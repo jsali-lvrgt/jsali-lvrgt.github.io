@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSALI — Sponsors</title>
+  <link rel="icon" href="https://i.imgur.com/uCNZguo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --text: #919191;
+      --subtext: #9ca3af;
+      --border: rgba(255,255,255,0.1);
+      --card-bg: rgba(255,255,255,0.02);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav h1 {
+      font-size: 1.2rem;
+      color: var(--text);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.2rem;
+    }
+
+    .nav-links a {
+      color: var(--subtext);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    header {
+      padding: 8rem 2rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .sponsor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      padding: 3rem 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .sponsor-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .sponsor-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sponsor-card img {
+      max-width: 120px;
+      max-height: 90px;
+      object-fit: contain;
+      border-radius: 50%;
+      filter: grayscale(0.1) brightness(1.1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      font-size: 0.9rem;
+      color: var(--subtext);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <h1>JSALI — Sponsors</h1>
+    <div class="nav-links">
+      <a href="indexloggedin.html">Accueil</a>
+      <a href="axe thematique.html">Axes thématiques</a>
+      <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header>
+    <h1 id="main-title">Erreur 404</h1>
+    <p>Oops, Une erreur c'est causé.</p>
+  </header>
+
+  <!-- Sponsor Section -->
+  <section class="sponsor-grid" id="sponsor-section">
+   
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 JSALI — USTHB | FSTGAT |
+    <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a><br>
+    <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
+  </footer>
+
+  <!-- Animations on scroll -->
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.sponsor-card').forEach(card => {
+      observer.observe(card);
+    });
+
+    // Animation for header title
+    const title = document.getElementById('main-title');
+    window.addEventListener('load', () => {
+      title.style.opacity = '1';
+      title.style.transform = 'translateY(0)';
+    });
+  </script>
+</body>
+</html>
