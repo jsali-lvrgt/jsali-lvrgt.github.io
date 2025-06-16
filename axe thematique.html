@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JSALI — Axes Thématiques</title>
+  <link rel="icon" href="https://i.imgur.com/uCNZguo.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg: #0a0a0a;
+      --highlight: #919191;
+      --primary-text: #fff;
+      --secondary-text: #cbd5e1;
+      --accent: #919191;
+      --blur: rgba(255,255,255,0.05);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; scroll-behavior:smooth; }
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--main-bg);
+      color: var(--primary-text);
+      overflow-x: hidden;
+    }
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: slideDown 1s ease forwards;
+    }
+    nav h1 {
+      font-size: 1.3rem;
+      color: var(--highlight);
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-links a {
+      color: var(--secondary-text);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {
+      color: var(--highlight);
+    }
+    header {
+      padding:8rem 2rem 2rem;
+      text-align:center;
+    }
+    header h1 {
+      font-size:3rem; font-weight:800;
+      background: linear-gradient(to right, #919191, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: popIn 1.2s ease forwards;
+    }
+    header p {
+      font-size:1.2rem; color: var(--secondary-text);
+      margin-top:1rem;
+      animation: fadeIn 2.5s ease forwards;
+    }
+
+    .features {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+      gap:2rem;
+      padding:3rem 2rem;
+      max-width:1200px;
+      margin:auto;
+    }
+    .feature {
+      background: var(--blur);
+      border:1px solid rgba(255,255,255,0.1);
+      padding:2rem;
+      border-radius:1rem;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(60px) scale(0.95) rotateX(30deg);
+      transition: all 0.8s ease;
+    }
+    .feature.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotateX(0);
+    }
+    .feature:hover {
+      transform: scale(1.05) translateY(-5px);
+      box-shadow: 0 10px 30px #919191;
+    }
+    .feature h3 {
+      color: var(--highlight);
+      margin-bottom:1rem;
+    }
+    .feature ul {
+      list-style: disc;
+      margin-left:1.5rem;
+      color: #d1d5db;
+    }
+
+    footer {
+      text-align:center;
+      padding:3rem 1rem 2rem;
+      font-size:0.9rem;
+      color:#64748b;
+      animation: fadeIn 3s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @keyframes popIn {
+      0% {opacity: 0; transform: scale(0.6);}
+      100% {opacity: 1; transform: scale(1);}
+    }
+    @keyframes slideDown {
+      from {transform: translateY(-100%); opacity: 0;}
+      to {transform: translateY(0); opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h1>JSALI — Axes</h1>
+    <div class="nav-links">
+      <a href="indexloggedin.html">Accueil</a>
+      <a href="sponsor.html">Nos Sponsors</a>
+      <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a>
+    </div>
+  </nav>
+
+  <header>
+    <h1>Axes Thématiques</h1>
+    <p>Découvrez les principaux axes de recherche de la Journée Scientifique JSALI</p>
+  </header>
+
+  <section class="features" id="axes">
+    <div class="feature">
+      <h3>Infrastructures linéaires & développement rural</h3>
+      <ul>
+        <li>Contributions des routes, chemins de fer et réseaux d’énergie au désenclavement des territoires.</li>
+        <li>Opportunités économiques générées par ces infrastructures dans les zones rurales.</li>
+        <li>Défis d’intégration paysagère et d’acceptabilité sociale.</li>
+      </ul>
+    </div>
+    <div class="feature">
+      <h3>Technologies & innovations pour un aménagement intelligent</h3>
+      <ul>
+        <li>Utilisation des SIG, drones et modèles numériques pour la conception et la gestion des infrastructures linéaires.</li>
+        <li>Surveillance en temps réel grâce à la Géomatique et aux systèmes intelligents.</li>
+        <li>Matériaux et techniques innovants pour des infrastructures durables.</li>
+      </ul>
+    </div>
+    <div class="feature">
+      <h3>Gouvernance & participation locale</h3>
+      <ul>
+        <li>Rôle des acteurs locaux dans la planification et le suivi des projets.</li>
+        <li>Modèles de gouvernance adaptés aux spécificités des territoires ruraux.</li>
+        <li>Partenariats public-privé et politiques publiques pour des infrastructures durables.</li>
+      </ul>
+    </div>
+    <div class="feature">
+      <h3>Développement durable & biodiversité</h3>
+      <ul>
+        <li>Réduction des impacts des infrastructures sur les écosystèmes naturels.</li>
+        <li>Stratégies pour restaurer les corridors écologiques et limiter la fragmentation des habitats.</li>
+        <li>Rôle des infrastructures dans la transition écologique et énergétique.</li>
+      </ul>
+    </div>
+    <div class="feature">
+      <h3>Résilience & adaptation climatique</h3>
+      <ul>
+        <li>Infrastructures linéaires face aux risques naturels : inondations, érosion, sécheresses.</li>
+        <li>Gestion durable des ressources en eau, énergie et sols dans les projets d’aménagement.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 JSALI — USTHB | FSTGAT | <a href="mailto:gatanalysel1@gmail.com">Contact</a><br>
+    <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
