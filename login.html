@@ -1,152 +1,165 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connexion – JSALI</title>
-  <link rel="icon" href="JSALI.png">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0a0a0a;
-      --accent: #919191;
-      --highlight: #919191;
-      --text: #fff;
-      --text-light: #cbd5e1;
-      --input-bg: #1a1a1a;
-    }
-    body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      padding: 1rem;
-    }
-    .login-box {
-      background: #111;
-      padding: 2.5rem;
-      border-radius: 1rem;
-      width: 100%;
-      max-width: 450px;
-      box-shadow: 0 0 30px rgba(255,255,255,0.05);
-      animation: popIn 0.7s ease forwards;
-    }
-    .login-box h2 {
-      text-align: center;
-      margin-bottom: 2rem;
-      color: var(--accent);
-    }
-    .login-box label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: var(--text-light);
-      font-weight: 600;
-    }
-    .login-box input {
-      width: 100%;
-      padding: 0.7rem;
-      margin-bottom: 1.5rem;
-      border: 1px solid #333;
-      border-radius: 8px;
-      background: var(--input-bg);
-      color: var(--text);
-      font-size: 1rem;
-    }
-    .login-box button {
-      width: 100%;
-      padding: 0.75rem;
-      border: none;
-      border-radius: 8px;
-      background: var(--accent);
-      color: #0a0a0a;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease, box-shadow 0.3s;
-    }
-    .login-box button:hover {
-      background: #a5a5a5;
-      box-shadow: 0 0 15px var(--accent);
-    }
-    a {
-      color: var(--highlight);
-      text-decoration: none;
-      display: inline-block;
-      margin-top: 1rem;
-      text-align: center;
-      width: 100%;
-    }
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #1f1f1f;
-      color: white;
-      padding: 1rem 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.05);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(30px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      z-index: 9999;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion – JSALI</title>
+    <link rel="icon" href="JSALI.png">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --accent: #919191;
+            --highlight: #919191;
+            --text: #fff;
+            --text-light: #cbd5e1;
+            --input-bg: #1a1a1a;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 1rem;
+        }
+        .login-box {
+            background: #111;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+            animation: popIn 0.7s ease forwards;
+        }
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+        .login-box label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 1rem;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #0a0a0a;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s;
+        }
+        .login-box button:hover {
+            background: #a5a5a5;
+            box-shadow: 0 0 15px var(--accent);
+        }
+        a {
+            color: var(--highlight);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+            text-align: center;
+            width: 100%;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1f1f1f;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(30px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: 9999;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Connexion à JSALI</h2>
-    <form onsubmit="handleLogin(event)">
-      <label for="email">Email</label>
-      <input type="email" id="email" required>
+    <div class="login-box">
+        <h2>Connexion à JSALI</h2>
+        <form onsubmit="handleLogin(event)">
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
 
-      <label for="password">Mot de passe</label>
-      <input type="password" id="password" required>
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" required>
 
-      <button type="submit">Se connecter</button>
-    </form>
-    <a href="register.html">Pas encore inscrit ? Créer un compte</a>
-  </div>
+            <button type="submit">Se connecter</button>
+        </form>
+        <a href="register.html">Pas encore inscrit ? Créer un compte</a>
+    </div>
 
-  <div class="toast" id="toast"></div>
+    <div class="toast" id="toast"></div>
 
-  <script>
-    function handleLogin(event) {
-      event.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+    <script>
+        function handleLogin(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
 
-      // Simuler une validation simple
-      if (email && password) {
-        const username = email.split("@")[0];
-        localStorage.setItem("jsaliUser", username);
-        showToast("Connexion réussie ! Bienvenue " + username + " !");
-        setTimeout(() => {
-          window.location.href = "indexloggedin.html";
-        }, 1500);
-      } else {
-        showToast("Veuillez remplir tous les champs.");
-      }
-    }
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
 
-    function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 3000);
-    }
-  </script>
+            if (email === "" || password === "") {
+                showToast("Veuillez remplir tous les champs.");
+                return;
+            }
+
+            // Simulez une connexion réussie.
+            // Dans un vrai projet, ici vous enverriez les identifiants à un serveur pour vérification.
+            // Par exemple, vous pourriez avoir des identifiants valides prédéfinis pour le test :
+            // if (email === "test@example.com" && password === "password123") { ... }
+            
+            const username = email.split("@")[0]; // Extrait la partie avant le @ pour le nom d'utilisateur
+
+            // Stocke le nom de l'utilisateur dans le localStorage
+            localStorage.setItem("jsaliUser", username);
+
+            // Affiche un message de succès
+            showToast("Connexion réussie ! Bienvenue " + username + " !");
+
+            // Redirige vers la page principale après un court délai
+            setTimeout(() => {
+                // **Vérifiez et ajustez cette ligne si votre page principale n'est PAS "index.html"**
+                window.location.href = "index.html"; 
+            }, 1500); 
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 3000);
+        }
+    </script>
 </body>
 </html>
