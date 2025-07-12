@@ -1,176 +1,294 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JSALI — Sponsors</title>
-  <link rel="icon" href="JSALI.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0a0a0a;
-      --text: #919191;
-      --subtext: #9ca3af;
-      --border: rgba(255,255,255,0.1);
-      --card-bg: rgba(255,255,255,0.02);
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSALI — Sponsors</title>
+    <link rel="icon" href="JSALI.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #919191; /* Main text color for headers/accents */
+            --subtext: #9ca3af; /* Secondary text color for links/footer */
+            --border: rgba(255,255,255,0.1);
+            --card-bg: rgba(255,255,255,0.02);
+            --primary-white: #fff; /* For contrast on some elements */
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
 
-    body {
-      font-family: 'Space Grotesk', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-    }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg);
+            color: var(--primary-white); /* Changed to white for better readability of main content */
+            overflow-x: hidden;
+            min-height: 100vh; /* Ensure body takes full height */
+            display: flex;
+            flex-direction: column;
+        }
 
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10, 10, 10, 0.85);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
-      z-index: 1000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+        }
 
-    nav h1 {
-      font-size: 1.2rem;
-      color: var(--text);
-    }
+        nav h1 {
+            font-size: 1.3rem; /* Slightly increased for better visibility */
+            color: var(--text);
+            margin-right: 1rem; /* Add space between title and links */
+        }
 
-    .nav-links {
-      display: flex;
-      gap: 1.2rem;
-    }
+        .nav-links {
+            display: flex;
+            gap: 1.2rem;
+            align-items: center;
+            flex-wrap: wrap; /* Allow nav links to wrap */
+        }
 
-    .nav-links a {
-      color: var(--subtext);
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s;
-    }
+        .nav-links a {
+            color: var(--subtext);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            white-space: nowrap; /* Prevent links from breaking lines prematurely */
+        }
 
-    .nav-links a:hover {
-      color: var(--text);
-    }
+        .nav-links a:hover {
+            color: var(--text);
+        }
 
-    header {
-      padding: 8rem 2rem 2rem;
-      text-align: center;
-    }
+        header {
+            padding: 8rem 2rem 2rem;
+            text-align: center;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
 
-    header h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 1s ease, transform 1s ease;
-    }
+        header h1 {
+            font-size: 2.8rem; /* Adjusted for better responsiveness */
+            font-weight: 800;
+            color: var(--text); /* Set specific color for main title */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+            margin-bottom: 0.5rem; /* Space below title */
+        }
 
-    .sponsor-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 2rem;
-      padding: 3rem 2rem;
-      max-width: 1000px;
-      margin: auto;
-    }
+        header p {
+            color: var(--subtext);
+            font-size: 1.1rem;
+        }
 
-    .sponsor-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transform: translateY(50px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
+        .sponsor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+            padding: 3rem 2rem;
+            max-width: 1000px;
+            margin: auto;
+            flex-grow: 1; /* Allow grid to take available space */
+        }
 
-    .sponsor-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+        /* Styles for individual sponsor cards (even if grid is empty, these are ready) */
+        .sponsor-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column; /* Stack logo and text */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
 
-    .sponsor-card img {
-      max-width: 120px;
-      max-height: 90px;
-      object-fit: contain;
-      border-radius: 50%;
-      filter: grayscale(0.1) brightness(1.1);
-    }
+        .sponsor-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    footer {
-      text-align: center;
-      padding: 3rem 1rem 2rem;
-      font-size: 0.9rem;
-      color: var(--subtext);
-    }
-  </style>
+        .sponsor-card img {
+            max-width: 120px;
+            max-height: 90px;
+            object-fit: contain;
+            border-radius: 50%; /* Circular images for logos */
+            filter: grayscale(0.1) brightness(1.1);
+            margin-bottom: 0.8rem; /* Space between image and text */
+        }
+
+        .sponsor-card h3 {
+            color: var(--primary-white); /* Sponsor name in white */
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .sponsor-card p {
+            color: var(--subtext);
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            font-size: 0.9rem;
+            color: var(--subtext);
+            flex-shrink: 0; /* Prevent footer from shrinking */
+        }
+
+        /* --- Media Queries for Mobile Responsiveness --- */
+
+        /* Small devices (phones, 600px and down) */
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column; /* Stack logo and nav links */
+                align-items: flex-start; /* Align items to the start */
+                padding: 1rem;
+            }
+
+            nav h1 {
+                margin-bottom: 1rem; /* Space below the logo */
+                font-size: 1.1rem;
+                margin-right: 0;
+            }
+
+            .nav-links {
+                flex-direction: column; /* Stack nav links vertically */
+                align-items: flex-start; /* Align links to the left */
+                width: 100%; /* Take full width */
+                gap: 0.6rem; /* Smaller gap between stacked links */
+            }
+
+            .nav-links a {
+                width: 100%; /* Make links take full width */
+                text-align: left; /* Align text to the left */
+                padding: 0.3rem 0; /* Add vertical padding */
+            }
+
+            header {
+                padding: 6rem 1rem 1.5rem; /* Adjust header padding */
+            }
+
+            header h1 {
+                font-size: 2.2rem; /* Smaller title for phones */
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            .sponsor-grid {
+                grid-template-columns: 1fr; /* Single column for sponsors */
+                padding: 2rem 1rem; /* Adjust grid padding */
+                gap: 1.5rem;
+            }
+
+            .sponsor-card {
+                padding: 1.2rem; /* Adjust card padding */
+            }
+
+            .sponsor-card img {
+                max-width: 100px; /* Smaller logos on mobile */
+                max-height: 75px;
+            }
+
+            footer {
+                padding: 2rem 1rem; /* Adjust footer padding */
+            }
+        }
+
+        /* Medium devices (tablets, 601px to 900px) */
+        @media (min-width: 601px) and (max-width: 900px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                gap: 0.8rem;
+            }
+
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            .sponsor-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Possibly 3 columns or more */
+                padding: 2.5rem 1.5rem;
+            }
+
+            .sponsor-card img {
+                max-width: 110px;
+                max-height: 80px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <h1>JSALI — Sponsors</h1>
-    <div class="nav-links">
-      <a href="index.html">Accueil</a>
-      <a href="axe thematique.html">Axes thématiques</a>
-      <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a>
-    </div>
-  </nav>
+    <nav>
+        <h1>JSALI — Sponsors</h1>
+        <div class="nav-links">
+            <a href="index.html">Accueil</a>
+            <a href="axe thematique.html">Axes thématiques</a>
+            <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a>
+        </div>
+    </nav>
 
-  <!-- Header -->
-  <header>
-    <h1 id="main-title">Erreur 404</h1>
-    <p>Oops, Une erreur c'est causé.</p>
-  </header>
+    <header>
+        <h1 id="main-title">Erreur 404</h1>
+        <p>Oops, il semble qu'il n'y ait pas encore de sponsors à afficher.</p>
+    </header>
 
-  <!-- Sponsor Section -->
-  <section class="sponsor-grid" id="sponsor-section">
-   
-  </section>
+    <section class="sponsor-grid" id="sponsor-section">
+        </section>
 
-  <!-- Footer -->
-  <footer>
-    &copy; 2025 JSALI — USTHB | FSTGAT |
-    <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a><br>
-    <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
-  </footer>
+    <footer>
+        &copy; 2025 JSALI — USTHB | FSTGAT |
+        <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a><br>
+        <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
+    </footer>
 
-  <!-- Animations on scroll -->
-  <script>
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
+    <script>
+        // The observer will still be set up, but won't find any .sponsor-card elements
+        // This is fine, it simply won't trigger the animation.
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // If you add sponsor cards later, consider unobserving them
+                    // observer.unobserve(entry.target); 
+                }
+            });
+        }, { threshold: 0.1 });
 
-    document.querySelectorAll('.sponsor-card').forEach(card => {
-      observer.observe(card);
-    });
+        document.querySelectorAll('.sponsor-card').forEach(card => {
+            observer.observe(card);
+        });
 
-    // Animation for header title
-    const title = document.getElementById('main-title');
-    window.addEventListener('load', () => {
-      title.style.opacity = '1';
-      title.style.transform = 'translateY(0)';
-    });
-  </script>
+        // Animation for header title
+        const title = document.getElementById('main-title');
+        window.addEventListener('load', () => {
+            title.style.opacity = '1';
+            title.style.transform = 'translateY(0)';
+        });
+    </script>
 </body>
 </html>
