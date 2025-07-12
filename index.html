@@ -44,6 +44,7 @@
       justify-content: space-between;
       align-items: center;
       animation: slideDown 1s ease forwards;
+      flex-wrap: wrap; /* Allow items to wrap on smaller screens */
     }
 
     nav h1 {
@@ -55,6 +56,8 @@
       display: flex;
       gap: 1rem;
       align-items: center;
+      flex-wrap: wrap; /* Allow nav links to wrap */
+      margin-top: 0; /* Reset margin for larger screens */
     }
 
     .nav-links a {
@@ -62,6 +65,7 @@
       text-decoration: none;
       font-weight: 600;
       transition: color 0.3s;
+      white-space: nowrap; /* Prevent links from breaking lines prematurely */
     }
 
     .nav-links a:hover {
@@ -78,6 +82,7 @@
       transition: background 0.3s, transform 0.3s;
       text-decoration: none;
       cursor: pointer;
+      white-space: nowrap; /* Prevent buttons from breaking lines prematurely */
     }
 
     .btn:hover {
@@ -85,12 +90,12 @@
       transform: scale(1.05);
     }
 
-    /* Nouveau style pour le message de bienvenue dans la navbar */
     #welcome-nav-msg {
       color: var(--highlight);
       font-weight: 600;
-      margin-right: 0.5rem; /* Espace entre le message et le bouton */
-      display: none; /* Caché par défaut */
+      margin-right: 0.5rem;
+      display: none;
+      white-space: nowrap; /* Prevent welcome message from breaking */
     }
 
     header {
@@ -105,9 +110,9 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: popIn 1.2s ease forwards;
+      font-size: 2.5rem; /* Slightly smaller for better fit */
     }
 
-    /* Le paragraphe d'origine reste pour le message de gouvernance */
     header p {
       font-size: 1.2rem;
       color: var(--secondary-text);
@@ -130,6 +135,8 @@
       border: 2px solid var(--highlight);
       padding: 5px;
       transition: transform 0.4s ease, box-shadow 0.4s ease;
+      max-width: 100%; /* Ensure images scale down */
+      height: auto; /* Maintain aspect ratio */
     }
 
     .logos img:hover {
@@ -231,6 +238,111 @@
       to {
         transform: translateY(0);
         opacity: 1;
+      }
+    }
+
+    /* --- Media Queries for Mobile Responsiveness --- */
+
+    /* Small devices (phones, 600px and down) */
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column; /* Stack logo and nav links */
+        align-items: flex-start; /* Align items to the start */
+        padding: 1rem;
+      }
+
+      nav h1 {
+        margin-bottom: 1rem; /* Space below the logo */
+      }
+
+      .nav-links {
+        flex-direction: column; /* Stack nav links vertically */
+        align-items: flex-start; /* Align links to the left */
+        width: 100%; /* Take full width */
+        gap: 0.8rem; /* Smaller gap between stacked links */
+        margin-top: 0.5rem; /* Space below logo */
+      }
+
+      .nav-links a,
+      .nav-links .btn,
+      #welcome-nav-msg {
+        width: 100%; /* Make links/buttons take full width */
+        text-align: left; /* Align text to the left */
+        padding: 0.5rem 0; /* Add vertical padding */
+        margin-right: 0; /* Remove right margin */
+      }
+      
+      .btn {
+          width: auto; /* Buttons might look better not full width */
+          text-align: center; /* Center button text */
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem; /* Add space between buttons if stacked */
+          padding: 0.5rem 0.8rem;
+      }
+
+      #welcome-nav-msg {
+          padding-left: 0; /* Align with other links */
+      }
+
+      header {
+        padding: 6rem 1rem 1rem; /* Reduce padding for smaller screens */
+      }
+
+      header h1 {
+        font-size: 2rem; /* Even smaller font size for very small screens */
+        word-break: break-word; /* Allow long words to break */
+      }
+
+      header p {
+        font-size: 1rem;
+      }
+
+      .logos {
+        flex-direction: column; /* Stack logos vertically */
+        align-items: center; /* Center logos */
+        gap: 1.5rem; /* Reduce gap */
+        padding: 1rem;
+      }
+
+      .logos img {
+        height: 70px; /* Smaller logo size */
+      }
+
+      .features {
+        grid-template-columns: 1fr; /* Single column layout for features */
+        padding: 2rem 1rem;
+      }
+
+      .feature {
+        padding: 1.5rem; /* Reduce feature padding */
+      }
+
+      footer {
+        padding: 2rem 1rem; /* Adjust footer padding */
+      }
+    }
+
+    /* Medium devices (tablets, 601px to 900px) */
+    @media (min-width: 601px) and (max-width: 900px) {
+      nav {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        gap: 0.8rem; /* Slightly smaller gap for tablets */
+      }
+
+      header h1 {
+        font-size: 2.8rem; /* Adjust header font size */
+      }
+
+      .logos img {
+        height: 80px; /* Slightly smaller logos */
+      }
+
+      .features {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Allow two columns if space permits */
+        padding: 2.5rem 1.5rem;
       }
     }
   </style>
@@ -341,32 +453,26 @@
     document.querySelectorAll('.feature').forEach(el => observer.observe(el));
 
     const user = localStorage.getItem('jsaliUser');
-    // const welcomeMsg = document.getElementById('welcome-msg'); // On n'utilise plus celui-ci pour le nom d'utilisateur
-    const welcomeNavMsg = document.getElementById('welcome-nav-msg'); // Nouvelle référence pour le message dans la navbar
+    const welcomeNavMsg = document.getElementById('welcome-nav-msg');
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
     const logoutBtn = document.getElementById('logout-btn');
 
     function showLoggedIn(userName) {
-      welcomeNavMsg.textContent = `👋 Bienvenue, ${userName} !`; // Ajout de l'emoji et du nom
-      welcomeNavMsg.style.display = 'inline-block'; // Afficher le message dans la navbar
+      welcomeNavMsg.textContent = `👋 Bienvenue, ${userName} !`;
+      welcomeNavMsg.style.display = 'inline-block';
 
-      // Cacher les boutons de connexion/inscription
       loginBtn.style.display = 'none';
       registerBtn.style.display = 'none';
-      // Afficher le bouton de déconnexion
       logoutBtn.style.display = 'inline-block';
     }
 
     function showLoggedOut() {
-      // welcomeMsg.textContent = 'Gouvernance, Développement Durable et Résilience Écologique'; // On garde ce paragraphe pour son texte d'origine
-      welcomeNavMsg.textContent = ''; // Vide le texte de la navbar
-      welcomeNavMsg.style.display = 'none'; // Cache le message dans la navbar
+      welcomeNavMsg.textContent = '';
+      welcomeNavMsg.style.display = 'none';
 
-      // Afficher les boutons de connexion/inscription
       loginBtn.style.display = 'inline-block';
       registerBtn.style.display = 'inline-block';
-      // Cacher le bouton de déconnexion
       logoutBtn.style.display = 'none';
       localStorage.removeItem('jsaliUser');
     }
