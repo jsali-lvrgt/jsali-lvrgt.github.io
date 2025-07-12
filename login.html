@@ -22,23 +22,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh; /* Use min-height for better adaptability */
             margin: 0;
-            padding: 1rem;
+            padding: 1rem; /* Padding around the body */
+            box-sizing: border-box; /* Include padding in element's total width/height */
         }
         .login-box {
             background: #111;
             padding: 2.5rem;
             border-radius: 1rem;
-            width: 100%;
+            width: 100%; /* Take full width within padding */
             max-width: 450px;
             box-shadow: 0 0 30px rgba(255,255,255,0.05);
             animation: popIn 0.7s ease forwards;
+            box-sizing: border-box; /* Include padding in element's total width/height */
         }
         .login-box h2 {
             text-align: center;
             margin-bottom: 2rem;
             color: var(--accent);
+            font-size: 2rem; /* Ensure appropriate size */
         }
         .login-box label {
             display: block;
@@ -47,7 +50,7 @@
             font-weight: 600;
         }
         .login-box input {
-            width: 100%;
+            width: 100%; /* Full width for inputs */
             padding: 0.7rem;
             margin-bottom: 1.5rem;
             border: 1px solid #333;
@@ -55,9 +58,10 @@
             background: var(--input-bg);
             color: var(--text);
             font-size: 1rem;
+            box-sizing: border-box; /* Critical for full-width inputs with padding */
         }
         .login-box button {
-            width: 100%;
+            width: 100%; /* Full width for button */
             padding: 0.75rem;
             border: none;
             border-radius: 8px;
@@ -66,6 +70,8 @@
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s ease, box-shadow 0.3s;
+            font-size: 1.1rem; /* Good size for tapping */
+            box-sizing: border-box; /* Include padding in element's total width/height */
         }
         .login-box button:hover {
             background: #a5a5a5;
@@ -78,6 +84,7 @@
             margin-top: 1rem;
             text-align: center;
             width: 100%;
+            font-size: 0.95rem; /* Adjust link size */
         }
         .toast {
             position: fixed;
@@ -93,6 +100,7 @@
             transform: translateY(30px);
             transition: opacity 0.4s ease, transform 0.4s ease;
             z-index: 9999;
+            font-size: 0.9rem; /* Smaller toast message on mobile */
         }
         .toast.show {
             opacity: 1;
@@ -102,6 +110,52 @@
         @keyframes popIn {
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- Media Queries for Mobile Responsiveness --- */
+
+        /* Small devices (phones, 600px and down) */
+        @media (max-width: 600px) {
+            body {
+                padding: 0.5rem; /* Less padding on very small screens */
+            }
+
+            .login-box {
+                padding: 1.5rem; /* Reduce internal padding for the login box */
+                margin: 0 0.5rem; /* Add slight horizontal margin to prevent touching edges */
+            }
+
+            .login-box h2 {
+                font-size: 1.8rem; /* Slightly smaller title */
+                margin-bottom: 1.5rem;
+            }
+
+            .login-box input {
+                padding: 0.6rem; /* Slightly less input padding */
+                margin-bottom: 1rem;
+            }
+
+            .login-box button {
+                padding: 0.65rem; /* Slightly less button padding */
+                font-size: 1rem;
+            }
+
+            .toast {
+                bottom: 15px;
+                right: 15px;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.85rem; /* Even smaller toast text */
+            }
+        }
+
+        /* Adjustments for a slightly wider range but still compact */
+        @media (max-width: 400px) {
+            .login-box {
+                padding: 1rem; /* Even less padding for tiny screens */
+            }
+            .login-box h2 {
+                font-size: 1.6rem;
+            }
         }
     </style>
 </head>
@@ -136,20 +190,18 @@
 
             // Simulez une connexion réussie.
             // Dans un vrai projet, ici vous enverriez les identifiants à un serveur pour vérification.
-            // Par exemple, vous pourriez avoir des identifiants valides prédéfinis pour le test :
-            // if (email === "test@example.com" && password === "password123") { ... }
             
-            const username = email.split("@")[0]; // Extrait la partie avant le @ pour le nom d'utilisateur
+            const username = email.split("@")[0]; // Extracts the part before the @ for the username
 
-            // Stocke le nom de l'utilisateur dans le localStorage
+            // Stores the username in localStorage
             localStorage.setItem("jsaliUser", username);
 
-            // Affiche un message de succès
+            // Displays a success message
             showToast("Connexion réussie ! Bienvenue " + username + " !");
 
-            // Redirige vers la page principale après un court délai
+            // Redirects to the main page after a short delay
             setTimeout(() => {
-                // **Vérifiez et ajustez cette ligne si votre page principale n'est PAS "index.html"**
+                // **Verify and adjust this line if your main page is NOT "index.html"**
                 window.location.href = "index.html"; 
             }, 1500); 
         }
