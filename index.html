@@ -115,7 +115,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: popIn 1.2s ease forwards;
-            /* font-size: 2.5rem; Removed fixed smaller size */
             margin-bottom: 1rem; /* Added spacing */
         }
 
@@ -266,14 +265,14 @@
             }
 
             nav h1 {
-                margin-bottom: 1rem; /* Space below the logo */
+                margin-bottom: 0.5rem; /* Reduced space below the logo */
             }
 
             .nav-links {
                 flex-direction: column; /* Stack nav links vertically */
                 align-items: flex-start; /* Align links to the left */
                 width: 100%; /* Take full width */
-                gap: 0.8rem; /* Smaller gap between stacked links */
+                gap: 0.6rem; /* Smaller gap between stacked links */
                 margin-top: 0.5rem; /* Space below logo */
             }
 
@@ -282,15 +281,15 @@
             #welcome-nav-msg {
                 width: 100%; /* Make links/buttons take full width */
                 text-align: left; /* Align text to the left */
-                padding: 0.5rem 0; /* Add vertical padding */
+                padding: 0.4rem 0; /* Reduced vertical padding */
                 margin-right: 0; /* Remove right margin */
             }
 
             .btn {
                 width: auto; /* Allow buttons to be natural width or adjust */
                 text-align: center; /* Center button text */
-                margin-top: 0.5rem;
-                margin-bottom: 0.5rem; /* Add space between buttons if stacked */
+                margin-top: 0.4rem;
+                margin-bottom: 0.4rem; /* Add space between buttons if stacked */
                 padding: 0.5rem 0.8rem;
             }
             /* Adjust login/register/logout buttons specifically if needed */
@@ -309,45 +308,45 @@
             }
 
             header h1 {
-                font-size: 2rem; /* Even smaller font size for very small screens */
+                font-size: 1.8rem; /* Even smaller font size for very small screens */
                 word-break: break-word; /* Allow long words to break */
             }
 
             header p {
-                font-size: 1rem;
+                font-size: 0.9rem; /* Smaller paragraph text */
             }
 
             .logos {
                 flex-direction: column; /* Stack logos vertically */
                 align-items: center; /* Center logos */
-                gap: 1.5rem; /* Reduce gap */
+                gap: 1.2rem; /* Reduced gap */
                 padding: 1rem;
             }
 
             .logos img {
-                max-width: 150px; /* Constrain images on small screens */
+                max-width: 100px; /* NEW: Even smaller max-width for logos on mobile */
                 height: auto; /* Ensure aspect ratio is maintained */
             }
 
             .features {
                 grid-template-columns: 1fr; /* Single column layout for features */
-                padding: 2rem 1rem;
+                padding: 1.5rem 1rem; /* Reduced padding */
             }
 
             .feature {
-                padding: 1.5rem; /* Reduce feature padding */
+                padding: 1.2rem; /* Reduced feature padding */
             }
 
             .feature h3 {
-                font-size: 1.3rem; /* Smaller heading for feature */
+                font-size: 1.2rem; /* Smaller heading for feature */
             }
 
             .feature ul {
-                font-size: 0.9rem; /* Smaller list items for readability */
+                font-size: 0.85rem; /* Smaller list items for readability */
             }
 
             footer {
-                padding: 2rem 1rem; /* Adjust footer padding */
+                padding: 1.5rem 1rem; /* Adjust footer padding */
             }
         }
 
@@ -362,16 +361,17 @@
             }
 
             header h1 {
-                font-size: 2.8rem; /* Adjust header font size */
+                font-size: 2.5rem; /* Adjust header font size */
             }
 
             .logos img {
-                max-width: 200px; /* Adjust size for tablets */
+                max-width: 180px; /* Adjust size for tablets */
             }
 
             .features {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Allow two columns if space permits */
-                padding: 2.5rem 1.5rem;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Allow two or three columns if space permits, adjusted minmax */
+                padding: 2rem 1.5rem;
+                gap: 1.5rem; /* Reduced gap for tablets */
             }
         }
     </style>
