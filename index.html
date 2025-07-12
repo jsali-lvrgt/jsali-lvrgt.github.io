@@ -85,6 +85,14 @@
       transform: scale(1.05);
     }
 
+    /* Nouveau style pour le message de bienvenue dans la navbar */
+    #welcome-nav-msg {
+      color: var(--highlight);
+      font-weight: 600;
+      margin-right: 0.5rem; /* Espace entre le message et le bouton */
+      display: none; /* Caché par défaut */
+    }
+
     header {
       padding: 8rem 2rem 2rem;
       text-align: center;
@@ -99,6 +107,7 @@
       animation: popIn 1.2s ease forwards;
     }
 
+    /* Le paragraphe d'origine reste pour le message de gouvernance */
     header p {
       font-size: 1.2rem;
       color: var(--secondary-text);
@@ -233,6 +242,7 @@
       <a href="axe thematique.html">Axes Thématiques</a>
       <a href="sponsor.html">Sponsors</a>
       <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a>
+      <span id="welcome-nav-msg" style="display:none;"></span>
       <a href="register.html" class="btn" id="register-btn">S'inscrire</a>
       <a href="login.html" class="btn" id="login-btn">Se connecter</a>
       <button class="btn" id="logout-btn" style="display:none">Déconnexion</button>
@@ -331,22 +341,32 @@
     document.querySelectorAll('.feature').forEach(el => observer.observe(el));
 
     const user = localStorage.getItem('jsaliUser');
-    const welcomeMsg = document.getElementById('welcome-msg');
+    // const welcomeMsg = document.getElementById('welcome-msg'); // On n'utilise plus celui-ci pour le nom d'utilisateur
+    const welcomeNavMsg = document.getElementById('welcome-nav-msg'); // Nouvelle référence pour le message dans la navbar
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
     const logoutBtn = document.getElementById('logout-btn');
 
     function showLoggedIn(userName) {
-      welcomeMsg.textContent = `Bienvenue, ${userName} !`;
+      welcomeNavMsg.textContent = `👋 Bienvenue, ${userName} !`; // Ajout de l'emoji et du nom
+      welcomeNavMsg.style.display = 'inline-block'; // Afficher le message dans la navbar
+
+      // Cacher les boutons de connexion/inscription
       loginBtn.style.display = 'none';
       registerBtn.style.display = 'none';
+      // Afficher le bouton de déconnexion
       logoutBtn.style.display = 'inline-block';
     }
 
     function showLoggedOut() {
-      welcomeMsg.textContent = 'Gouvernance, Développement Durable et Résilience Écologique';
+      // welcomeMsg.textContent = 'Gouvernance, Développement Durable et Résilience Écologique'; // On garde ce paragraphe pour son texte d'origine
+      welcomeNavMsg.textContent = ''; // Vide le texte de la navbar
+      welcomeNavMsg.style.display = 'none'; // Cache le message dans la navbar
+
+      // Afficher les boutons de connexion/inscription
       loginBtn.style.display = 'inline-block';
       registerBtn.style.display = 'inline-block';
+      // Cacher le bouton de déconnexion
       logoutBtn.style.display = 'none';
       localStorage.removeItem('jsaliUser');
     }
