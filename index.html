@@ -1,491 +1,531 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JSALI</title>
-  <link rel="icon" href="JSALI.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --main-bg: #0a0a0a;
-      --highlight: #919191;
-      --accent: #919191;
-      --primary-text: #fff;
-      --secondary-text: #cbd5e1;
-      --blur: rgba(255, 255, 255, 0.05);
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSALI</title>
+    <link rel="icon" href="JSALI.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --main-bg: #0a0a0a;
+            --highlight: #919191;
+            --accent: #919191;
+            --primary-text: #fff;
+            --secondary-text: #cbd5e1;
+            --blur: rgba(255, 255, 255, 0.05);
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
 
-    body {
-      font-family: "Space Grotesk", sans-serif;
-      background: var(--main-bg);
-      color: var(--primary-text);
-      overflow-x: hidden;
-    }
+        body {
+            font-family: "Space Grotesk", sans-serif;
+            background: var(--main-bg);
+            color: var(--primary-text);
+            overflow-x: hidden;
+            min-height: 100vh; /* Ensure body takes full height */
+            display: flex;
+            flex-direction: column; /* Allows content and footer to stack and stretch */
+        }
 
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10, 10, 10, 0.85);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 1rem 2rem;
-      z-index: 1000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      animation: slideDown 1s ease forwards;
-      flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-    }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideDown 1s ease forwards;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+        }
 
-    nav h1 {
-      font-size: 1.3rem;
-      color: var(--highlight);
-    }
+        nav h1 {
+            font-size: 1.3rem;
+            color: var(--highlight);
+            margin-right: 1rem; /* Space between title and links */
+        }
 
-    .nav-links {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap; /* Allow nav links to wrap */
-      margin-top: 0; /* Reset margin for larger screens */
-    }
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap; /* Allow nav links to wrap */
+            margin-top: 0; /* Reset margin for larger screens */
+        }
 
-    .nav-links a {
-      color: var(--secondary-text);
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s;
-      white-space: nowrap; /* Prevent links from breaking lines prematurely */
-    }
+        .nav-links a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            white-space: nowrap; /* Prevent links from breaking lines prematurely */
+        }
 
-    .nav-links a:hover {
-      color: var(--highlight);
-    }
+        .nav-links a:hover {
+            color: var(--highlight);
+        }
 
-    .btn {
-      padding: 0.4rem 1rem;
-      background: var(--highlight);
-      color: var(--main-bg);
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: background 0.3s, transform 0.3s;
-      text-decoration: none;
-      cursor: pointer;
-      white-space: nowrap; /* Prevent buttons from breaking lines prematurely */
-    }
+        .btn {
+            padding: 0.4rem 1rem;
+            background: var(--highlight);
+            color: var(--main-bg);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+            text-decoration: none;
+            cursor: pointer;
+            white-space: nowrap; /* Prevent buttons from breaking lines prematurely */
+        }
 
-    .btn:hover {
-      background: #a1a1a1;
-      transform: scale(1.05);
-    }
+        .btn:hover {
+            background: #a1a1a1;
+            transform: scale(1.05);
+        }
 
-    #welcome-nav-msg {
-      color: var(--highlight);
-      font-weight: 600;
-      margin-right: 0.5rem;
-      display: none;
-      white-space: nowrap; /* Prevent welcome message from breaking */
-    }
+        #welcome-nav-msg {
+            color: var(--highlight);
+            font-weight: 600;
+            margin-right: 0.5rem;
+            display: none;
+            white-space: nowrap; /* Prevent welcome message from breaking */
+        }
 
-    header {
-      padding: 8rem 2rem 2rem;
-      text-align: center;
-    }
+        header {
+            padding: 8rem 2rem 2rem;
+            text-align: center;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
 
-    header h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(to right, var(--highlight), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: popIn 1.2s ease forwards;
-      font-size: 2.5rem; /* Slightly smaller for better fit */
-    }
+        header h1 {
+            font-size: 3rem; /* Reverted to 3rem for larger screens */
+            font-weight: 800;
+            background: linear-gradient(to right, var(--highlight), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: popIn 1.2s ease forwards;
+            /* font-size: 2.5rem; Removed fixed smaller size */
+            margin-bottom: 1rem; /* Added spacing */
+        }
 
-    header p {
-      font-size: 1.2rem;
-      color: var(--secondary-text);
-      margin-top: 1rem;
-      animation: fadeIn 2.5s ease forwards;
-    }
+        header p {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            margin-top: 1rem;
+            animation: fadeIn 2.5s ease forwards;
+        }
 
-    .logos {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      padding: 2rem;
-      flex-wrap: wrap;
-      animation: fadeInZoom 2s ease forwards;
-    }
+        .logos {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+            flex-wrap: wrap;
+            animation: fadeInZoom 2s ease forwards;
+            flex-shrink: 0; /* Prevent logos section from shrinking */
+        }
 
-    .logos img {
-      height: 90px;
-      border-radius: 0%;
-      border: 2px solid var(--highlight);
-      padding: 5px;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      max-width: 100%; /* Ensure images scale down */
-      height: auto; /* Maintain aspect ratio */
-    }
+        .logos img {
+            /* PC: Let images be larger, but constrain a bit if needed */
+            max-width: 250px; /* Max width for images on PC */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 0%;
+            border: 2px solid var(--highlight);
+            padding: 5px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            /* Removed fixed height: 90px; for PC */
+        }
 
-    .logos img:hover {
-      transform: scale(1.15);
-      box-shadow: 0 0 20px var(--highlight);
-    }
+        .logos img:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 20px var(--highlight);
+        }
 
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      padding: 3rem 2rem;
-      max-width: 1200px;
-      margin: auto;
-    }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: auto;
+            flex-grow: 1; /* Allow features section to take available space */
+        }
 
-    .feature {
-      background: var(--blur);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 2rem;
-      border-radius: 2rem;
-      backdrop-filter: blur(10px);
-      opacity: 0;
-      transform: translateY(60px) scale(0.95) rotateX(30deg);
-      transition: all 0.8s ease;
-    }
+        .feature {
+            background: var(--blur);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 2rem;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(60px) scale(0.95) rotateX(30deg);
+            transition: all 0.8s ease;
+        }
 
-    .feature.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1) rotateX(0);
-    }
+        .feature.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotateX(0);
+        }
 
-    .feature:hover {
-      transform: scale(1.05) translateY(-5px);
-      box-shadow: 0 10px 30px #919191;
-    }
+        .feature:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 10px 30px #919191;
+        }
 
-    .feature h3 {
-      color: var(--highlight);
-      margin-bottom: 1rem;
-    }
+        .feature h3 {
+            color: var(--highlight);
+            margin-bottom: 1rem;
+        }
 
-    .feature ul {
-      list-style: disc;
-      margin-left: 1.5rem;
-      color: #d1d5db;
-    }
+        .feature ul {
+            list-style: disc;
+            margin-left: 1.5rem;
+            color: #d1d5db;
+        }
 
-    footer {
-      text-align: center;
-      padding: 3rem 1rem 2rem;
-      font-size: 0.9rem;
-      color: #64748b;
-      animation: fadeIn 3s ease forwards;
-    }
+        footer {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            font-size: 0.9rem;
+            color: #64748b;
+            animation: fadeIn 3s ease forwards;
+            flex-shrink: 0; /* Prevent footer from shrinking */
+        }
+        footer a {
+            color: var(--secondary-text); /* Ensure footer links are readable */
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        footer a:hover {
+            color: var(--highlight);
+        }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.6);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
 
-    @keyframes popIn {
-      0% {
-        opacity: 0;
-        transform: scale(0.6);
-      }
+        @keyframes fadeInZoom {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
 
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
 
-    @keyframes fadeInZoom {
-      from {
-        opacity: 0;
-        transform: scale(0.8);
-      }
+        /* --- Media Queries for Mobile Responsiveness --- */
 
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
+        /* Small devices (phones, 600px and down) */
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column; /* Stack logo and nav links */
+                align-items: flex-start; /* Align items to the start */
+                padding: 1rem;
+            }
 
-    @keyframes slideDown {
-      from {
-        transform: translateY(-100%);
-        opacity: 0;
-      }
+            nav h1 {
+                margin-bottom: 1rem; /* Space below the logo */
+            }
 
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
+            .nav-links {
+                flex-direction: column; /* Stack nav links vertically */
+                align-items: flex-start; /* Align links to the left */
+                width: 100%; /* Take full width */
+                gap: 0.8rem; /* Smaller gap between stacked links */
+                margin-top: 0.5rem; /* Space below logo */
+            }
 
-    /* --- Media Queries for Mobile Responsiveness --- */
+            .nav-links a,
+            .nav-links .btn,
+            #welcome-nav-msg {
+                width: 100%; /* Make links/buttons take full width */
+                text-align: left; /* Align text to the left */
+                padding: 0.5rem 0; /* Add vertical padding */
+                margin-right: 0; /* Remove right margin */
+            }
 
-    /* Small devices (phones, 600px and down) */
-    @media (max-width: 600px) {
-      nav {
-        flex-direction: column; /* Stack logo and nav links */
-        align-items: flex-start; /* Align items to the start */
-        padding: 1rem;
-      }
+            .btn {
+                width: auto; /* Allow buttons to be natural width or adjust */
+                text-align: center; /* Center button text */
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem; /* Add space between buttons if stacked */
+                padding: 0.5rem 0.8rem;
+            }
+            /* Adjust login/register/logout buttons specifically if needed */
+            #login-btn, #register-btn, #logout-btn {
+                width: 100%; /* Make sure login/register/logout buttons take full width */
+                text-align: center;
+                margin-left: 0; /* Ensure no extra left margin */
+            }
 
-      nav h1 {
-        margin-bottom: 1rem; /* Space below the logo */
-      }
+            #welcome-nav-msg {
+                padding-left: 0; /* Align with other links */
+            }
 
-      .nav-links {
-        flex-direction: column; /* Stack nav links vertically */
-        align-items: flex-start; /* Align links to the left */
-        width: 100%; /* Take full width */
-        gap: 0.8rem; /* Smaller gap between stacked links */
-        margin-top: 0.5rem; /* Space below logo */
-      }
+            header {
+                padding: 6rem 1rem 1rem; /* Reduce padding for smaller screens */
+            }
 
-      .nav-links a,
-      .nav-links .btn,
-      #welcome-nav-msg {
-        width: 100%; /* Make links/buttons take full width */
-        text-align: left; /* Align text to the left */
-        padding: 0.5rem 0; /* Add vertical padding */
-        margin-right: 0; /* Remove right margin */
-      }
-      
-      .btn {
-          width: auto; /* Buttons might look better not full width */
-          text-align: center; /* Center button text */
-          margin-top: 0.5rem;
-          margin-bottom: 0.5rem; /* Add space between buttons if stacked */
-          padding: 0.5rem 0.8rem;
-      }
+            header h1 {
+                font-size: 2rem; /* Even smaller font size for very small screens */
+                word-break: break-word; /* Allow long words to break */
+            }
 
-      #welcome-nav-msg {
-          padding-left: 0; /* Align with other links */
-      }
+            header p {
+                font-size: 1rem;
+            }
 
-      header {
-        padding: 6rem 1rem 1rem; /* Reduce padding for smaller screens */
-      }
+            .logos {
+                flex-direction: column; /* Stack logos vertically */
+                align-items: center; /* Center logos */
+                gap: 1.5rem; /* Reduce gap */
+                padding: 1rem;
+            }
 
-      header h1 {
-        font-size: 2rem; /* Even smaller font size for very small screens */
-        word-break: break-word; /* Allow long words to break */
-      }
+            .logos img {
+                max-width: 150px; /* Constrain images on small screens */
+                height: auto; /* Ensure aspect ratio is maintained */
+            }
 
-      header p {
-        font-size: 1rem;
-      }
+            .features {
+                grid-template-columns: 1fr; /* Single column layout for features */
+                padding: 2rem 1rem;
+            }
 
-      .logos {
-        flex-direction: column; /* Stack logos vertically */
-        align-items: center; /* Center logos */
-        gap: 1.5rem; /* Reduce gap */
-        padding: 1rem;
-      }
+            .feature {
+                padding: 1.5rem; /* Reduce feature padding */
+            }
 
-      .logos img {
-        height: 70px; /* Smaller logo size */
-      }
+            .feature h3 {
+                font-size: 1.3rem; /* Smaller heading for feature */
+            }
 
-      .features {
-        grid-template-columns: 1fr; /* Single column layout for features */
-        padding: 2rem 1rem;
-      }
+            .feature ul {
+                font-size: 0.9rem; /* Smaller list items for readability */
+            }
 
-      .feature {
-        padding: 1.5rem; /* Reduce feature padding */
-      }
+            footer {
+                padding: 2rem 1rem; /* Adjust footer padding */
+            }
+        }
 
-      footer {
-        padding: 2rem 1rem; /* Adjust footer padding */
-      }
-    }
+        /* Medium devices (tablets, 601px to 900px) */
+        @media (min-width: 601px) and (max-width: 900px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
 
-    /* Medium devices (tablets, 601px to 900px) */
-    @media (min-width: 601px) and (max-width: 900px) {
-      nav {
-        padding: 1rem 1.5rem;
-      }
+            .nav-links {
+                gap: 0.8rem; /* Slightly smaller gap for tablets */
+            }
 
-      .nav-links {
-        gap: 0.8rem; /* Slightly smaller gap for tablets */
-      }
+            header h1 {
+                font-size: 2.8rem; /* Adjust header font size */
+            }
 
-      header h1 {
-        font-size: 2.8rem; /* Adjust header font size */
-      }
+            .logos img {
+                max-width: 200px; /* Adjust size for tablets */
+            }
 
-      .logos img {
-        height: 80px; /* Slightly smaller logos */
-      }
-
-      .features {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Allow two columns if space permits */
-        padding: 2.5rem 1.5rem;
-      }
-    }
-  </style>
+            .features {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Allow two columns if space permits */
+                padding: 2.5rem 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <nav>
-    <h1>JSALI</h1>
-    <div class="nav-links" id="nav-links">
-      <a href="axe thematique.html">Axes Thématiques</a>
-      <a href="sponsor.html">Sponsors</a>
-      <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a>
-      <span id="welcome-nav-msg" style="display:none;"></span>
-      <a href="register.html" class="btn" id="register-btn">S'inscrire</a>
-      <a href="login.html" class="btn" id="login-btn">Se connecter</a>
-      <button class="btn" id="logout-btn" style="display:none">Déconnexion</button>
-    </div>
-  </nav>
+    <nav>
+        <h1>JSALI</h1>
+        <div class="nav-links" id="nav-links">
+            <a href="axe thematique.html">Axes Thématiques</a>
+            <a href="sponsor.html">Sponsors</a>
+            <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a>
+            <span id="welcome-nav-msg" style="display:none;"></span>
+            <a href="register.html" class="btn" id="register-btn">S'inscrire</a>
+            <a href="login.html" class="btn" id="login-btn">Se connecter</a>
+            <button class="btn" id="logout-btn" style="display:none">Déconnexion</button>
+        </div>
+    </nav>
 
-  <header>
-    <h1> Journée Scientifique de l'Aménagements Linéaires Intelligents</h1>
-    <p id="welcome-msg">Gouvernance, Développement Durable et Résilience Écologique</p>
-  </header>
+    <header>
+        <h1> Journée Scientifique de l'Aménagements Linéaires Intelligents</h1>
+        <p id="welcome-msg">Gouvernance, Développement Durable et Résilience Écologique</p>
+    </header>
 
-  <section class="logos">
-    <img src="jsail usthb.jpeg" alt="USTHB" />
-    <img src="fstgat jsail.png" alt="FSTGAT" />
-    <img src="JSALI.png" alt="JSALI" />
-  </section>
+    <section class="logos">
+        <img src="jsail usthb.jpeg" alt="USTHB" />
+        <img src="fstgat jsail.png" alt="FSTGAT" />
+        <img src="JSALI.png" alt="JSALI" />
+    </section>
 
-  <section class="features" id="objectifs">
-    <div class="feature">
-      <h3>Infrastructures & Développement rural</h3>
-      <ul>
-        <li>Désenclavement via routes, rails, énergies.</li>
-        <li>Opportunités économiques locales.</li>
-        <li>Intégration paysagère & sociale.</li>
-      </ul>
-    </div>
-    <div class="feature">
-      <h3>Technologies & Innovations</h3>
-      <ul>
-        <li>Usage des SIG, drones, modèles numériques.</li>
-        <li>Surveillance géomatique et intelligente.</li>
-        <li>Techniques durables innovantes.</li>
-      </ul>
-    </div>
-    <div class="feature">
-      <h3>Gouvernance & Participation</h3>
-      <ul>
-        <li>Acteurs locaux dans les projets.</li>
-        <li>Modèles adaptés aux territoires ruraux.</li>
-        <li>PPP & politiques publiques durables.</li>
-      </ul>
-    </div>
-    <div class="feature">
-      <h3>Écologie & Biodiversité</h3>
-      <ul>
-        <li>Réduction des impacts naturels.</li>
-        <li>Corridors écologiques & restauration.</li>
-        <li>Transition énergétique des infrastructures.</li>
-      </ul>
-    </div>
-    <div class="feature">
-      <h3>Résilience climatique</h3>
-      <ul>
-        <li>Inondations, sécheresse, érosion.</li>
-        <li>Gestion durable des ressources.</li>
-      </ul>
-    </div>
-  </section>
+    <section class="features" id="objectifs">
+        <div class="feature">
+            <h3>Infrastructures & Développement rural</h3>
+            <ul>
+                <li>Désenclavement via routes, rails, énergies.</li>
+                <li>Opportunités économiques locales.</li>
+                <li>Intégration paysagère & sociale.</li>
+            </ul>
+        </div>
+        <div class="feature">
+            <h3>Technologies & Innovations</h3>
+            <ul>
+                <li>Usage des SIG, drones, modèles numériques.</li>
+                <li>Surveillance géomatique et intelligente.</li>
+                <li>Techniques durables innovantes.</li>
+            </ul>
+        </div>
+        <div class="feature">
+            <h3>Gouvernance & Participation</h3>
+            <ul>
+                <li>Acteurs locaux dans les projets.</li>
+                <li>Modèles adaptés aux territoires ruraux.</li>
+                <li>PPP & politiques publiques durables.</li>
+            </ul>
+        </div>
+        <div class="feature">
+            <h3>Écologie & Biodiversité</h3>
+            <ul>
+                <li>Réduction des impacts naturels.</li>
+                <li>Corridors écologiques & restauration.</li>
+                <li>Transition énergétique des infrastructures.</li>
+            </ul>
+        </div>
+        <div class="feature">
+            <h3>Résilience climatique</h3>
+            <ul>
+                <li>Inondations, sécheresse, érosion.</li>
+                <li>Gestion durable des ressources.</li>
+            </ul>
+        </div>
+    </section>
 
-  <section class="features" id="sponsors">
-    <div class="feature">
-      <h3>Partenaires Institutionnels</h3>
-      <ul>
-        <li>USTHB</li>
-        <li>FSTGAT</li>
-        <li>Laboratoires & Universités</li>
-      </ul>
-    </div>
-    <div class="feature">
-      <h3>Support Logistique</h3>
-      <ul>
-        <li>Collectivités locales</li>
-        <li>Entreprises du secteur</li>
-      </ul>
-    </div>
-  </section>
+    <section class="features" id="sponsors">
+        <div class="feature">
+            <h3>Partenaires Institutionnels</h3>
+            <ul>
+                <li>USTHB</li>
+                <li>FSTGAT</li>
+                <li>Laboratoires & Universités</li>
+            </ul>
+        </div>
+        <div class="feature">
+            <h3>Support Logistique</h3>
+            <ul>
+                <li>Collectivités locales</li>
+                <li>Entreprises du secteur</li>
+            </ul>
+        </div>
+    </section>
 
-  <footer>
-    &copy; 2025 JSALI — USTHB | FSTGAT | <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a><br />
-    <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
-  </footer>
+    <footer>
+        &copy; 2025 JSALI — USTHB | FSTGAT | <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a><br />
+        <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
+    </footer>
 
-  <script>
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        } else {
-          entry.target.classList.remove('visible');
+    <script>
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                } else {
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, {
+            threshold: 0.2
+        });
+
+        document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+
+        const user = localStorage.getItem('jsaliUser');
+        const welcomeNavMsg = document.getElementById('welcome-nav-msg');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        function showLoggedIn(userName) {
+            welcomeNavMsg.textContent = `👋 Bienvenue, ${userName} !`;
+            welcomeNavMsg.style.display = 'inline-block';
+
+            loginBtn.style.display = 'none';
+            registerBtn.style.display = 'none';
+            logoutBtn.style.display = 'inline-block';
         }
-      });
-    }, {
-      threshold: 0.2
-    });
 
-    document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+        function showLoggedOut() {
+            welcomeNavMsg.textContent = '';
+            welcomeNavMsg.style.display = 'none';
 
-    const user = localStorage.getItem('jsaliUser');
-    const welcomeNavMsg = document.getElementById('welcome-nav-msg');
-    const loginBtn = document.getElementById('login-btn');
-    const registerBtn = document.getElementById('register-btn');
-    const logoutBtn = document.getElementById('logout-btn');
+            loginBtn.style.display = 'inline-block';
+            registerBtn.style.display = 'inline-block';
+            logoutBtn.style.display = 'none';
+            localStorage.removeItem('jsaliUser');
+        }
 
-    function showLoggedIn(userName) {
-      welcomeNavMsg.textContent = `👋 Bienvenue, ${userName} !`;
-      welcomeNavMsg.style.display = 'inline-block';
+        // Check for 'registeredUser' first to correctly display login/register post-registration
+        const registeredUserData = localStorage.getItem('registeredUser');
+        if (registeredUserData) {
+            // A user was just registered, or registration data exists.
+            // If you want to auto-login after registration, you'd set jsaliUser here.
+            // For now, we'll just check 'jsaliUser' for active session.
+        }
 
-      loginBtn.style.display = 'none';
-      registerBtn.style.display = 'none';
-      logoutBtn.style.display = 'inline-block';
-    }
+        if (user) {
+            // User is actively logged in
+            showLoggedIn(user);
+        } else {
+            // No active user session
+            showLoggedOut();
+        }
 
-    function showLoggedOut() {
-      welcomeNavMsg.textContent = '';
-      welcomeNavMsg.style.display = 'none';
 
-      loginBtn.style.display = 'inline-block';
-      registerBtn.style.display = 'inline-block';
-      logoutBtn.style.display = 'none';
-      localStorage.removeItem('jsaliUser');
-    }
-
-    if (user) {
-      showLoggedIn(user);
-    } else {
-      showLoggedOut();
-    }
-
-    logoutBtn.addEventListener('click', () => {
-      showLoggedOut();
-    });
-  </script>
+        logoutBtn.addEventListener('click', () => {
+            showLoggedOut();
+        });
+    </script>
 </body>
 </html>
