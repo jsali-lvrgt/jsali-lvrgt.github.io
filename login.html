@@ -162,12 +162,13 @@
 <body>
     <div class="login-box">
         <h2>Connexion à JSALI</h2>
-        <form onsubmit="handleLogin(event)">
+        <!-- Formspree integration: Replace the action with your Formspree endpoint -->
+        <form id="loginForm" action="https://formspree.io/f/movlvnpr" method="POST">
             <label for="email">Email</label>
-            <input type="email" id="email" required>
+            <input type="email" id="email" name="_replyto" required> <!-- Use name="_replyto" for email -->
 
             <label for="password">Mot de passe</label>
-            <input type="password" id="password" required>
+            <input type="password" id="password" name="password" required> <!-- Add name="password" -->
 
             <button type="submit">Se connecter</button>
         </form>
@@ -177,41 +178,63 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        function handleLogin(event) {
-            event.preventDefault(); // Empêche le rechargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(event) {
+                    event.preventDefault(); // Empêche le rechargement de la page
 
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value.trim();
+                    const email = document.getElementById("email").value.trim();
+                    const password = document.getElementById("password").value.trim();
 
-            if (email === "" || password === "") {
-                showToast("Veuillez remplir tous les champs.");
-                return;
+                    if (email === "" || password === "") {
+                        showToast("Veuillez remplir tous les champs.");
+                        return;
+                    }
+
+                    // Prepare form data for submission
+                    const formData = new FormData(loginForm);
+
+                    try {
+                        const response = await fetch(loginForm.action, {
+                            method: loginForm.method,
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json' // Important for Formspree to return JSON
+                            }
+                        });
+
+                        if (response.ok) {
+                            const username = email.split("@")[0]; // Extracts the part before the @ for the username
+                            localStorage.setItem("jsaliUser", username); // Stores the username in localStorage
+
+                            showToast("Connexion réussie ! Bienvenue " + username + " !");
+
+                            // Redirects to the main page after a short delay
+                            setTimeout(() => {
+                                // **Verify and adjust this line if your main page is NOT "index.html"**
+                                window.location.href = "index.html";
+                            }, 1500);
+                        } else {
+                            // Handle errors from Formspree (e.g., invalid endpoint, rate limiting)
+                            const data = await response.json();
+                            console.error("Formspree errors:", data);
+                            showToast("Échec de la connexion. Veuillez réessayer. (Erreur Formspree)");
+                        }
+                    } catch (error) {
+                        console.error("Erreur réseau lors de la soumission du formulaire:", error);
+                        showToast("Erreur réseau. Veuillez réessayer plus tard.");
+                    }
+                });
             }
 
-            // Simulez une connexion réussie.
-            // Dans un vrai projet, ici vous enverriez les identifiants à un serveur pour vérification.
-            
-            const username = email.split("@")[0]; // Extracts the part before the @ for the username
-
-            // Stores the username in localStorage
-            localStorage.setItem("jsaliUser", username);
-
-            // Displays a success message
-            showToast("Connexion réussie ! Bienvenue " + username + " !");
-
-            // Redirects to the main page after a short delay
-            setTimeout(() => {
-                // **Verify and adjust this line if your main page is NOT "index.html"**
-                window.location.href = "index.html"; 
-            }, 1500); 
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            toast.textContent = message;
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 3000);
-        }
+            function showToast(message) {
+                const toast = document.getElementById("toast");
+                toast.textContent = message;
+                toast.classList.add("show");
+                setTimeout(() => toast.classList.remove("show"), 3000);
+            }
+        });
     </script>
 </body>
 </html>
