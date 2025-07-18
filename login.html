@@ -162,10 +162,10 @@
 <body>
     <div class="login-box">
         <h2>Connexion à JSALI</h2>
-        <!-- Formspree integration: Replace the action with your Formspree endpoint -->
-        <form id="loginForm" action="https://formspree.io/f/xgvzvldr" method="POST">
+        <!-- Formcarry integration: Replace the action with your Formcarry endpoint -->
+        <form id="loginForm" action="https://formcarry.com/s/-rz71ZfooOI" method="POST">
             <label for="email">Email</label>
-            <input type="email" id="email" name="_replyto" required> <!-- Use name="_replyto" for email -->
+            <input type="email" id="email" name="email" required> <!-- Use name="email" for Formcarry -->
 
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" required> <!-- Add name="password" -->
@@ -200,7 +200,7 @@
                             method: loginForm.method,
                             body: formData,
                             headers: {
-                                'Accept': 'application/json' // Important for Formspree to return JSON
+                                'Accept': 'application/json' // Important for Formcarry to return JSON
                             }
                         });
 
@@ -216,10 +216,10 @@
                                 window.location.href = "index.html";
                             }, 1500);
                         } else {
-                            // Handle errors from Formspree (e.g., invalid endpoint, rate limiting)
+                            // Handle errors from Formcarry
                             const data = await response.json();
-                            console.error("Formspree errors:", data);
-                            showToast("Échec de la connexion. Veuillez réessayer. (Erreur Formspree)");
+                            console.error("Formcarry errors:", data);
+                            showToast("Échec de la connexion. Veuillez réessayer. (Erreur Formcarry)");
                         }
                     } catch (error) {
                         console.error("Erreur réseau lors de la soumission du formulaire:", error);
