@@ -22,26 +22,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh; /* Use min-height for better adaptability */
+            min-height: 100vh;
             margin: 0;
-            padding: 1rem; /* Padding around the body */
-            box-sizing: border-box; /* Include padding in element's total width/height */
+            padding: 1rem;
+            box-sizing: border-box;
         }
         .login-box {
             background: #111;
             padding: 2.5rem;
             border-radius: 1rem;
-            width: 100%; /* Take full width within padding */
+            width: 100%;
             max-width: 450px;
             box-shadow: 0 0 30px rgba(255,255,255,0.05);
             animation: popIn 0.7s ease forwards;
-            box-sizing: border-box; /* Include padding in element's total width/height */
+            box-sizing: border-box;
         }
         .login-box h2 {
             text-align: center;
             margin-bottom: 2rem;
             color: var(--accent);
-            font-size: 2rem; /* Ensure appropriate size */
+            font-size: 2rem;
         }
         .login-box label {
             display: block;
@@ -50,7 +50,7 @@
             font-weight: 600;
         }
         .login-box input {
-            width: 100%; /* Full width for inputs */
+            width: 100%;
             padding: 0.7rem;
             margin-bottom: 1.5rem;
             border: 1px solid #333;
@@ -58,10 +58,10 @@
             background: var(--input-bg);
             color: var(--text);
             font-size: 1rem;
-            box-sizing: border-box; /* Critical for full-width inputs with padding */
+            box-sizing: border-box;
         }
         .login-box button {
-            width: 100%; /* Full width for button */
+            width: 100%;
             padding: 0.75rem;
             border: none;
             border-radius: 8px;
@@ -70,8 +70,8 @@
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s ease, box-shadow 0.3s;
-            font-size: 1.1rem; /* Good size for tapping */
-            box-sizing: border-box; /* Include padding in element's total width/height */
+            font-size: 1.1rem;
+            box-sizing: border-box;
         }
         .login-box button:hover {
             background: #a5a5a5;
@@ -84,7 +84,7 @@
             margin-top: 1rem;
             text-align: center;
             width: 100%;
-            font-size: 0.95rem; /* Adjust link size */
+            font-size: 0.95rem;
         }
         .toast {
             position: fixed;
@@ -100,7 +100,7 @@
             transform: translateY(30px);
             transition: opacity 0.4s ease, transform 0.4s ease;
             z-index: 9999;
-            font-size: 0.9rem; /* Smaller toast message on mobile */
+            font-size: 0.9rem;
         }
         .toast.show {
             opacity: 1;
@@ -111,64 +111,29 @@
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
-
-        /* --- Media Queries for Mobile Responsiveness --- */
-
-        /* Small devices (phones, 600px and down) */
         @media (max-width: 600px) {
-            body {
-                padding: 0.5rem; /* Less padding on very small screens */
-            }
-
-            .login-box {
-                padding: 1.5rem; /* Reduce internal padding for the login box */
-                margin: 0 0.5rem; /* Add slight horizontal margin to prevent touching edges */
-            }
-
-            .login-box h2 {
-                font-size: 1.8rem; /* Slightly smaller title */
-                margin-bottom: 1.5rem;
-            }
-
-            .login-box input {
-                padding: 0.6rem; /* Slightly less input padding */
-                margin-bottom: 1rem;
-            }
-
-            .login-box button {
-                padding: 0.65rem; /* Slightly less button padding */
-                font-size: 1rem;
-            }
-
-            .toast {
-                bottom: 15px;
-                right: 15px;
-                padding: 0.8rem 1.2rem;
-                font-size: 0.85rem; /* Even smaller toast text */
-            }
+            body { padding: 0.5rem; }
+            .login-box { padding: 1.5rem; margin: 0 0.5rem; }
+            .login-box h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+            .login-box input { padding: 0.6rem; margin-bottom: 1rem; }
+            .login-box button { padding: 0.65rem; font-size: 1rem; }
+            .toast { bottom: 15px; right: 15px; padding: 0.8rem 1.2rem; font-size: 0.85rem; }
         }
-
-        /* Adjustments for a slightly wider range but still compact */
         @media (max-width: 400px) {
-            .login-box {
-                padding: 1rem; /* Even less padding for tiny screens */
-            }
-            .login-box h2 {
-                font-size: 1.6rem;
-            }
+            .login-box { padding: 1rem; }
+            .login-box h2 { font-size: 1.6rem; }
         }
     </style>
 </head>
 <body>
     <div class="login-box">
         <h2>Connexion à JSALI</h2>
-        <!-- Formcarry integration: Replace the action with your Formcarry endpoint -->
-        <form id="loginForm" action="https://formcarry.com/s/-rz71ZfooOI" method="POST">
+        <form id="loginForm">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required> <!-- Use name="email" for Formcarry -->
+            <input type="email" id="email" name="email" required>
 
             <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" required> <!-- Add name="password" -->
+            <input type="password" id="password" name="password" required>
 
             <button type="submit">Se connecter</button>
         </form>
@@ -177,12 +142,40 @@
 
     <div class="toast" id="toast"></div>
 
-    <script>
+    <!-- Firebase SDKs and custom script using your configuration -->
+    <script type="module">
+        // Import the necessary functions from Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBeFGzTiu3BcMCURE_Cpw4F4cmihY059mw",
+            authDomain: "jsali-fstgat.firebaseapp.com",
+            projectId: "jsali-fstgat",
+            storageBucket: "jsali-fstgat.firebasestorage.app",
+            messagingSenderId: "887844859070",
+            appId: "1:887844859070:web:ff3f88a6c8ee0547a5c2ef",
+            measurementId: "G-FW9DBVQND2"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Your existing showToast function
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 3000);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const loginForm = document.getElementById('loginForm');
             if (loginForm) {
                 loginForm.addEventListener('submit', async function(event) {
-                    event.preventDefault(); // Empêche le rechargement de la page
+                    event.preventDefault();
 
                     const email = document.getElementById("email").value.trim();
                     const password = document.getElementById("password").value.trim();
@@ -192,47 +185,31 @@
                         return;
                     }
 
-                    // Prepare form data for submission
-                    const formData = new FormData(loginForm);
-
                     try {
-                        const response = await fetch(loginForm.action, {
-                            method: loginForm.method,
-                            body: formData,
-                            headers: {
-                                'Accept': 'application/json' // Important for Formcarry to return JSON
-                            }
-                        });
+                        // Sign in the user with email and password using Firebase
+                        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                        const user = userCredential.user;
 
-                        if (response.ok) {
-                            const username = email.split("@")[0]; // Extracts the part before the @ for the username
-                            localStorage.setItem("jsaliUser", username); // Stores the username in localStorage
+                        // Use the user's display name (set during registration) or email as a fallback
+                        const username = user.displayName || email.split("@")[0];
+                        localStorage.setItem("jsaliUser", username);
 
-                            showToast("Connexion réussie ! Bienvenue " + username + " !");
+                        showToast("Connexion réussie ! Bienvenue " + username + " !");
 
-                            // Redirects to the main page after a short delay
-                            setTimeout(() => {
-                                // **Verify and adjust this line if your main page is NOT "index.html"**
-                                window.location.href = "index.html";
-                            }, 1500);
-                        } else {
-                            // Handle errors from Formcarry
-                            const data = await response.json();
-                            console.error("Formcarry errors:", data);
-                            showToast("Échec de la connexion. Veuillez réessayer. (Erreur Formcarry)");
-                        }
+                        // Redirect to the main page after a short delay
+                        setTimeout(() => {
+                            window.location.href = "index.html";
+                        }, 1500);
+
                     } catch (error) {
-                        console.error("Erreur réseau lors de la soumission du formulaire:", error);
-                        showToast("Erreur réseau. Veuillez réessayer plus tard.");
+                        let errorMessage = "Échec de la connexion. Veuillez vérifier votre email et mot de passe.";
+                        if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                            errorMessage = "Identifiants incorrects. Veuillez réessayer.";
+                        }
+                        showToast(errorMessage);
+                        console.error("Firebase Auth Error:", error.message);
                     }
                 });
-            }
-
-            function showToast(message) {
-                const toast = document.getElementById("toast");
-                toast.textContent = message;
-                toast.classList.add("show");
-                setTimeout(() => toast.classList.remove("show"), 3000);
             }
         });
     </script>
