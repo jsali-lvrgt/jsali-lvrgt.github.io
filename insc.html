@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de participation</title>
+    <!-- Utilisation de Tailwind CSS pour un style moderne et réactif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --accent: #919191;
+            --highlight: #919191;
+            --text: #fff;
+            --text-light: #cbd5e1;
+            --input-bg: #1a1a1a;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        .login-box { /* Renommé en login-box pour réutiliser le style */
+            background: #111;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 450px; /* Utilisation de la même largeur maximale */
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+            animation: popIn 0.7s ease forwards;
+            box-sizing: border-box;
+        }
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--accent);
+            font-size: 2rem;
+        }
+        .login-box label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        .login-box input, .login-box textarea { /* Ajout de textarea pour le champ Auteurs */
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #0a0a0a;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+        }
+        .login-box button:hover {
+            background: #a5a5a5;
+            box-shadow: 0 0 15px var(--accent);
+        }
+        .form-message {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Media queries pour la réactivité, copiées de login.html */
+        @media (max-width: 600px) {
+            body { padding: 0.5rem; }
+            .login-box { padding: 1.5rem; margin: 0 0.5rem; }
+            .login-box h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+            .login-box input, .login-box textarea { padding: 0.6rem; margin-bottom: 1rem; }
+            .login-box button { padding: 0.65rem; font-size: 1rem; }
+        }
+        @media (max-width: 400px) {
+            .login-box { padding: 1rem; }
+            .login-box h2 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>Soumission de participation</h2>
+
+        <form id="participation-form" class="space-y-6">
+            <!-- Informations personnelles -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="nom">Nom</label>
+                    <input type="text" id="nom" name="Nom" required>
+                </div>
+                <div>
+                    <label for="prenom">Prénom</label>
+                    <input type="text" id="prenom" name="Prénom" required>
+                </div>
+            </div>
+
+            <!-- Ajout du champ Email -->
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="Email" required>
+            </div>
+
+            <!-- Etablissement et Fonction -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="etablissement">Etablissement de Rattachement</label>
+                    <input type="text" id="etablissement" name="Etablissement de Rattachement" required>
+                </div>
+                <div>
+                    <label for="fonction">Fonction</label>
+                    <input type="text" id="fonction" name="Fonction" required>
+                </div>
+            </div>
+            
+            <!-- Titre de la communication et Axe -->
+            <div>
+                <label for="titre">Titre de communication</label>
+                <input type="text" id="titre" name="Titre de communication" required>
+            </div>
+
+            <div>
+                <label for="axe">Axe</label>
+                <input type="text" id="axe" name="Axe" required>
+            </div>
+
+            <!-- Auteurs -->
+            <div>
+                <label for="auteurs">Auteurs(ices)</label>
+                <textarea id="auteurs" name="Auteurs(ices)" rows="3" required></textarea>
+            </div>
+
+            <div id="form-message" class="form-message"></div>
+
+            <button type="submit">Soumettre</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('participation-form');
+            const formMessage = document.getElementById('form-message');
+            const formcarryUrl = "https://formcarry.com/s/GYoRPrXNxsK";
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Empêche le rechargement de la page
+
+                // Récupère les données du formulaire
+                const formData = new FormData(form);
+                const payload = Object.fromEntries(formData.entries());
+
+                // Affiche un message de chargement
+                formMessage.textContent = "Envoi en cours...";
+                formMessage.style.color = "yellow";
+
+                try {
+                    const response = await fetch(formcarryUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        formMessage.textContent = "Votre participation a été soumise avec succès !";
+                        formMessage.style.color = "green";
+                        form.reset(); // Réinitialise le formulaire après le succès
+                    } else {
+                        console.error("Erreur de Formcarry:", result);
+                        formMessage.textContent = "Une erreur est survenue lors de l'envoi. Veuillez réessayer.";
+                        formMessage.style.color = "red";
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la soumission du formulaire:", error);
+                    formMessage.textContent = "Erreur de connexion. Veuillez vérifier votre connexion internet et réessayer.";
+                    formMessage.style.color = "red";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
