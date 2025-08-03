@@ -30,6 +30,7 @@
             min-height: 100vh; /* Ensure body takes full height */
             display: flex;
             flex-direction: column; /* Allows content and footer to stack and stretch */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
         /* --- Loading Screen Styles --- */
         .loader-wrapper {
@@ -80,6 +81,11 @@
             }
         }
         /* --- End Loading Screen Styles --- */
+
+        /* --- Main Content Styles --- */
+        .main-content.hidden {
+            display: none;
+        }
 
         nav {
             position: fixed;
@@ -387,7 +393,7 @@
             }
 
             .logos img {
-                max-width: 100px; /* Mobile: Smaller max-width for ALL logos */
+                max-width: 100%; /* Ensure images don't overflow on mobile */
                 height: auto; /* Ensure aspect ratio is maintained */
             }
             /* Mobile specific for FSTGAT logo */
@@ -461,7 +467,7 @@
         </div>
     </div>
 
-    <div id="mainContent" style="display: none;">
+    <div id="mainContent" class="main-content hidden">
         <nav>
             <h1>JSALI</h1>
             <div class="nav-links" id="nav-links">
@@ -586,8 +592,7 @@
                     loaderWrapper.classList.add('hidden');
                     // Use a slight delay to allow the fade-out to start before showing the main content
                     setTimeout(() => {
-                        mainContent.style.display = 'flex';
-                        document.body.style.overflow = 'auto'; // Re-enable scrolling after loading
+                        mainContent.classList.remove('hidden');
                     }, 500);
                 }, Math.max(0, remainingTime));
             };
