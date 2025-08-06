@@ -124,6 +124,7 @@
             .register-box h2 { font-size: 1.6rem; }
         }
     </style>
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfnQpwrAAAAACeH3_kMEr5RD4khXwMC6JqJWLTa"></script>
 </head>
 <body>
     <div class="register-box">
@@ -145,7 +146,6 @@
 
     <div class="toast" id="toast"></div>
 
-    <!-- Firebase SDKs and custom script using your configuration -->
     <script type="module">
         // Import the necessary functions from Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -180,16 +180,24 @@
                 form.addEventListener('submit', async function(e) {
                     e.preventDefault();
 
-                    const name = document.getElementById('name').value.trim();
-                    const email = document.getElementById('email').value.trim();
-                    const password = document.getElementById('password').value;
-
-                    if (!name || !email || !password) {
-                        showToast("Veuillez remplir tous les champs.");
-                        return;
-                    }
-
+                    // Execute reCAPTCHA before proceeding with registration
                     try {
+                        const token = await grecaptcha.enterprise.execute('6LfnQpwrAAAAACeH3_kMEr5RD4khXwMC6JqJWLTa', {action: 'LOGIN'});
+
+                        // In a real-world scenario, you would send this token to your backend
+                        // for server-side verification. For this client-side example,
+                        // we'll proceed directly.
+                        console.log('reCAPTCHA Token:', token);
+
+                        const name = document.getElementById('name').value.trim();
+                        const email = document.getElementById('email').value.trim();
+                        const password = document.getElementById('password').value;
+
+                        if (!name || !email || !password) {
+                            showToast("Veuillez remplir tous les champs.");
+                            return;
+                        }
+
                         // Create a new user with email and password using Firebase
                         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                         const user = userCredential.user;
