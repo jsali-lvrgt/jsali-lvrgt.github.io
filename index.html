@@ -27,10 +27,10 @@
             font-family: "Space Grotesk", sans-serif;
             background: var(--main-bg);
             color: var(--primary-text);
-            min-height: 100vh; /* Ensure body takes full height */
+            min-height: 100vh;
             display: flex;
-            flex-direction: column; /* Allows content and footer to stack and stretch */
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            flex-direction: column;
+            overflow-x: hidden;
         }
         /* --- Loading Screen Styles --- */
         .loader-wrapper {
@@ -43,7 +43,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999; /* Make sure it's on top of everything */
+            z-index: 9999;
             transition: opacity 1s ease-in-out;
             opacity: 1;
             pointer-events: all;
@@ -66,7 +66,7 @@
         .loader img {
             width: 150px;
             height: 150px;
-            border-radius: 50%; /* This makes the image round */
+            border-radius: 50%;
             animation: pulse 2s infinite ease-in-out;
         }
         @keyframes pulse {
@@ -101,21 +101,51 @@
             justify-content: space-between;
             align-items: center;
             animation: slideDown 1s ease forwards;
-            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            flex-wrap: wrap;
         }
 
         nav h1 {
             font-size: 1.3rem;
             color: var(--highlight);
-            margin-right: 1rem; /* Space between title and links */
+            margin-right: 1rem;
         }
-
+        
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        #profile-pic-container {
+            position: relative;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+        }
+        
+        #profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--highlight);
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        #profile-pic:hover {
+            transform: scale(1.1);
+        }
+        
+        #profile-pic-input {
+            display: none;
+        }
+        
         .nav-links {
             display: flex;
             gap: 1rem;
             align-items: center;
-            flex-wrap: wrap; /* Allow nav links to wrap */
-            margin-top: 0; /* Reset margin for larger screens */
+            flex-wrap: wrap;
+            margin-top: 0;
         }
 
         .nav-links a {
@@ -123,7 +153,7 @@
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s;
-            white-space: nowrap; /* Prevent links from breaking lines prematurely */
+            white-space: nowrap;
         }
 
         .nav-links a:hover {
@@ -140,7 +170,7 @@
             transition: background 0.3s, transform 0.3s;
             text-decoration: none;
             cursor: pointer;
-            white-space: nowrap; /* Prevent buttons from breaking lines prematurely */
+            white-space: nowrap;
         }
 
         .btn:hover {
@@ -153,23 +183,23 @@
             font-weight: 600;
             margin-right: 0.5rem;
             display: none;
-            white-space: nowrap; /* Prevent welcome message from breaking */
+            white-space: nowrap;
         }
 
         header {
             padding: 8rem 2rem 2rem;
             text-align: center;
-            flex-shrink: 0; /* Prevent header from shrinking */
+            flex-shrink: 0;
         }
 
         header h1 {
-            font-size: 3rem; /* Reverted to 3rem for larger screens */
+            font-size: 3rem;
             font-weight: 800;
             background: linear-gradient(to right, var(--highlight), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: popIn 1.2s ease forwards;
-            margin-bottom: 1rem; /* Added spacing */
+            margin-bottom: 1rem;
         }
 
         header p {
@@ -182,30 +212,28 @@
         .logos {
             display: flex;
             justify-content: center;
-            align-items: center; /* Align items vertically in the center */
+            align-items: center;
             gap: 2rem;
             padding: 2rem;
             flex-wrap: wrap;
             animation: fadeInZoom 2s ease forwards;
-            flex-shrink: 0; /* Prevent logos section from shrinking */
+            flex-shrink: 0;
         }
 
         .logos img {
-            max-width: 250px; /* Max width for images on PC */
-            height: auto; /* Maintain aspect ratio */
+            max-width: 250px;
+            height: auto;
             border-radius: 25%;
             border: 2px solid var(--highlight);
             padding: 5px;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
-        /* Specific styles for the FSTGAT logo */
         #fstgat-logo {
-            width: 300px; /* Adjust this width for the desired "rectangular" size on PC */
-            height: 150px; /* Adjust this height to control the rectangle proportion */
-            object-fit: contain; /* Ensures the whole image is visible within the bounds without stretching */
-            /* If you want it to fill the rectangle and potentially crop, use object-fit: cover; */
-            border-radius: 25%; /* Ensure it's not rounded like a circle */
+            width: 300px;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 25%;
         }
 
 
@@ -213,9 +241,9 @@
             transform: scale(1.15);
             box-shadow: 0 0 20px var(--highlight);
         }
-        /* Specific hover for FSTGAT logo to maintain proportions */
+        
         #fstgat-logo:hover {
-            transform: scale(1.05); /* Slightly less dramatic scale to avoid major distortion */
+            transform: scale(1.05);
             box-shadow: 0 0 20px var(--highlight);
         }
 
@@ -226,7 +254,7 @@
             padding: 3rem 2rem;
             max-width: 1200px;
             margin: auto;
-            flex-grow: 1; /* Allow features section to take available space */
+            flex-grow: 1;
         }
 
         .feature {
@@ -248,7 +276,7 @@
         .feature:hover {
             transform: scale(1.05) translateY(-5px);
             box-shadow: 0 10px 30px #919191;
-            cursor: pointer; /* Add a pointer cursor to indicate it's clickable */
+            cursor: pointer;
         }
 
         .feature h3 {
@@ -268,10 +296,10 @@
             font-size: 0.9rem;
             color: #64748b;
             animation: fadeIn 3s ease forwards;
-            flex-shrink: 0; /* Prevent footer from shrinking */
+            flex-shrink: 0;
         }
         footer a {
-            color: var(--secondary-text); /* Ensure footer links are readable */
+            color: var(--secondary-text);
             text-decoration: none;
             transition: color 0.3s;
         }
@@ -324,137 +352,113 @@
         }
 
         /* --- Media Queries for Mobile Responsiveness --- */
-
-        /* Small devices (phones, 600px and down) */
         @media (max-width: 600px) {
             nav {
-                flex-direction: column; /* Stack logo and nav links */
-                align-items: flex-start; /* Align items to the start */
+                flex-direction: column;
+                align-items: flex-start;
                 padding: 1rem;
             }
-
             nav h1 {
-                margin-bottom: 0.5rem; /* Reduced space below the logo */
+                margin-bottom: 0.5rem;
             }
-
             .nav-links {
-                flex-direction: column; /* Stack nav links vertically */
-                align-items: flex-start; /* Align links to the left */
-                width: 100%; /* Take full width */
-                gap: 0.6rem; /* Smaller gap between stacked links */
-                margin-top: 0.5rem; /* Space below logo */
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                gap: 0.6rem;
+                margin-top: 0.5rem;
             }
-
-            .nav-links a,
-            .nav-links .btn,
-            #welcome-nav-msg {
-                width: 100%; /* Make links/buttons take full width */
-                text-align: left; /* Align text to the left */
-                padding: 0.4rem 0; /* Reduced vertical padding */
-                margin-right: 0; /* Remove right margin */
+            .profile-section {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                gap: 0.5rem;
             }
-
+            .nav-links a, .nav-links .btn, #welcome-nav-msg {
+                width: 100%;
+                text-align: left;
+                padding: 0.4rem 0;
+                margin-right: 0;
+            }
             .btn {
-                width: auto; /* Allow buttons to be natural width or adjust */
-                text-align: center; /* Center button text */
+                width: auto;
+                text-align: center;
                 margin-top: 0.4rem;
-                margin-bottom: 0.4rem; /* Add space between buttons if stacked */
+                margin-bottom: 0.4rem;
                 padding: 0.5rem 0.8rem;
             }
-            /* Adjust login/register/logout buttons specifically if needed */
             #login-btn, #register-btn, #logout-btn {
-                width: 100%; /* Make sure login/register/logout buttons take full width */
+                width: 100%;
                 text-align: center;
-                margin-left: 0; /* Ensure no extra left margin */
+                margin-left: 0;
             }
-
             #welcome-nav-msg {
-                padding-left: 0; /* Align with other links */
+                padding-left: 0;
             }
-
             header {
-                padding: 6rem 1rem 1rem; /* Reduce padding for smaller screens */
+                padding: 6rem 1rem 1rem;
             }
-
             header h1 {
-                font-size: 1.8rem; /* Even smaller font size for very small screens */
-                word-break: break-word; /* Allow long words to break */
+                font-size: 1.8rem;
+                word-break: break-word;
             }
-
             header p {
-                font-size: 0.9rem; /* Smaller paragraph text */
+                font-size: 0.9rem;
             }
-
             .logos {
-                flex-direction: column; /* Stack logos vertically */
-                align-items: center; /* Center logos */
-                gap: 1.2rem; /* Reduced gap */
+                flex-direction: column;
+                align-items: center;
+                gap: 1.2rem;
                 padding: 1rem;
             }
-
             .logos img {
-                max-width: 100%; /* Ensure images don't overflow on mobile */
-                height: auto; /* Ensure aspect ratio is maintained */
+                max-width: 100%;
+                height: auto;
             }
-            /* Mobile specific for FSTGAT logo */
             #fstgat-logo {
-                width: 120px; /* Adjusted width for mobile */
-                height: 60px; /* Adjusted height for mobile */
-                object-fit: contain; /* Maintain object-fit */
+                width: 120px;
+                height: 60px;
+                object-fit: contain;
             }
-
-
             .features {
-                grid-template-columns: 1fr; /* Single column layout for features */
-                padding: 1.5rem 1rem; /* Reduced padding */
+                grid-template-columns: 1fr;
+                padding: 1.5rem 1rem;
             }
-
             .feature {
-                padding: 1.2rem; /* Reduced feature padding */
+                padding: 1.2rem;
             }
-
             .feature h3 {
-                font-size: 1.2rem; /* Smaller heading for feature */
+                font-size: 1.2rem;
             }
-
             .feature ul {
-                font-size: 0.85rem; /* Smaller list items for readability */
+                font-size: 0.85rem;
             }
-
             footer {
-                padding: 1.5rem 1rem; /* Adjust footer padding */
+                padding: 1.5rem 1rem;
             }
         }
-
-        /* Medium devices (tablets, 601px to 900px) */
         @media (min-width: 601px) and (max-width: 900px) {
             nav {
                 padding: 1rem 1.5rem;
             }
-
             .nav-links {
-                gap: 0.8rem; /* Slightly smaller gap for tablets */
+                gap: 0.8rem;
             }
-
             header h1 {
-                font-size: 2.5rem; /* Adjust header font size */
+                font-size: 2.5rem;
             }
-
             .logos img {
-                max-width: 180px; /* Adjust size for tablets */
+                max-width: 180px;
             }
-            /* Tablet specific for FSTGAT logo */
             #fstgat-logo {
-                width: 220px; /* Adjusted width for tablets */
-                height: 110px; /* Adjusted height for tablets */
+                width: 220px;
+                height: 110px;
                 object-fit: contain;
             }
-
-
             .features {
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Allow two or three columns if space permits, adjusted minmax */
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
                 padding: 2rem 1.5rem;
-                gap: 1.5rem; /* Reduced gap for tablets */
+                gap: 1.5rem;
             }
         }
     </style>
@@ -474,7 +478,15 @@
                 <a href="axe thematique.html">Axes Thématiques</a>
                 <a href="sponsor.html">Sponsors</a>
                 <a href="ins.html">Inscription à la participation</a>
-                <span id="welcome-nav-msg" style="display:none;"></span>
+                
+                <div class="profile-section" style="display:none" id="profile-section">
+                    <div id="profile-pic-container">
+                        <input type="file" id="profile-pic-input" accept="image/*">
+                        <img src="placeholder-profile-pic.png" alt="Profile" id="profile-pic" />
+                    </div>
+                    <span id="welcome-nav-msg"></span>
+                </div>
+                
                 <a href="register.html" class="btn" id="register-btn">S'inscrire</a>
                 <a href="login.html" class="btn" id="login-btn">Se connecter</a>
                 <button class="btn" id="logout-btn" style="display:none">Déconnexion</button>
@@ -581,7 +593,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             const loaderWrapper = document.getElementById('loaderWrapper');
             const mainContent = document.getElementById('mainContent');
-            const minimumLoadingTime = 4000; // 4 seconds
+            const minimumLoadingTime = 4000;
             const startTime = Date.now();
 
             const hideLoader = () => {
@@ -590,14 +602,12 @@
 
                 setTimeout(() => {
                     loaderWrapper.classList.add('hidden');
-                    // Use a slight delay to allow the fade-out to start before showing the main content
                     setTimeout(() => {
                         mainContent.classList.remove('hidden');
                     }, 500);
                 }, Math.max(0, remainingTime));
             };
 
-            // Assuming all page assets are loaded when this event fires
             window.addEventListener('load', hideLoader);
 
             const observer = new IntersectionObserver(entries => {
@@ -619,24 +629,59 @@
             const loginBtn = document.getElementById('login-btn');
             const registerBtn = document.getElementById('register-btn');
             const logoutBtn = document.getElementById('logout-btn');
+            const profileSection = document.getElementById('profile-section');
+            const profilePic = document.getElementById('profile-pic');
+            const profilePicInput = document.getElementById('profile-pic-input');
+
+            const placeholderPicPath = "placeholder-profile-pic.png";
+            
+            function loadProfilePic() {
+                const savedPic = localStorage.getItem('jsaliProfilePic');
+                if (savedPic) {
+                    profilePic.src = savedPic;
+                } else {
+                    profilePic.src = placeholderPicPath;
+                }
+            }
+
+            function saveProfilePic(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        localStorage.setItem('jsaliProfilePic', e.target.result);
+                        profilePic.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            profilePic.addEventListener('click', () => {
+                if (user) {
+                   profilePicInput.click();
+                }
+            });
+
+            profilePicInput.addEventListener('change', saveProfilePic);
 
             function showLoggedIn(userName) {
                 welcomeNavMsg.textContent = `👋 Bienvenue, ${userName} !`;
-                welcomeNavMsg.style.display = 'inline-block';
-
+                profileSection.style.display = 'flex';
                 loginBtn.style.display = 'none';
                 registerBtn.style.display = 'none';
                 logoutBtn.style.display = 'inline-block';
+                loadProfilePic();
             }
 
             function showLoggedOut() {
                 welcomeNavMsg.textContent = '';
-                welcomeNavMsg.style.display = 'none';
-
+                profileSection.style.display = 'none';
                 loginBtn.style.display = 'inline-block';
                 registerBtn.style.display = 'inline-block';
                 logoutBtn.style.display = 'none';
                 localStorage.removeItem('jsaliUser');
+                localStorage.removeItem('jsaliProfilePic');
+                profilePic.src = placeholderPicPath;
             }
 
             const registeredUserData = localStorage.getItem('registeredUser');
