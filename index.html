@@ -624,7 +624,7 @@
             profilePicInput.addEventListener('change', saveProfilePic);
 
             function showLoggedIn(userName) {
-                welcomeNavMsg.textContent = `👋 Bienvenue, ${userName} !`;
+                welcomeNavMsg.textContent = `${userName} !`;
                 profileSection.style.display = 'flex';
                 welcomeNavMsg.style.display = 'inline-block';
                 loginBtn.style.display = 'none';
