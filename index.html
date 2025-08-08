@@ -54,40 +54,134 @@
             pointer-events: none;
         }
 
- /* From Uiverse.io by zeynabashouri */ 
-.loader {
-  width: 45px;
-  height: 40px;
-  background: linear-gradient(
-      #0000 calc(1 * 100% / 6),
-      #fff 0 calc(3 * 100% / 6),
-      #0000 0
-    ),
-    linear-gradient(
-      #0000 calc(2 * 100% / 6),
-      #fff 0 calc(4 * 100% / 6),
-      #0000 0
-    ),
-    linear-gradient(
-      #0000 calc(3 * 100% / 6),
-      #fff 0 calc(5 * 100% / 6),
-      #0000 0
-    );
-  background-size: 10px 400%;
-  background-repeat: no-repeat;
-  animation: matrix 1s infinite linear;
-}
+        /* From Uiverse.io by jonas_5925 */
+        .loader {
+            height: 150px;
+            width: 150px;
+            background-color: rgb(221, 219, 219);
+            border-radius: 39px;
+            position: relative;
+        }
+        .loader::before {
+            content: "";
+            position: absolute;
+            height: 65px;
+            width: 65px;
+        }
 
-@keyframes matrix {
-  0% {
-    background-position: 0% 100%, 50% 100%, 100% 100%;
-  }
+        .box {
+            position: absolute;
+            height: 65px;
+            width: 65px;
+            background-color: #0cc0df;
+            animation: move 3s infinite;
+            border-radius: 10px;
+            border-top-left-radius: 32.5px;
+            margin-top: 5px;
+            margin-left: 5px;
+        }
 
-  100% {
-    background-position: 0% 0%, 50% 0%, 100% 0%;
-  }
-}
+        .box.white {
+            background-color: white;
+        }
 
+        .box.delay1 {
+            animation-delay: 1.3s;
+        }
+
+        @keyframes move {
+            0% {
+                width: 65px;
+                height: 65px;
+                margin-top: 5px;
+                margin-left: 5px;
+                border-top-left-radius: 32.5px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+            12.5% {
+                width: 140px;
+                height: 65px;
+                margin-top: 5px;
+                margin-left: 5px;
+                border-top-left-radius: 32.5px;
+                border-top-right-radius: 32.5px;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+            25% {
+                width: 65px;
+                height: 65px;
+                margin-top: 5px;
+                margin-left: 80px;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 32.5px;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+            37.5% {
+                width: 65px;
+                height: 140px;
+                margin-top: 5px;
+                margin-left: 80px;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 32.5px;
+                border-bottom-right-radius: 32.5px;
+                border-bottom-left-radius: 10px;
+            }
+            50% {
+                width: 65px;
+                height: 65px;
+                margin-top: 80px;
+                margin-left: 80px;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 32.5px;
+                border-bottom-left-radius: 10px;
+            }
+            62.5% {
+                width: 140px;
+                height: 65px;
+                margin-top: 80px;
+                margin-left: 5px;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 32.5px;
+                border-bottom-left-radius: 32.5px;
+            }
+            75% {
+                width: 65px;
+                height: 65px;
+                margin-top: 80px;
+                margin-left: 5px;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 32.5px;
+            }
+            87.5% {
+                width: 65px;
+                height: 140px;
+                margin-top: 5px;
+                margin-left: 5px;
+                border-top-left-radius: 32.5px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 32.5px;
+            }
+            100% {
+                width: 65px;
+                height: 65px;
+                margin-top: 5px;
+                margin-left: 5px;
+                border-top-left-radius: 32.5px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+        }
+        /* --- End Loading Screen Styles --- */
 
         /* --- Main Content Styles --- */
         .main-content.hidden {
@@ -477,9 +571,12 @@
 </head>
 <body>
 
- <!-- From Uiverse.io by zeynabashouri --> 
-<div class="loader"></div>
-
+    <div class="loader-wrapper" id="loaderWrapper">
+        <div class="loader">
+            <div class="box white delay1"></div>
+            <div class="box"></div>
+        </div>
+    </div>
 
     <div id="mainContent" class="main-content hidden">
         <nav>
@@ -489,7 +586,7 @@
                 <a href="sponsor.html">Sponsors</a>
                 <a href="ins.html">Inscription à la participation</a>
                 
-                <div class="profile-section" style="display:none" id="profile-section">
+                <div class="profile-section" id="profile-section">
                     <div id="profile-pic-container">
                         <input type="file" id="profile-pic-input" accept="image/*">
                         <img src="placeholder-profile-pic.png" alt="Profile" id="profile-pic" />
@@ -516,29 +613,82 @@
 
         <section class="features" id="axes">
             <a href="axe thematique.html" class="feature">
-                <h3>Infrastructures linéaires & développement rural</h3>
-
+                <h3>Axe 1</h3>
             </a>
             <a href="axe thematique.html" class="feature">
-                <h3>Technologies & innovations pour un aménagement intelligent</h3>
-
+                <h3>Axe 2</h3>
             </a>
             <a href="axe thematique.html" class="feature">
-                <h3>Gouvernance & participation locale</h3>
-
+                <h3>Axe 3</h3>
             </a>
             <a href="axe thematique.html" class="feature">
-                <h3>Développement durable & biodiversité</h3>
-
+                <h3>Axe 4</h3>
             </a>
             <a href="axe thematique.html" class="feature">
-                <h3>Résilience & adaptation climatique</h3>
-
+                <h3>Axe 5</h3>
             </a>
         </section>
 
 
-     
+        <section class="features" id="objectifs">
+            <div class="feature">
+                <h3>Infrastructures & Développement rural</h3>
+                <ul>
+                    <li>Désenclavement via routes, rails, énergies.</li>
+                    <li>Opportunités économiques locales.</li>
+                    <li>Intégration paysagère & sociale.</li>
+                </ul>
+            </div>
+            <div class="feature">
+                <h3>Technologies & Innovations</h3>
+                <ul>
+                    <li>Usage des SIG, drones, modèles numériques.</li>
+                    <li>Surveillance géomatique et intelligente.</li>
+                    <li>Techniques durables innovantes.</li>
+                </ul>
+            </div>
+            <div class="feature">
+                <h3>Gouvernance & Participation</h3>
+                <ul>
+                    <li>Acteurs locaux dans les projets.</li>
+                    <li>Modèles adaptés aux territoires ruraux.</li>
+                    <li>PPP & politiques publiques durables.</li>
+                </ul>
+            </div>
+            <div class="feature">
+                <h3>Écologie & Biodiversité</h3>
+                <ul>
+                    <li>Réduction des impacts naturels.</li>
+                    <li>Corridors écologiques & restauration.</li>
+                    <li>Transition énergétique des infrastructures.</li>
+                </ul>
+            </div>
+            <div class="feature">
+                <h3>Résilience climatique</h3>
+                <ul>
+                    <li>Inondations, sécheresse, érosion.</li>
+                    <li>Gestion durable des ressources.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="features" id="sponsors">
+            <div class="feature">
+                <h3>Partenaires Institutionnels</h3>
+                <ul>
+                    <li>USTHB</li>
+                    <li>FSTGAT</li>
+                    <li>Laboratoires & Universités</li>
+                </ul>
+            </div>
+            <div class="feature">
+                <h3>Support Logistique</h3>
+                <ul>
+                    <li>Collectivités locales</li>
+                    <li>Entreprises du secteur</li>
+                </ul>
+            </div>
+        </section>
 
         <footer>
             &copy; 2025 JSALI — USTHB | FSTGAT | <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a><br />
