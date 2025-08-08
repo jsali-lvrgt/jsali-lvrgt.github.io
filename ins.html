@@ -490,7 +490,7 @@
         }
 
         function showLoggedIn(userName) {
-            if (welcomeNavMsg) welcomeNavMsg.textContent = `👋 Bienvenue, ${userName} !`;
+            if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
             if (profileSection) profileSection.style.display = 'flex';
             if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
             if (loginBtn) loginBtn.style.display = 'none';
