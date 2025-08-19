@@ -430,6 +430,7 @@
             const startTime = Date.now();
             const form = document.getElementById('participation-form');
             const formMessage = document.getElementById('form-message');
+            const submitButton = form.querySelector('button[type="submit"]');
 
             const hideLoader = () => {
                 const elapsed = Date.now() - startTime;
@@ -457,14 +458,33 @@
             // Authenticate user for Firebase
             try {
                 if (initialAuthToken) {
+                    console.log("Tentative de connexion avec le jeton personnalisé...");
                     await signInWithCustomToken(auth, initialAuthToken);
+                    console.log("Authentification Firebase réussie avec le jeton personnalisé.");
                 } else {
+                    console.log("Aucun jeton personnalisé fourni. Connexion anonyme...");
                     await signInAnonymously(auth);
+                    console.log("Authentification Firebase anonyme réussie.");
                 }
-                console.log("Firebase authenticated successfully.");
             } catch (error) {
-                console.error("Firebase authentication error:", error);
-                // Handle authentication errors, though anonymous/custom token sign-in should generally succeed in Canvas
+                console.error("Erreur d'authentification Firebase:", error);
+                // Si le jeton personnalisé échoue, essayez la connexion anonyme comme solution de repli pour le formulaire
+                if (error.code === 'auth/custom-token-mismatch' || error.code === 'auth/invalid-custom-token') {
+                    console.warn("Le jeton personnalisé a échoué, tentative de repli vers la connexion anonyme pour le formulaire...");
+                    try {
+                        await signInAnonymously(auth);
+                        console.log("Authentification Firebase réussie via le repli anonyme.");
+                    } catch (anonError) {
+                        console.error("Le repli d'authentification anonyme a échoué:", anonError);
+                        formMessage.textContent = "Erreur d'authentification Firebase. Le formulaire ne peut pas être soumis.";
+                        formMessage.style.color = "red";
+                        submitButton.disabled = true; // Désactive le bouton de soumission si l'authentification échoue complètement
+                    }
+                } else {
+                     formMessage.textContent = "Erreur d'authentification Firebase. Le formulaire ne peut pas être soumis.";
+                     formMessage.style.color = "red";
+                     submitButton.disabled = true; // Désactive le bouton de soumission si l'authentification échoue complètement
+                }
             }
 
             const observer = new IntersectionObserver(entries => {
@@ -563,9 +583,11 @@
                 event.preventDefault();
 
                 // Check if user is authenticated via Firebase.
+                // It's important that auth.currentUser exists and is valid here.
                 if (!auth.currentUser) {
-                    formMessage.textContent = "Veuillez patienter pendant l'authentification Firebase ou vous connecter...";
-                    formMessage.style.color = "yellow";
+                    formMessage.textContent = "Erreur: Authentification Firebase non prête. Veuillez réessayer.";
+                    formMessage.style.color = "red";
+                    console.error("Soumission bloquée: auth.currentUser n'est pas défini.");
                     return; // Prevent submission until auth is ready
                 }
 
