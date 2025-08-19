@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord JSALI - Administrateur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://placehold.co/16x16/0a0a0a/919191?text=JSALI" type="image/png" />
+    <style>
+        /* Variables from ins(3).html */
+        :root {
+            --main-bg: #0a0a0a;
+            --highlight: #919191;
+            --accent: #919191;
+            --primary-text: #fff;
+            --secondary-text: #cbd5e1;
+            --blur: rgba(255, 255, 255, 0.05);
+            --bg: #0a0a0a;
+            --input-bg: #1a1a1a;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg); /* #0a0a0a */
+            color: var(--primary-text); /* #fff */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
+            padding-top: 5rem; /* Space for fixed nav */
+        }
+
+        /* Custom scrollbar - sleek & modern (adapted for dark theme) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a; /* Dark track */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--highlight); /* Medium gray thumb */
+            border-radius: 10px;
+            border: 2px solid var(--bg); /* Matches body background for subtle depth */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1; /* Lighter on hover */
+            cursor: pointer;
+        }
+
+        /* Navigation styles from ins(3).html */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.85); /* Dark semi-transparent */
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideDown 1s ease forwards;
+            flex-wrap: wrap;
+        }
+
+        nav h1 {
+            font-size: 1.8rem; /* Adjusted for dashboard branding */
+            color: var(--highlight); /* #919191 */
+            margin-right: 1rem;
+            font-weight: 800;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a, .nav-links button {
+            color: var(--secondary-text); /* #cbd5e1 */
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            white-space: nowrap;
+            padding: 0.4rem 1rem; /* Consistent padding */
+            background: none; /* Ensure no background by default */
+            border: none; /* Remove default button border */
+            cursor: pointer;
+            border-radius: 8px; /* Consistent border radius */
+        }
+
+        .nav-links a:hover, .nav-links button:hover {
+            color: var(--highlight); /* #919191 */
+            background: rgba(255, 255, 255, 0.1); /* Light background on hover */
+        }
+
+        /* General button style (adapted from ins(3).html .btn) */
+        .general-btn {
+            padding: 0.4rem 1rem;
+            background: var(--highlight); /* #919191 */
+            color: var(--main-bg); /* #0a0a0a */
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+            text-decoration: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .general-btn:hover {
+            background: #a1a1a1;
+            transform: scale(1.05);
+        }
+
+        /* Section Backgrounds/Cards (adapted from ins(3).html .login-box) */
+        .dark-card-background {
+            background: #111; /* Darker background */
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+            box-sizing: border-box;
+            border: 1px solid #333; /* Darker border */
+        }
+
+        /* Input fields and Textarea (adapted from ins(3).html) */
+        .dark-input-field {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #333;
+            border-radius: 4px; /* Reduced border-radius for a more square feel */
+            background: var(--input-bg); /* #1a1a1a */
+            color: var(--primary-text); /* #fff */
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark-input-field:focus {
+            outline: none;
+            border-color: var(--accent); /* Highlight color on focus */
+            box-shadow: 0 0 10px rgba(145, 145, 145, 0.4); /* Glow on focus */
+        }
+
+        /* Submit button within forms (adapted from ins(3).html .login-box button) */
+        .dark-submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px; /* Reduced border-radius to match inputs */
+            background: var(--accent); /* #919191 */
+            color: var(--main-bg); /* #0a0a0a */
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+        }
+        .dark-submit-btn:hover {
+            background: #a5a5a5;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* Section Heading (adapted from ins(3).html h2) */
+        .section-heading-dark {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--accent); /* #919191 */
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        .section-heading-dark::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px; /* Short underline */
+            height: 4px;
+            background: var(--accent); /* Highlight color underline */
+            border-radius: 2px;
+        }
+        
+        /* Dashboard-specific styles adjusted for dark theme */
+        .stat-card {
+            background-color: #1a1a1a; /* Dark background for stats */
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.05);
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 800; /* Use 800 as per Space Grotesk */
+            color: var(--highlight);
+            line-height: 1;
+        }
+        .stat-label {
+            font-weight: 600;
+            color: var(--secondary-text);
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .dashboard-table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .dashboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .dashboard-table th, .dashboard-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #333; /* Darker border */
+        }
+        .dashboard-table th {
+            font-weight: 600;
+            background-color: #2a2a2a; /* Darker header background */
+            color: var(--highlight);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .dashboard-table tr:hover {
+            background-color: #1a1a1a; /* Slightly lighter dark on hover */
+        }
+        .dashboard-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Table Action Buttons (adapted from ins(3).html general .btn idea) */
+        .action-buttons button {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px; /* Consistent with other buttons */
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            white-space: nowrap;
+            border: none;
+        }
+        .action-buttons button.accept {
+            background-color: green;
+            color: white;
+        }
+        .action-buttons button.accept:hover {
+            background-color: darkgreen;
+            transform: scale(1.05);
+        }
+        .action-buttons button.decline {
+            background-color: red;
+            color: white;
+        }
+        .action-buttons button.decline:hover {
+            background-color: darkred;
+            transform: scale(1.05);
+        }
+
+        /* Custom Message Box (adapted from ins(3).html) */
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        .message-box-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .message-box-content {
+            background-color: #111; /* Dark background for modal */
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+            text-align: center;
+            max-width: 90%;
+            width: 500px;
+            transform: translateY(-40px);
+            transition: transform 0.5s ease-out;
+            border: 1px solid var(--highlight); /* Highlight border */
+            color: var(--primary-text);
+        }
+        .message-box-overlay.show .message-box-content {
+            transform: translateY(0);
+        }
+        .message-box-content h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        .message-box-content p {
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--secondary-text);
+        }
+        .message-box-content button {
+            background: var(--accent); /* Use accent color for buttons */
+            color: var(--main-bg);
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(145, 145, 145, 0.4);
+            text-transform: uppercase;
+        }
+        .message-box-content button:hover {
+            background: #a5a5a5;
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--accent);
+        }
+        /* Email Modal (adapted from ins(3).html) */
+        .email-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1001; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .email-modal-content {
+            background-color: #111; /* Dark background */
+            padding: 2.5rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+            position: relative;
+            color: var(--primary-text);
+            border: 1px solid #333;
+        }
+        .email-modal-close-btn {
+            color: var(--secondary-text);
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .email-modal-close-btn:hover,
+        .email-modal-close-btn:focus {
+            color: var(--highlight);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .email-modal-content label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-text);
+            font-weight: 600;
+        }
+        .email-modal-content input[type="email"],
+        .email-modal-content textarea {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--primary-text);
+            font-size: 1rem;
+            box-sizing: border-box;
+            min-height: 150px;
+        }
+        .email-modal-content textarea {
+            min-height: 150px;
+        }
+        .email-modal-content button.send-email-btn {
+            background: var(--accent);
+            color: var(--main-bg);
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            box-shadow: 0 0 15px var(--accent);
+        }
+        .email-modal-content button.send-email-btn:hover {
+            background: #a5a5a5;
+            box-shadow: 0 0 20px var(--accent);
+        }
+        .email-modal-message {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+        /* Status colors */
+        .status-pending { color: yellow; }
+        .status-accepted { color: green; }
+        .status-declined { color: red; }
+
+        /* Keyframes from ins(3).html */
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Media queries from ins(3).html */
+        @media (max-width: 768px) {
+            body { padding: 0.5rem; padding-top: 6rem; }
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+            nav h1 { margin-bottom: 0.5rem; font-size: 1.5rem; }
+            .nav-links {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                gap: 0.8rem;
+                margin-top: 0.5rem;
+            }
+            .nav-links a, .nav-links button {
+                width: 100%;
+                text-align: left;
+                padding: 0.4rem 0.5rem;
+                margin-right: 0;
+            }
+            .general-btn {
+                width: 100%;
+                text-align: center;
+                margin-top: 0.8rem;
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            .dark-card-background { padding: 1.5rem; margin: 1rem 0.5rem; max-width: none; }
+            .section-heading-dark { font-size: 1.8rem; margin-bottom: 1.5rem; }
+            .dark-input-field { padding: 0.6rem; margin-bottom: 1rem; font-size: 1rem; }
+            .dark-submit-btn { padding: 0.65rem; font-size: 1rem; }
+            .message-box-content { padding: 1.5rem; }
+            .message-box-content h3 { font-size: 1.8rem; }
+            .message-box-content p { font-size: 1rem; }
+            .message-box-content button { padding: 0.6rem 1.5rem; }
+            
+            .dashboard-table th, .dashboard-table td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+            .action-buttons button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.8rem;
+            }
+            .email-modal-content {
+                padding: 1.5rem;
+            }
+            .email-modal-content textarea {
+                min-height: 100px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700">
+
+    <header> <!-- Header will now use nav styles directly -->
+        <nav>
+            <h1>JSALI Dashboard</h1>
+            <div id="logoutButtonContainer" class="hidden nav-links">
+                 <button id="logoutBtn" class="general-btn bg-red-500 hover:bg-red-700">Déconnexion</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto py-12 px-6 md:px-12">
+        <!-- Login Form Section -->
+        <section id="login-section" class="w-full max-w-lg mx-auto dark-card-background" style="animation: popIn 0.7s ease forwards; margin-top: 2rem;">
+            <h2 class="section-heading-dark">Connexion Administrateur</h2>
+            <p class="text-center text-secondary-text mb-8">Veuillez vous connecter pour accéder au tableau de bord.</p>
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="email" class="sr-only">Adresse e-mail</label>
+                    <input type="email" id="email" name="email" class="dark-input-field" placeholder="Adresse e-mail" required>
+                </div>
+                <div>
+                    <label for="password" class="sr-only">Mot de passe</label>
+                    <input type="password" id="password" name="password" class="dark-input-field" placeholder="Mot de passe" required>
+                </div>
+                <div class="flex justify-center">
+                    <button type="submit" class="dark-submit-btn">
+                        Se connecter
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Access Denied Message Section -->
+        <section id="access-denied-section" class="w-full max-w-lg mx-auto dark-card-background bg-red-900 border-red-700 text-red-100 hidden">
+             <div class="text-center">
+                <h2 class="text-2xl font-bold mb-4" style="color: red;">Accès Refusé</h2>
+                <p id="accessDeniedMessage" class="text-red-300 text-lg">Vous n'avez pas la permission de consulter ce tableau de bord.</p>
+                <p class="text-red-300 mt-2">Veuillez vous connecter avec le compte administrateur correct.</p>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Section -->
+        <section id="dashboard-section" class="w-full" style="display: none;">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="stat-card">
+                    <p class="stat-value" id="totalSubmissionsCount">0</p>
+                    <p class="stat-label">Total des Soumissions</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-value" id="pendingSubmissionsCount">0</p>
+                    <p class="stat-label">Soumissions en Attente</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-value" style="color: var(--highlight);" id="currentUserID">Non authentifié</p>
+                    <p class="stat-label">ID Utilisateur Authentifié</p>
+                </div>
+            </div>
+
+            <div id="loadingIndicator" class="text-center py-12">
+                <p class="text-secondary-text text-lg">Chargement des soumissions...</p>
+            </div>
+            
+            <div id="emptyState" class="text-center py-12 hidden">
+                <p class="text-secondary-text text-lg">Aucune soumission de formulaire n'a été trouvée.</p>
+            </div>
+
+            <div class="dark-card-background p-8 md:p-12 overflow-hidden">
+                <h2 class="section-heading-dark">Toutes les Soumissions de Formulaire</h2>
+                <div class="dashboard-table-container">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>Date Soumission</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Email</th>
+                                <th>Établissement</th>
+                                <th>Fonction</th>
+                                <th>Titre</th>
+                                <th>Axe</th>
+                                <th>Auteurs</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionsTableBody">
+                            <!-- Data will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Custom Message Box for errors and alerts -->
+    <div id="messageBoxOverlay" class="message-box-overlay">
+        <div class="message-box-content">
+            <h3 id="messageBoxTitle"></h3>
+            <p id="messageBoxText"></p>
+            <button id="messageBoxCloseButton" class="general-btn">Fermer</button>
+        </div>
+    </div>
+
+    <!-- Email Modal -->
+    <div id="email-modal" class="email-modal">
+        <div class="email-modal-content">
+            <span class="email-modal-close-btn">&times;</span>
+            <h3 class="text-xl font-bold mb-4 text-center" style="color: var(--accent);">Envoyer un message à l'utilisateur</h3>
+            <p class="text-sm text-secondary-text mb-4">
+                Note: L'envoi réel d'e-mails depuis une adresse spécifique nécessite un service backend.
+            </p>
+            <form id="email-form">
+                <div>
+                    <label for="modal-recipient-email">Destinataire (Email)</label>
+                    <input type="email" id="modal-recipient-email" readonly class="dark-input-field" style="background: #1a1a1a;">
+                </div>
+                <div>
+                    <label for="modal-email-message">Message</label>
+                    <textarea id="modal-email-message" rows="8" required class="dark-input-field"></textarea>
+                </div>
+                <div id="modal-message" class="email-modal-message"></div>
+                <button type="submit" id="send-email-btn" class="dark-submit-btn">Envoyer l'email</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration (using the one you provided for jsali-fstgat)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBeFGzTiu3BcMCURE_Cpw4F4cmihY059mw",
+            authDomain: "jsali-fstgat.firebaseapp.com",
+            projectId: "jsali-fstgat",
+            storageBucket: "jsali-fstgat.firebasestorage.app",
+            messagingSenderId: "887844859070",
+            appId: "1:887844859070:web:ff3f88a6c8ee0547a5c2ef",
+            measurementId: "G-FW9DBVQND2"
+        };
+        
+        let app, db, auth;
+        // The authorized administrator UID
+        const AUTHORIZED_ADMIN_UID = "HVOB6exkv8Pv9Woiy6THDhMYEuh2";
+        // Path to the form submissions collection
+        const submissionsCollectionPath = `/artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/public/data/formSubmissions`;
+        // URL of your Firebase Cloud Function for sending emails.
+        // Replace with your actual Cloud Function URL after deployment!
+        const SEND_EMAIL_FUNCTION_URL = "YOUR_CLOUD_FUNCTION_URL_HERE"; 
+
+        // Function to show custom message box
+        function showMessageBox(title, message) {
+            const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+            const messageBoxTitle = document.getElementById('messageBoxTitle');
+            const messageBoxText = document.getElementById('messageBoxText');
+            
+            messageBoxTitle.textContent = title;
+            messageBoxText.textContent = message;
+            messageBoxOverlay.classList.add('show');
+        }
+
+        // Function to hide custom message box
+        function hideMessageBox() {
+            const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+            messageBoxOverlay.classList.remove('show');
+        }
+        
+        // Setup Firebase and Auth listener
+        function setupFirebase() {
+            try {
+                // Initialize Firebase app
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                console.log("Firebase initialized.");
+
+                // Listen for auth state changes
+                onAuthStateChanged(auth, (user) => {
+                    const loginSection = document.getElementById('login-section');
+                    const dashboardSection = document.getElementById('dashboard-section');
+                    const accessDeniedSection = document.getElementById('access-denied-section');
+                    const logoutButtonContainer = document.getElementById('logoutButtonContainer');
+                    const currentUserIDElement = document.getElementById('currentUserID');
+                    const accessDeniedMessageElement = document.getElementById('accessDeniedMessage');
+
+                    if (user) {
+                        // User is signed in
+                        currentUserIDElement.textContent = user.uid;
+
+                        if (user.uid === AUTHORIZED_ADMIN_UID) {
+                            // User is the authorized administrator
+                            console.log("Administrateur authentifié avec succès :", user.uid);
+                            loginSection.style.display = 'none';
+                            accessDeniedSection.style.display = 'none';
+                            dashboardSection.style.display = 'block';
+                            logoutButtonContainer.classList.remove('hidden');
+                            listenForSubmissions(); // Load submissions for authorized user
+                        } else {
+                            // User is signed in but NOT the authorized administrator
+                            console.log("Utilisateur connecté, mais pas l'administrateur autorisé. UID :", user.uid);
+                            loginSection.style.display = 'none';
+                            accessDeniedSection.style.display = 'block';
+                            dashboardSection.style.display = 'none';
+                            logoutButtonContainer.classList.remove('hidden');
+                            accessDeniedMessageElement.textContent = `Vous n'avez pas la permission de consulter ce tableau de bord. Votre UID : ${user.uid}`;
+                            // signOut(auth); // Consider uncommenting this in a real scenario
+                        }
+                    } else {
+                        // No user is signed in
+                        console.log("Aucun utilisateur n'est authentifié.");
+                        currentUserIDElement.textContent = "Non authentifié";
+                        loginSection.style.display = 'block';
+                        accessDeniedSection.style.display = 'none';
+                        dashboardSection.style.display = 'none';
+                        logoutButtonContainer.classList.add('hidden');
+                    }
+                });
+
+            } catch (error) {
+                console.error("Erreur lors de la configuration de Firebase :", error);
+                showMessageBox("Erreur de Configuration", `Impossible de configurer Firebase. Vérifiez la console pour les détails. Erreur : ${error.message}`);
+            }
+        }
+
+        // Email Modal elements
+        const emailModal = document.getElementById('email-modal');
+        const closeModalBtn = document.querySelector('.email-modal-close-btn');
+        const modalRecipientEmail = document.getElementById('modal-recipient-email');
+        const modalEmailMessage = document.getElementById('modal-email-message');
+        const modalMessage = document.getElementById('modal-message'); // For messages within the modal
+        const sendEmailBtn = document.getElementById('send-email-btn');
+
+        let currentSubmissionId = null;
+        let currentSubmissionEmail = null;
+        let currentActionType = null; // 'accepted' or 'declined'
+
+        // Function to close the email modal
+        function closeEmailModal() {
+            emailModal.style.display = 'none';
+            modalEmailMessage.value = ''; // Clear message
+            modalMessage.textContent = ''; // Clear status message
+            currentSubmissionId = null;
+            currentSubmissionEmail = null;
+            currentActionType = null;
+        }
+
+        // Event listener for closing the email modal
+        closeModalBtn.addEventListener('click', closeEmailModal);
+        window.addEventListener('click', (event) => {
+            if (event.target == emailModal) {
+                closeEmailModal();
+            }
+        });
+
+        // Event listener for sending email (via Cloud Function) and updating status
+        sendEmailBtn.addEventListener('click', async (event) => {
+            event.preventDefault();
+            
+            const message = modalEmailMessage.value.trim();
+            if (!message) {
+                modalMessage.textContent = "Le message ne peut pas être vide.";
+                modalMessage.style.color = "red";
+                return;
+            }
+
+            if (!SEND_EMAIL_FUNCTION_URL || SEND_EMAIL_FUNCTION_URL === "YOUR_CLOUD_FUNCTION_URL_HERE") {
+                modalMessage.textContent = "URL de la fonction Cloud non configurée. Veuillez déployer la fonction Cloud.";
+                modalMessage.style.color = "red";
+                return;
+            }
+
+            modalMessage.textContent = "Envoi de l'e-mail via le backend...";
+            modalMessage.style.color = "orange";
+
+            try {
+                // Get the current user's ID token to authenticate with the Cloud Function
+                const idToken = await auth.currentUser.getIdToken();
+
+                const response = await fetch(SEND_EMAIL_FUNCTION_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}` // Pass ID token for authentication
+                    },
+                    body: JSON.stringify({
+                        submissionId: currentSubmissionId,
+                        recipientEmail: currentSubmissionEmail,
+                        message: message,
+                        actionType: currentActionType
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    modalMessage.textContent = `E-mail envoyé et statut mis à jour à '${currentActionType}' pour ${currentSubmissionEmail}.`;
+                    modalMessage.style.color = "green";
+                    setTimeout(closeEmailModal, 2000); // Close modal after 2 seconds
+                } else {
+                    console.error("Erreur de la fonction Cloud:", result.error || "Réponse inattendue");
+                    modalMessage.textContent = `Erreur lors de l'envoi de l'e-mail : ${result.error || 'Erreur inconnue'}.`;
+                    modalMessage.style.color = "red";
+                }
+            } catch (error) {
+                console.error("Erreur lors de l'appel de la fonction Cloud:", error);
+                modalMessage.textContent = "Erreur de connexion à la fonction Cloud. Veuillez vérifier votre connexion internet et le déploiement de la fonction.";
+                modalMessage.style.color = "red";
+            }
+        });
+
+        // Listen for real-time updates to the form submissions collection
+        function listenForSubmissions() {
+            if (!db) {
+                console.error("Firestore non initialisé.");
+                return;
+            }
+
+            const submissionsRef = collection(db, submissionsCollectionPath);
+            
+            console.log("Écoute des données dans la collection :", submissionsCollectionPath);
+            
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const emptyState = document.getElementById('emptyState');
+            const submissionsTableBody = document.getElementById('submissionsTableBody');
+            
+            // onSnapshot provides real-time updates
+            onSnapshot(submissionsRef, (querySnapshot) => {
+                const submissions = [];
+                let totalSubmissions = 0; // Initialize total submissions count
+                let pendingCount = 0;
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    submissions.push({
+                        id: doc.id,
+                        ...data
+                    });
+                    totalSubmissions++; // Increment total submissions
+                    if (data.status === 'pending') {
+                        pendingCount++;
+                    }
+                });
+                
+                // Clear the table body
+                submissionsTableBody.innerHTML = '';
+                
+                if (submissions.length > 0) {
+                    loadingIndicator.classList.add('hidden');
+                    emptyState.classList.add('hidden');
+                    
+                    // Sort submissions by timestamp, newest first
+                    submissions.sort((a, b) => {
+                        const dateA = a.timestamp ? a.timestamp.toDate() : new Date(0);
+                        const dateB = b.timestamp ? b.toDate() : new Date(0); // Corrected to use toDate() if b.timestamp is Firestore Timestamp
+                        return dateB.getTime() - dateA.getTime();
+                    });
+
+                    submissions.forEach(submission => {
+                        const row = document.createElement('tr');
+                        const timestamp = submission.timestamp ? new Date(submission.timestamp.toDate()).toLocaleString() : 'N/A';
+                        
+                        row.innerHTML = `
+                            <td>${timestamp}</td>
+                            <td>${submission.Nom || 'N/A'}</td>
+                            <td>${submission.Prénom || 'N/A'}</td>
+                            <td>${submission.Email || 'N/A'}</td>
+                            <td>${submission['Etablissement de Rattachement'] || 'N/A'}</td>
+                            <td>${submission.Fonction || 'N/A'}</td>
+                            <td>${submission['Titre de communication'] || 'N/A'}</td>
+                            <td>${submission.Axe || 'N/A'}</td>
+                            <td>${submission['Auteurs(ices)'] || 'N/A'}</td>
+                            <td class="status-${submission.status || 'pending'}">${submission.status || 'pending'}</td>
+                            <td class="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 action-buttons">
+                                <button class="accept-btn">Accepter</button>
+                                <button class="decline-btn">Décliner</button>
+                            </td>
+                        `;
+                        submissionsTableBody.appendChild(row);
+
+                        // Attach event listeners to the new buttons
+                        const acceptBtn = row.querySelector('.accept-btn');
+                        const declineBtn = row.querySelector('.decline-btn');
+
+                        acceptBtn.addEventListener('click', () => {
+                            currentSubmissionId = submission.id;
+                            currentSubmissionEmail = submission.Email;
+                            currentActionType = 'accepted';
+                            modalRecipientEmail.value = submission.Email;
+                            modalEmailMessage.value = `Cher(e) ${submission.Nom || ''} ${submission.Prénom || ''},\n\nNous avons le plaisir de vous informer que votre participation intitulée "${submission['Titre de communication'] || ''}" a été acceptée pour la conférence JSALI.\n\nCordialement,\nL'équipe JSALI`; // Pre-fill accept message
+                            emailModal.style.display = 'flex'; // Show modal
+                        });
+
+                        declineBtn.addEventListener('click', () => {
+                            currentSubmissionId = submission.id;
+                            currentSubmissionEmail = submission.Email;
+                            currentActionType = 'declined';
+                            modalRecipientEmail.value = submission.Email;
+                            modalEmailMessage.value = `Cher(e) ${submission.Nom || ''} ${submission.Prénom || ''},\n\nNous regrettons de vous informer que votre participation intitulée "${submission['Titre de communication'] || ''}" n'a pas été retenue pour la conférence JSALI. Nous vous remercions de votre intérêt.\n\nCordialement,\nL'équipe JSALI`; // Pre-fill decline message
+                            emailModal.style.display = 'flex'; // Show modal
+                        });
+                    });
+                } else {
+                    loadingIndicator.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                }
+                
+                // Update stats
+                document.getElementById('totalSubmissionsCount').textContent = totalSubmissions;
+                document.getElementById('pendingSubmissionsCount').textContent = pendingCount;
+                
+                console.log("Données de soumissions mises à jour. Total :", totalSubmissions, "En attente :", pendingCount);
+            }, (error) => {
+                console.error("Erreur lors de la récupération des documents :", error);
+                loadingIndicator.classList.add('hidden');
+                showMessageBox("Erreur de Données", "Impossible de récupérer les données des soumissions. Veuillez vérifier votre configuration Firebase et vos règles de sécurité. Erreur : " + error.message);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const messageBoxCloseButton = document.getElementById('messageBoxCloseButton');
+
+            // Set up Firebase and the authentication listener on page load
+            setupFirebase();
+
+            // --- LOGIN FORM LOGIC ---
+            loginForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    // The onAuthStateChanged listener will handle UI changes on successful login
+                    console.log("Connexion réussie. Vérification des permissions de l'utilisateur...");
+                } catch (error) {
+                    console.error("Échec de la connexion :", error);
+                    let errorMessage = "Une erreur est survenue lors de la connexion. Veuillez réessayer.";
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                        errorMessage = "E-mail ou mot de passe invalide.";
+                    } else if (error.code === 'auth/invalid-email') {
+                         errorMessage = "Format d'e-mail invalide.";
+                    }
+                    showMessageBox("Échec de la Connexion", errorMessage);
+                }
+            });
+
+            // --- LOGOUT LOGIC ---
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                    console.log("Utilisateur déconnecté avec succès.");
+                    // onAuthStateChanged listener will handle UI update
+                } catch (error) {
+                    console.error("Erreur lors de la déconnexion :", error);
+                    showMessageBox("Erreur de Déconnexion", "Échec de la déconnexion. Veuillez réessayer.");
+                }
+            });
+
+            // Close message box when button is clicked
+            messageBoxCloseButton.addEventListener('click', hideMessageBox);
+        });
+
+    </script>
+</body>
+</html>
