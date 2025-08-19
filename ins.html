@@ -250,7 +250,7 @@
             box-sizing: border-box;
         }
         .login-box button:hover {
-            background: #a5a5a5;
+            background: #a1a1a1;
             box-shadow: 0 0 15px var(--accent);
         }
         .form-message {
@@ -332,15 +332,14 @@
         <nav>
             <h1>JSALI</h1>
             <div class="nav-links" id="nav-links">
-   <a href="index.html">Page principale</a>
+                <a href="index.html">Page principale</a>
                 <a href="axe thematique.html">Axes Thématiques</a>
                 <a href="sponsor.html">Sponsors</a>
-
                 
                 <div class="profile-section" style="display:none" id="profile-section">
                     <div id="profile-pic-container">
                         <input type="file" id="profile-pic-input" accept="image/*">
-                        <img src="placeholder-profile-pic.png" alt="Profile" id="profile-pic" />
+                        <img src="https://placehold.co/40x40/919191/0a0a0a?text=P" alt="Profile" id="profile-pic" />
                     </div>
                     <span id="welcome-nav-msg"></span>
                 </div>
@@ -399,176 +398,202 @@
         </div>
     </div>
     
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const loaderWrapper = document.getElementById('loaderWrapper');
-        const mainContent = document.getElementById('mainContent');
-        const minimumLoadingTime = 4000;
-        const startTime = Date.now();
-        const form = document.getElementById('participation-form');
-        const formMessage = document.getElementById('form-message');
-        const formcarryUrl = "https://formcarry.com/s/GYoRPrXNxsK";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const hideLoader = () => {
-            const elapsed = Date.now() - startTime;
-            const remainingTime = minimumLoadingTime - elapsed;
-
-            setTimeout(() => {
-                if (loaderWrapper) {
-                    loaderWrapper.classList.add('hidden');
-                }
-                setTimeout(() => {
-                    if (mainContent) {
-                        mainContent.classList.remove('hidden');
-                    }
-                }, 500);
-            }, Math.max(0, remainingTime));
+        // Firebase configuration from user input
+        const firebaseConfig = {
+            apiKey: "AIzaSyBeFGzTiu3BcMCURE_Cpw4F4cmihY059mw",
+            authDomain: "jsali-fstgat.firebaseapp.com",
+            projectId: "jsali-fstgat",
+            storageBucket: "jsali-fstgat.firebasestorage.app",
+            messagingSenderId: "887844859070",
+            appId: "1:887844859070:web:ff3f88a6c8ee0547a5c2ef",
+            measurementId: "G-FW9DBVQND2"
         };
 
-        if (window.location.pathname.includes('ins.html')) {
-            window.addEventListener('load', hideLoader);
-        } else {
-            hideLoader();
-        }
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else {
-                    entry.target.classList.remove('visible');
-                }
-            });
-        }, {
-            threshold: 0.2
-        });
+        // Global variables for Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+        document.addEventListener("DOMContentLoaded", async () => {
+            const loaderWrapper = document.getElementById('loaderWrapper');
+            const mainContent = document.getElementById('mainContent');
+            const minimumLoadingTime = 4000;
+            const startTime = Date.now();
+            const form = document.getElementById('participation-form');
+            const formMessage = document.getElementById('form-message');
 
-        const user = localStorage.getItem('jsaliUser');
-        const welcomeNavMsg = document.getElementById('welcome-nav-msg');
-        const loginBtn = document.getElementById('login-btn');
-        const registerBtn = document.getElementById('register-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const profileSection = document.getElementById('profile-section');
-        const profilePic = document.getElementById('profile-pic');
-        const profilePicInput = document.getElementById('profile-pic-input');
+            const hideLoader = () => {
+                const elapsed = Date.now() - startTime;
+                const remainingTime = minimumLoadingTime - elapsed;
 
-        const placeholderPicPath = "placeholder-profile-pic.png";
+                setTimeout(() => {
+                    if (loaderWrapper) {
+                        loaderWrapper.classList.add('hidden');
+                    }
+                    setTimeout(() => {
+                        if (mainContent) {
+                            mainContent.classList.remove('hidden');
+                        }
+                    }, 500);
+                }, Math.max(0, remainingTime));
+            };
 
-        function loadProfilePic() {
-            const savedPic = localStorage.getItem('jsaliProfilePic');
-            if (savedPic) {
-                profilePic.src = savedPic;
+            // This line ensures the loader hides if this is the ins.html page directly
+            if (window.location.pathname.includes('ins.html') || window.location.pathname.includes('participation_form.html')) {
+                window.addEventListener('load', hideLoader);
             } else {
-                profilePic.src = placeholderPicPath;
-            }
-        }
-
-        function saveProfilePic(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    localStorage.setItem('jsaliProfilePic', e.target.result);
-                    profilePic.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-        
-        if (profilePic) {
-            profilePic.addEventListener('click', () => {
-                if (user) {
-                   profilePicInput.click();
-                }
-            });
-        }
-        
-        if (profilePicInput) {
-            profilePicInput.addEventListener('change', saveProfilePic);
-        }
-
-        function showLoggedIn(userName) {
-            if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
-            if (profileSection) profileSection.style.display = 'flex';
-            if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
-            if (loginBtn) loginBtn.style.display = 'none';
-            if (registerBtn) registerBtn.style.display = 'none';
-            if (logoutBtn) logoutBtn.style.display = 'inline-block';
-            if (profilePic) loadProfilePic();
-        }
-
-        function showLoggedOut() {
-            if (welcomeNavMsg) welcomeNavMsg.textContent = '';
-            if (profileSection) profileSection.style.display = 'none';
-            if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
-            if (loginBtn) loginBtn.style.display = 'inline-block';
-            if (registerBtn) registerBtn.style.display = 'inline-block';
-            if (logoutBtn) logoutBtn.style.display = 'none';
-            localStorage.removeItem('jsaliUser');
-            // The line to remove the profile picture was here.
-            // It has been removed to allow the picture to persist on logout.
-            if (profilePic) profilePic.src = placeholderPicPath;
-        }
-
-        if (user) {
-            showLoggedIn(user);
-        } else {
-            showLoggedOut();
-        }
-
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => {
-                showLoggedOut();
-                window.location.href = "index.html";
-            });
-        }
-
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const loggedInUser = localStorage.getItem('jsaliUser');
-            if (!loggedInUser) {
-                alert("Vous devez être connecté pour soumettre une participation.");
-                window.location.href = "register.html";
-                return;
+                hideLoader();
             }
 
-            const formData = new FormData(form);
-            const payload = Object.fromEntries(formData.entries());
-
-            formMessage.textContent = "Envoi en cours...";
-            formMessage.style.color = "yellow";
-
+            // Authenticate user for Firebase
             try {
-                const response = await fetch(formcarryUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                console.log("Firebase authenticated successfully.");
+            } catch (error) {
+                console.error("Firebase authentication error:", error);
+                // Handle authentication errors, though anonymous/custom token sign-in should generally succeed in Canvas
+            }
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        entry.target.classList.remove('visible');
+                    }
                 });
+            }, {
+                threshold: 0.2
+            });
 
-                const result = await response.json();
+            document.querySelectorAll('.feature').forEach(el => observer.observe(el));
 
-                if (response.ok) {
+            const user = localStorage.getItem('jsaliUser');
+            const welcomeNavMsg = document.getElementById('welcome-nav-msg');
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const profileSection = document.getElementById('profile-section');
+            const profilePic = document.getElementById('profile-pic');
+            const profilePicInput = document.getElementById('profile-pic-input');
+
+            const placeholderPicPath = "https://placehold.co/40x40/919191/0a0a0a?text=P"; // Placeholder image for profile pic
+
+            function loadProfilePic() {
+                const savedPic = localStorage.getItem('jsaliProfilePic');
+                if (savedPic) {
+                    profilePic.src = savedPic;
+                } else {
+                    profilePic.src = placeholderPicPath;
+                }
+            }
+
+            function saveProfilePic(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        localStorage.setItem('jsaliProfilePic', e.target.result);
+                        profilePic.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            if (profilePic) {
+                profilePic.addEventListener('click', () => {
+                    if (user) {
+                       profilePicInput.click();
+                    }
+                });
+            }
+            
+            if (profilePicInput) {
+                profilePicInput.addEventListener('change', saveProfilePic);
+            }
+
+            function showLoggedIn(userName) {
+                if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
+                if (profileSection) profileSection.style.display = 'flex';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (registerBtn) registerBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                if (profilePic) loadProfilePic();
+            }
+
+            function showLoggedOut() {
+                if (welcomeNavMsg) welcomeNavMsg.textContent = '';
+                if (profileSection) profileSection.style.display = 'none';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (registerBtn) registerBtn.style.display = 'inline-block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                localStorage.removeItem('jsaliUser');
+                if (profilePic) profilePic.src = placeholderPicPath;
+            }
+
+            if (user) {
+                showLoggedIn(user);
+            } else {
+                showLoggedOut();
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    showLoggedOut();
+                    window.location.href = "index.html";
+                });
+            }
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                // Check if user is authenticated via Firebase.
+                if (!auth.currentUser) {
+                    formMessage.textContent = "Veuillez patienter pendant l'authentification Firebase ou vous connecter...";
+                    formMessage.style.color = "yellow";
+                    return; // Prevent submission until auth is ready
+                }
+
+                const formData = new FormData(form);
+                const submissionData = Object.fromEntries(formData.entries());
+                
+                // Add timestamp and initial status
+                submissionData.timestamp = serverTimestamp();
+                submissionData.status = 'pending'; // Default status for new submissions
+                
+                formMessage.textContent = "Envoi en cours...";
+                formMessage.style.color = "yellow";
+
+                try {
+                    // Store in Firestore: /artifacts/{appId}/public/data/formSubmissions
+                    const submissionsRef = collection(db, `artifacts/${appId}/public/data/formSubmissions`);
+                    await addDoc(submissionsRef, submissionData);
+
                     formMessage.textContent = "Votre participation a été soumise avec succès !";
                     formMessage.style.color = "green";
                     form.reset();
-                } else {
-                    console.error("Erreur de Formcarry:", result);
+                } catch (error) {
+                    console.error("Erreur lors de la soumission du formulaire vers Firestore:", error);
                     formMessage.textContent = "Une erreur est survenue lors de l'envoi. Veuillez réessayer.";
                     formMessage.style.color = "red";
                 }
-            } catch (error) {
-                console.error("Erreur lors de la soumission du formulaire:", error);
-                formMessage.textContent = "Erreur de connexion. Veuillez vérifier votre connexion internet et réessayer.";
-                formMessage.style.color = "red";
-            }
+            });
         });
-    });
     </script>
 </body>
 </html>
