@@ -647,9 +647,9 @@
         const AUTHORIZED_ADMIN_UID = "HVOB6exkv8Pv9Woiy6THDhMYEuh2";
         // Path to the form submissions collection
         const submissionsCollectionPath = `/artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/public/data/formSubmissions`;
-        // URL of your Firebase Cloud Function for sending emails.
-        // Replace with your actual Cloud Function URL after deployment!
-        const SEND_EMAIL_FUNCTION_URL = "YOUR_CLOUD_FUNCTION_URL_HERE"; 
+        // URL of your Firebase Cloud Function or Google Apps Script for sending emails.
+        // Make sure to replace this with your actual deployed URL!
+        const SEND_EMAIL_FUNCTION_URL = "https://script.google.com/macros/s/AKfycbx54zKXn6MSO3D-w4Onc4YvhLw8tObWygBi4bIqpNcQBP_VsbEy8xBm1G5LS9I8-Pcr/exec"; 
 
         // Function to show custom message box
         function showMessageBox(title, message) {
@@ -755,7 +755,7 @@
             }
         });
 
-        // Event listener for sending email (via Cloud Function) and updating status
+        // Event listener for sending email (via Apps Script) and updating status
         sendEmailBtn.addEventListener('click', async (event) => {
             event.preventDefault();
             
@@ -766,24 +766,21 @@
                 return;
             }
 
-            if (!SEND_EMAIL_FUNCTION_URL || SEND_EMAIL_FUNCTION_URL === "YOUR_CLOUD_FUNCTION_URL_HERE") {
-                modalMessage.textContent = "URL de la fonction Cloud non configurée. Veuillez déployer la fonction Cloud.";
+            if (!SEND_EMAIL_FUNCTION_URL || SEND_EMAIL_FUNCTION_URL.includes("YOUR_CLOUD_FUNCTION_URL_HERE")) {
+                modalMessage.textContent = "URL de la fonction Google Apps Script non configurée ou incorrecte.";
                 modalMessage.style.color = "red";
                 return;
             }
 
-            modalMessage.textContent = "Envoi de l'e-mail via le backend...";
-            modalMessage.style.color = "orange";
+            modalMessage.textContent = "Envoi de l'e-mail via Google Apps Script...";
+            modalMessage.style.color = "yellow"; // Changed to yellow for consistency
 
             try {
-                // Get the current user's ID token to authenticate with the Cloud Function
-                const idToken = await auth.currentUser.getIdToken();
-
+                // No need for Firebase ID token here for a simple Apps Script Web App call
                 const response = await fetch(SEND_EMAIL_FUNCTION_URL, {
                     method: 'POST',
                     headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${idToken}` // Pass ID token for authentication
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         submissionId: currentSubmissionId,
@@ -796,17 +793,29 @@
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    modalMessage.textContent = `E-mail envoyé et statut mis à jour à '${currentActionType}' pour ${currentSubmissionEmail}.`;
-                    modalMessage.style.color = "green";
-                    setTimeout(closeEmailModal, 2000); // Close modal after 2 seconds
+                    // Update Firestore status AFTER successful email sending via Apps Script
+                    if (currentSubmissionId && currentActionType) {
+                        const submissionRef = doc(db, submissionsCollectionPath, currentSubmissionId);
+                        await updateDoc(submissionRef, {
+                            status: currentActionType,
+                            adminMessage: message, // Store the admin's message
+                            processedAt: serverTimestamp() // Record when it was processed
+                        });
+                        modalMessage.textContent = `E-mail envoyé et statut mis à jour à '${currentActionType}' pour ${currentSubmissionEmail}.`;
+                        modalMessage.style.color = "green";
+                        setTimeout(closeEmailModal, 2000); // Close modal after 2 seconds
+                    } else {
+                        modalMessage.textContent = "E-mail envoyé, mais erreur lors de la mise à jour du statut Firestore (ID manquant).";
+                        modalMessage.style.color = "orange";
+                    }
                 } else {
-                    console.error("Erreur de la fonction Cloud:", result.error || "Réponse inattendue");
+                    console.error("Erreur de la fonction Apps Script:", result.error || "Réponse inattendue");
                     modalMessage.textContent = `Erreur lors de l'envoi de l'e-mail : ${result.error || 'Erreur inconnue'}.`;
                     modalMessage.style.color = "red";
                 }
             } catch (error) {
-                console.error("Erreur lors de l'appel de la fonction Cloud:", error);
-                modalMessage.textContent = "Erreur de connexion à la fonction Cloud. Veuillez vérifier votre connexion internet et le déploiement de la fonction.";
+                console.error("Erreur lors de l'appel de la fonction Apps Script:", error);
+                modalMessage.textContent = "Erreur de connexion à Google Apps Script. Vérifiez votre connexion internet et le déploiement de la fonction.";
                 modalMessage.style.color = "red";
             }
         });
@@ -854,7 +863,7 @@
                     // Sort submissions by timestamp, newest first
                     submissions.sort((a, b) => {
                         const dateA = a.timestamp ? a.timestamp.toDate() : new Date(0);
-                        const dateB = b.timestamp ? b.toDate() : new Date(0); // Corrected to use toDate() if b.timestamp is Firestore Timestamp
+                        const dateB = b.timestamp ? b.timestamp.toDate() : new Date(0); 
                         return dateB.getTime() - dateA.getTime();
                     });
 
