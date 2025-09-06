@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Page Non Trouvée</title>
+    <link rel="icon" href="JSALI.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --main-bg: #0a0a0a;
+            --highlight: #919191;
+            --accent: #919191;
+            --primary-text: #fff;
+            --secondary-text: #cbd5e1;
+            --blur: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Space Grotesk", sans-serif;
+            background: var(--main-bg);
+            color: var(--primary-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- Main Content Styles --- */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav h1 {
+            font-size: 1.3rem;
+            color: var(--highlight);
+            margin-right: 1rem;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #profile-pic-container {
+            position: relative;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+        }
+
+        #profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--highlight);
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        #profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        #profile-pic-input {
+            display: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 0;
+        }
+
+        .nav-links a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: var(--highlight);
+        }
+
+        .btn {
+            padding: 0.4rem 1rem;
+            background: var(--highlight);
+            color: var(--main-bg);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+            text-decoration: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: #a1a1a1;
+            transform: scale(1.05);
+        }
+
+        #welcome-nav-msg {
+            color: var(--highlight);
+            font-weight: 600;
+            margin-right: 0.5rem;
+            display: none;
+            white-space: nowrap;
+        }
+
+        /* --- Custom 404 Styles --- */
+        .not-found-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 2rem;
+            flex-grow: 1;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        .not-found-section h2 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--highlight), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: popIn 1.5s ease forwards;
+        }
+
+        .not-found-section p {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            margin-bottom: 2rem;
+        }
+
+        .road-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 200px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .road {
+            width: 100%;
+            height: 50px;
+            background-color: #333;
+            border-top: 5px dashed #fff;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .road-sign {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-10deg);
+            width: 150px;
+            height: auto;
+        }
+
+        .road-sign .sign-pole {
+            width: 8px;
+            height: 60px;
+            background: #666;
+            margin: 0 auto;
+        }
+
+        .road-sign .sign-board {
+            width: 150px;
+            background: var(--highlight);
+            border: 4px solid var(--primary-text);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--main-bg);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            line-height: 1;
+        }
+
+        /* --- Footer Styles --- */
+        footer {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            font-size: 0.9rem;
+            color: #64748b;
+            animation: fadeIn 3s ease forwards;
+            flex-shrink: 0;
+        }
+        footer a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        footer a:hover {
+            color: var(--highlight);
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.6);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* --- Media Queries --- */
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+            nav h1 {
+                margin-bottom: 0.5rem;
+            }
+            .nav-links {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                gap: 0.6rem;
+                margin-top: 0.5rem;
+            }
+            .profile-section {
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+            }
+            .nav-links a, .nav-links .btn {
+                width: 100%;
+                text-align: left;
+                padding: 0.4rem 0;
+                margin-right: 0;
+            }
+            #welcome-nav-msg {
+                width: auto;
+                text-align: left;
+                padding: 0;
+                margin-right: 0.5rem;
+                display: inline-block !important;
+            }
+            .btn {
+                width: auto;
+                text-align: center;
+                margin-top: 0.4rem;
+                margin-bottom: 0.4rem;
+                padding: 0.5rem 0.8rem;
+            }
+            #login-btn, #register-btn, #logout-btn {
+                width: 100%;
+                text-align: center;
+                margin-left: 0;
+            }
+            .not-found-section {
+                padding: 6rem 1rem 1rem;
+            }
+            .not-found-section h2 {
+                font-size: 2.5rem;
+            }
+            .not-found-section p {
+                font-size: 0.9rem;
+            }
+            .road-sign .sign-board {
+                width: 120px;
+                font-size: 1.5rem;
+            }
+            footer {
+                padding: 1.5rem 1rem;
+            }
+        }
+        @media (min-width: 601px) and (max-width: 900px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+            .nav-links {
+                gap: 0.8rem;
+            }
+            .not-found-section h2 {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mainContent" class="main-content">
+        <nav>
+            <h1>JSALI</h1>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="axe thematique.html">Axes Thématiques</a>
+                <a href="sponsor.html">Sponsors</a>
+                <a href="/inscriptions/">Inscription à la participation</a>
+
+                <div class="profile-section" style="display:none" id="profile-section">
+                    <div id="profile-pic-container">
+                        <input type="file" id="profile-pic-input" accept="image/*">
+                        <img src="placeholder-profile-pic.png" alt="Profile" id="profile-pic" />
+                    </div>
+                    <span id="welcome-nav-msg"></span>
+                </div>
+
+                <a href="register.html" class="btn" id="register-btn">S'inscrire</a>
+                <a href="login.html" class="btn" id="login-btn">Se connecter</a>
+                <button class="btn" id="logout-btn" style="display:none">Déconnexion</button>
+            </div>
+        </nav>
+
+        <section class="not-found-section">
+            <h2>404 - Page non trouvée</h2>
+            <p>Oops ! On dirait que vous êtes perdu. La page que vous cherchez n'existe pas.</p>
+            <div class="road-container">
+                <div class="road-sign">
+                    <div class="sign-board">404</div>
+                    <div class="sign-pole"></div>
+                </div>
+                <div class="road"></div>
+            </div>
+            <a href="index.html" class="btn" style="margin-top: 2rem;">Retour à l'accueil</a>
+        </section>
+
+        <footer>
+            &copy; 2025 JSALI — USTHB | FSTGAT | <a href="mailto:gatanalysel1@gmail.com">Nous Contacter</a><br />
+            <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
+        </footer>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = localStorage.getItem('jsaliUser');
+            const welcomeNavMsg = document.getElementById('welcome-nav-msg');
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const profileSection = document.getElementById('profile-section');
+            const profilePic = document.getElementById('profile-pic');
+            const profilePicInput = document.getElementById('profile-pic-input');
+
+            const placeholderPicPath = "placeholder-profile-pic.png";
+
+            function loadProfilePic() {
+                const savedPic = localStorage.getItem('jsaliProfilePic');
+                if (savedPic) {
+                    profilePic.src = savedPic;
+                } else {
+                    profilePic.src = placeholderPicPath;
+                }
+            }
+
+            function saveProfilePic(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        localStorage.setItem('jsaliProfilePic', e.target.result);
+                        profilePic.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            if (profilePic) {
+                profilePic.addEventListener('click', () => {
+                    if (user) {
+                        profilePicInput.click();
+                    }
+                });
+            }
+
+            if (profilePicInput) {
+                profilePicInput.addEventListener('change', saveProfilePic);
+            }
+
+            function showLoggedIn(userName) {
+                if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
+                if (profileSection) profileSection.style.display = 'flex';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (registerBtn) registerBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                if (profilePic) loadProfilePic();
+            }
+
+            function showLoggedOut() {
+                if (welcomeNavMsg) welcomeNavMsg.textContent = '';
+                if (profileSection) profileSection.style.display = 'none';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (registerBtn) registerBtn.style.display = 'inline-block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                localStorage.removeItem('jsaliUser');
+                if (profilePic) profilePic.src = placeholderPicPath;
+            }
+
+            if (user) {
+                showLoggedIn(user);
+            } else {
+                showLoggedOut();
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    showLoggedOut();
+                    window.location.href = "index.html";
+                });
+            }
+        });
+    </script>
+</body>
+</html>
