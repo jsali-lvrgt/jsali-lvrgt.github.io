@@ -135,9 +135,9 @@
 
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" required>
-            
-            <div class="g-recaptcha" data-sitekey="6LfnQpwrAAAAACeH3_kMEr5RD4khXwMC6JqJWLTa"></div>
-            
+
+            <div class="g-recaptcha" data-sitekey="6LeE9s0rAAAAAMjjjJG2weTGHGn65pEcqFCp57zV"></div>
+
             <button type="submit">C'est parti! →</button>
         </form>
         <a href="register.html">Pas encore inscrit ? Créer un compte</a>
@@ -160,9 +160,11 @@
             measurementId: "G-FW9DBVQND2"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
+        // Function to display a toast notification
         function showToast(message) {
             const toast = document.getElementById("toast");
             toast.textContent = message;
@@ -191,11 +193,6 @@
                     }
 
                     try {
-                        // The reCAPTCHA v2 token is in `recaptchaResponse`
-                        // In a real app, you would send this token to your server for verification
-                        // before proceeding with the login.
-                        // Here, we'll proceed directly assuming the user is a human.
-                        
                         // Sign in the user with email and password using Firebase
                         const userCredential = await signInWithEmailAndPassword(auth, email, password);
                         const user = userCredential.user;
@@ -212,7 +209,7 @@
                         }, 1500);
 
                     } catch (error) {
-                        // Reset reCAPTCHA on failure to allow user to try again
+                        // Reset reCAPTCHA on a failed login attempt to force re-verification
                         grecaptcha.reset();
 
                         let errorMessage = "Échec de la connexion. Veuillez vérifier votre email et mot de passe.";
