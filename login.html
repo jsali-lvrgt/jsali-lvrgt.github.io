@@ -147,9 +147,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBeFGzTiu3BcMCURE_Cpw4F4cmihY059mw",
             authDomain: "jsali-fstgat.firebaseapp.com",
@@ -160,11 +159,9 @@
             measurementId: "G-FW9DBVQND2"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Function to display a toast notification
         function showToast(message) {
             const toast = document.getElementById("toast");
             toast.textContent = message;
@@ -182,7 +179,6 @@
                     const password = document.getElementById("password").value.trim();
                     const recaptchaResponse = grecaptcha.getResponse();
 
-                    // Check if all fields and reCAPTCHA are filled/completed
                     if (email === "" || password === "") {
                         showToast("Veuillez remplir tous les champs.");
                         return;
@@ -193,23 +189,28 @@
                     }
 
                     try {
-                        // Sign in the user with email and password using Firebase
                         const userCredential = await signInWithEmailAndPassword(auth, email, password);
                         const user = userCredential.user;
 
-                        // Use the user's display name or email as a fallback
+                        // Vérifiez si l'e-mail de l'utilisateur est vérifié
+                        if (!user.emailVerified) {
+                            await signOut(auth);
+                            showToast("Votre compte n'a pas été vérifié. Veuillez vérifier votre boîte de réception pour l'e-mail de confirmation.");
+                            grecaptcha.reset();
+                            return;
+                        }
+
+                        // Si l'e-mail est vérifié, continuez le processus de connexion
                         const username = user.displayName || email.split("@")[0];
                         localStorage.setItem("jsaliUser", username);
 
                         showToast("Connexion réussie ! Bienvenue " + username + " !");
 
-                        // Redirect to the main page after a short delay
                         setTimeout(() => {
                             window.location.href = "index.html";
                         }, 1500);
 
                     } catch (error) {
-                        // Reset reCAPTCHA on a failed login attempt to force re-verification
                         grecaptcha.reset();
 
                         let errorMessage = "Échec de la connexion. Veuillez vérifier votre email et mot de passe.";
