@@ -47,6 +47,187 @@ document.addEventListener("DOMContentLoaded", () => {
         }, Math.max(0, remainingTime));
     };
 
+    if (window.location.pathname.includes('ins.html') || window.location.pathname.includes('participation_form.html')) {
+        window.addEventListener('load', hideLoader);
+    } else {
+        hideLoader();
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log("Firebase authentication successful.", user.uid);
+            // L'utilisateur est connecté, on active le bouton de soumission
+            submitButton.disabled = false;
+            formMessage.textContent = "";
+
+            // On ajoute l'écouteur d'événement pour la soumission du formulaire
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const formData = new FormData(form);
+                const submissionData = Object.fromEntries(formData.entries());
+
+                // Logique de soumission Formcarry
+                formMessage.textContent = "Envoi en cours...";
+                formMessage.style.color = "yellow";
+                submitButton.disabled = true;
+
+                try {
+                    const response = await fetch("https://formcarry.com/s/-rz71ZfooOI", {
+                        method: "POST",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(submissionData)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status === "success") {
+                        formMessage.textContent = "Votre participation a été soumise avec succès !";
+                        formMessage.style.color = "green";
+                        form.reset();
+                    } else {
+                        console.error("Erreur lors de la soumission du formulaire vers Formcarry:", result.message);
+                        formMessage.textContent = `Une erreur est survenue: ${result.message}`;
+                        formMessage.style.color = "red";
+                    }
+                } catch (error) {
+                    console.error("Erreur de connexion au serveur Formcarry:", error);
+                    formMessage.textContent = "Une erreur est survenue lors de l'envoi. Veuillez vérifier votre connexion.";
+                    formMessage.style.color = "red";
+                } finally {
+                    submitButton.disabled = false;
+                }
+            });
+            
+        } else {
+            console.log("No user signed in. Attempting to sign in.");
+            // L'utilisateur n'est pas connecté, on désactive le bouton et on affiche un message
+            submitButton.disabled = true;
+            formMessage.textContent = "Vous devez être connecté pour soumettre le formulaire.";
+            formMessage.style.color = "red";
+            alert("Vous devez être connecté pour soumettre le formulaire. Veuillez vous connecter ou vous inscrire.");
+            try {
+                if (initialAuthToken) {
+                    console.log("Attempting to sign in with custom token...");
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    console.log("No custom token provided. Signing in anonymously...");
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Firebase authentication error:", error);
+                formMessage.textContent = "L'authentification a échoué. Le formulaire ne peut pas être soumis.";
+                formMessage.style.color = "red";
+            }
+        }
+    });
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                entry.target.classList.remove('visible');
+            }
+        });
+    }, {
+        threshold: 0.2
+    });
+
+    document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+
+    const user = localStorage.getItem('jsaliUser');
+    const welcomeNavMsg = document.getElementById('welcome-nav-msg');
+    const loginBtn = document.getElementById('login-btn');
+    const registerBtn = document.getElementById('register-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const profileSection = document.getElementById('profile-section');
+    const profilePic = document.getElementById('profile-pic');
+    const profilePicInput = document.getElementById('profile-pic-input');
+    const placeholderPicPath = "https://placehold.co/40x40/919191/0a0a0a?text=P";
+
+    function loadProfilePic() {
+        const savedPic = localStorage.getItem('jsaliProfilePic');
+        if (savedPic) {
+            profilePic.src = savedPic;
+        } else {
+            profilePic.src = placeholderPicPath;
+        }
+    }
+
+    function saveProfilePic(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('jsaliProfilePic', e.target.result);
+                profilePic.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    if (profilePic) {
+        profilePic.addEventListener('click', () => {
+            if (user) {
+                profilePicInput.click();
+            }
+        });
+    }
+
+    if (profilePicInput) {
+        profilePicInput.addEventListener('change', saveProfilePic);
+    }
+
+    function showLoggedIn(userName) {
+        if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
+        if (profileSection) profileSection.style.display = 'flex';
+        if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (registerBtn) registerBtn.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'inline-block';
+        if (profilePic) loadProfilePic();
+    }
+
+    function showLoggedOut() {
+        if (welcomeNavMsg) welcomeNavMsg.textContent = '';
+        if (profileSection) profileSection.style.display = 'none';
+        if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
+        if (loginBtn) loginBtn.style.display = 'inline-block';
+        if (registerBtn) registerBtn.style.display = 'inline-block';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        localStorage.removeItem('jsaliUser');
+        if (profilePic) profilePic.src = placeholderPicPath;
+    }
+
+    if (user) {
+        showLoggedIn(user);
+    } else {
+        showLoggedOut();
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            showLoggedOut();
+            window.location.href = "index.html";
+        });
+    }
+});
+        setTimeout(() => {
+            if (loaderWrapper) {
+                loaderWrapper.classList.add('hidden');
+            }
+            setTimeout(() => {
+                if (mainContent) {
+                    mainContent.classList.remove('hidden');
+                }
+            }, 500);
+        }, Math.max(0, remainingTime));
+    };
+
     // This line ensures the loader hides if this is the ins.html page directly
     if (window.location.pathname.includes('ins.html') || window.location.pathname.includes('participation_form.html')) {
         window.addEventListener('load', hideLoader);
