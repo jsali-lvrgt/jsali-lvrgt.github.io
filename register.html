@@ -124,7 +124,7 @@
             .register-box h2 { font-size: 1.6rem; }
         }
     </style>
-    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfnQpwrAAAAACeH3_kMEr5RD4khXwMC6JqJWLTa"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="register-box">
@@ -138,8 +138,10 @@
 
             <label for="password">Mot de passe</label>
             <input type="password" id="password" required placeholder="Mot de passe" />
+            
+            <div class="g-recaptcha" data-sitekey="6LeE9s0rAAAAAMjjjJG2weTGHGn65pEcqFCp57zV"></div>
 
-            <button type="submit">Connexion →</button>
+            <button type="submit">S'inscrire →</button>
         </form>
         <a href="login.html">Déjà un compte ? Connectez-vous</a>
     </div>
@@ -180,24 +182,22 @@
                 form.addEventListener('submit', async function(e) {
                     e.preventDefault();
 
-                    // Execute reCAPTCHA before proceeding with registration
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password').value;
+                    const recaptchaResponse = grecaptcha.getResponse();
+
+                    // Check if all fields are filled and reCAPTCHA is completed
+                    if (!name || !email || !password) {
+                        showToast("Veuillez remplir tous les champs.");
+                        return;
+                    }
+                    if (recaptchaResponse.length === 0) {
+                        showToast("Veuillez compléter le reCAPTCHA.");
+                        return;
+                    }
+
                     try {
-                        const token = await grecaptcha.enterprise.execute('6LfnQpwrAAAAACeH3_kMEr5RD4khXwMC6JqJWLTa', {action: 'LOGIN'});
-
-                        // In a real-world scenario, you would send this token to your backend
-                        // for server-side verification. For this client-side example,
-                        // we'll proceed directly.
-                        console.log('reCAPTCHA Token:', token);
-
-                        const name = document.getElementById('name').value.trim();
-                        const email = document.getElementById('email').value.trim();
-                        const password = document.getElementById('password').value;
-
-                        if (!name || !email || !password) {
-                            showToast("Veuillez remplir tous les champs.");
-                            return;
-                        }
-
                         // Create a new user with email and password using Firebase
                         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                         const user = userCredential.user;
@@ -211,10 +211,13 @@
                         
                         // Redirect to the login page after a short delay
                         setTimeout(() => {
-                            window.location.href = "login.html";
+                            window.location.href = "index.html";
                         }, 1500);
 
                     } catch (error) {
+                        // Reset reCAPTCHA on a failed registration attempt
+                        grecaptcha.reset();
+
                         let errorMessage = "Échec de l'inscription. Veuillez réessayer.";
                         if (error.code === 'auth/email-already-in-use') {
                             errorMessage = 'Cette adresse e-mail est déjà utilisée.';
