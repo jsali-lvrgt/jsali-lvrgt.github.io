@@ -149,11 +149,9 @@
     <div class="toast" id="toast"></div>
 
     <script type="module">
-        // Import the necessary functions from Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBeFGzTiu3BcMCURE_Cpw4F4cmihY059mw",
             authDomain: "jsali-fstgat.firebaseapp.com",
@@ -164,11 +162,9 @@
             measurementId: "G-FW9DBVQND2"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Your existing showToast function
         function showToast(message) {
             const toast = document.getElementById("toast");
             toast.textContent = message;
@@ -187,7 +183,6 @@
                     const password = document.getElementById('password').value;
                     const recaptchaResponse = grecaptcha.getResponse();
 
-                    // Check if all fields are filled and reCAPTCHA is completed
                     if (!name || !email || !password) {
                         showToast("Veuillez remplir tous les champs.");
                         return;
@@ -198,24 +193,19 @@
                     }
 
                     try {
-                        // Create a new user with email and password using Firebase
                         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                         const user = userCredential.user;
 
-                        // Update the user's display name
-                        await updateProfile(user, {
-                            displayName: name
-                        });
+                        await updateProfile(user, { displayName: name });
+                        await sendEmailVerification(user);
 
-                        showToast("Compte créé avec succès ! Redirection...");
+                        showToast("Compte créé avec succès ! Un e-mail de vérification a été envoyé. Veuillez vérifier votre boîte de réception.");
                         
-                        // Redirect to the login page after a short delay
-                        setTimeout(() => {
-                            window.location.href = "login.html";
-                        }, 1500);
+                        // Réinitialiser le formulaire et le reCAPTCHA après l'envoi de l'e-mail
+                        form.reset();
+                        grecaptcha.reset();
 
                     } catch (error) {
-                        // Reset reCAPTCHA on a failed registration attempt
                         grecaptcha.reset();
 
                         let errorMessage = "Échec de l'inscription. Veuillez réessayer.";
