@@ -638,7 +638,7 @@ Résilience & adaptation climatique</h3>
       }, Math.max(0, remainingTime));
     };
 
-    if (window.location.pathname.includes('ins.html')) {
+    if (window.location.pathname.includes('/inscriptions')) {
       window.addEventListener('load', hideLoader);
     } else {
       hideLoader();
@@ -676,6 +676,8 @@ Résilience & adaptation climatique</h3>
         const filePath = `${userId}/avatar.${ext}`;
         const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
         const publicUrl = data?.publicUrl;
+
+          console.log('✅ Uploaded to:', publicUrl);
 
         if (!publicUrl) continue;
 
