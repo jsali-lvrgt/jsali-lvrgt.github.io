@@ -1,684 +1,1177 @@
-<!DOCTYPE html> 
- <html lang="fr"> 
- <head> 
-     <meta charset="UTF-8" /> 
-     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-     <title>JSALI — Axes Thématiques</title> 
-     <link rel="icon" href="JSALI.png"/> 
-     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet"> 
-     <style> 
-         :root { 
-             --main-bg: #0a0a0a; 
-             --highlight: #919191; 
-             --primary-text: #fff; 
-             --secondary-text: #cbd5e1; 
-             --accent: #919191; 
-             --blur: rgba(255,255,255,0.05); 
-         } 
-         * { margin:0; padding:0; box-sizing:border-box; scroll-behavior:smooth; } 
-         body { 
-             font-family: 'Space Grotesk', sans-serif; 
-             background: var(--main-bg); 
-             color: var(--primary-text); 
-             overflow-x: hidden; 
-             min-height: 100vh; 
-             display: flex; 
-             flex-direction: column; 
-         } 
+<!DOCTYPE html>
 
-         /* --- Loading Screen Styles --- */ 
-         .loader-wrapper { 
-             position: fixed; 
-             top: 0; 
-             left: 0; 
-             width: 100%; 
-             height: 100%; 
-             background-color: var(--main-bg); 
-             display: flex; 
-             justify-content: center; 
-             align-items: center; 
-             z-index: 9999; 
-             transition: opacity 1s ease-in-out; 
-             opacity: 1; 
-             pointer-events: all; 
-         } 
+<html lang="fr">
 
-         .loader-wrapper.hidden { 
-             opacity: 0; 
-             pointer-events: none; 
-         } 
- 
-         /* --- NEW LOADER STYLES --- */
-         .loader { 
-             position: relative; 
-             width: 200px; 
-             height: 200px; 
-             border-radius: 50%; 
-             /* smooth background */ 
-             background: radial-gradient( 
-                 circle, 
-                 rgba(255, 255, 255, 0.05) 30%, 
-                 transparent 70% 
-             ); 
-             overflow: hidden; 
-         } 
- 
-         /* outside circle */ 
-         .loader::before { 
-             content: ""; 
-             position: absolute; 
-             inset: 0; 
-             border-radius: 50%; 
-             border: 4px solid transparent; 
-             border-top-color: rgba(255, 255, 255, 0.6); 
-             animation: loader-spin 2s linear infinite; 
-         } 
- 
-         /* rotating circle */ 
-         .loader::after { 
-             content: ""; 
-             position: absolute; 
-             inset: 10%; 
-             border-radius: 50%; 
-             background: conic-gradient(from 90deg, rgba(255, 255, 255, 0.2), transparent); 
-             filter: blur(2px); 
-             animation: loader-spin-reverse 1.5s linear infinite; 
-         } 
- 
-         /* center circle */ 
-         .loader__inner { 
-             position: absolute; 
-             top: 50%; 
-             left: 50%; 
-             width: 30px; 
-             height: 30px; 
-             background: rgba(255, 255, 255, 0.9); 
-             border-radius: 50%; 
-             transform: translate(-50%, -50%); 
-             box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); 
-             animation: loader-pulse 1s ease-in-out infinite; 
-         } 
- 
-         /* Container */ 
-         .loader__orbit { 
-             position: absolute; 
-             top: 0; 
-             left: 0; 
-             width: 100%; 
-             height: 100%; 
-             animation: orbit-rotate 3s linear infinite; 
-         } 
- 
-         /* dots */ 
-         .loader__dot { 
-             position: absolute; 
-             left: 50%; 
-             top: 50%; 
-             width: 8px; 
-             height: 8px; 
-             background: rgba(255, 255, 255, 0.8); 
-             border-radius: 50%; 
-         } 
- 
-         /* 4 dots */ 
-         .loader__dot:nth-child(1) { 
-             transform: rotate(0deg) translate(60px); 
-         } 
-         .loader__dot:nth-child(2) { 
-             transform: rotate(90deg) translate(60px); 
-         } 
-         .loader__dot:nth-child(3) { 
-             transform: rotate(180deg) translate(60px); 
-         } 
-         .loader__dot:nth-child(4) { 
-             transform: rotate(270deg) translate(60px); 
-         } 
- 
-         /* Animations */ 
- 
-         @keyframes loader-spin { 
-             0% { 
-                 transform: rotate(0deg); 
-             } 
-             100% { 
-                 transform: rotate(360deg); 
-             } 
-         } 
- 
-         @keyframes loader-spin-reverse { 
-             0% { 
-                 transform: rotate(0deg); 
-             } 
-             100% { 
-                 transform: rotate(-360deg); 
-             } 
-         } 
- 
-         @keyframes loader-pulse { 
-             0%, 
-             100% { 
-                 transform: translate(-50%, -50%) scale(1); 
-             } 
-             50% { 
-                 transform: translate(-50%, -50%) scale(1.2); 
-             } 
-         } 
- 
-         @keyframes orbit-rotate { 
-             0% { 
-                 transform: rotate(0deg); 
-             } 
-             100% { 
-                 transform: rotate(360deg); 
-             } 
-         }
+<head>
 
-         /* --- Main Content Styles --- */ 
-         .main-content.hidden { 
-             display: none; 
-         } 
+    <meta charset="UTF-8" />
 
-         nav { 
-             position: fixed; 
-             top: 0; left: 0; right: 0; 
-             background: rgba(10,10,10,0.85); 
-             backdrop-filter: blur(8px); 
-             border-bottom: 1px solid rgba(255,255,255,0.1); 
-             padding: 1rem 2rem; 
-             z-index: 1000; 
-             display: flex; 
-             justify-content: space-between; 
-             align-items: center; 
-             animation: slideDown 1s ease forwards; 
-             flex-wrap: wrap; 
-         } 
-         nav h1 { 
-             font-size: 1.3rem; 
-             color: var(--highlight); 
-             margin-right: 1rem; 
-         } 
-          
-         .profile-section { 
-             display: flex; 
-             align-items: center; 
-             gap: 0.5rem; 
-         } 
-          
-         #profile-pic-container { 
-             position: relative; 
-             cursor: pointer; 
-             width: 40px; 
-             height: 40px; 
-         } 
-          
-         #profile-pic { 
-             width: 100%; 
-             height: 100%; 
-             border-radius: 50%; 
-             border: 2px solid var(--highlight); 
-             object-fit: cover; 
-             transition: transform 0.3s ease; 
-         } 
-          
-         #profile-pic:hover { 
-             transform: scale(1.1); 
-         } 
-          
-         #profile-pic-input { 
-             display: none; 
-         } 
-          
-         .nav-links { 
-             display: flex; 
-             gap: 1rem; 
-             align-items: center; 
-             flex-wrap: wrap; 
-             margin-top: 0; 
-         } 
-         .nav-links a { 
-             color: var(--secondary-text); 
-             text-decoration: none; 
-             font-weight: 600; 
-             transition: color 0.3s; 
-             white-space: nowrap; 
-         } 
-         .nav-links a:hover { 
-             color: var(--highlight); 
-         } 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-         .btn { 
-             padding: 0.4rem 1rem; 
-             background: var(--highlight); 
-             color: var(--main-bg); 
-             border: none; 
-             border-radius: 8px; 
-             font-weight: bold; 
-             transition: background 0.3s, transform 0.3s; 
-             text-decoration: none; 
-             cursor: pointer; 
-             white-space: nowrap; 
-         } 
+    <title>JSALI — Axes Thématiques</title>
 
-         .btn:hover { 
-             background: #a1a1a1; 
-             transform: scale(1.05); 
-         } 
+    <link rel="icon" href="JSALI.png"/>
 
-         #welcome-nav-msg { 
-             color: var(--highlight); 
-             font-weight: 600; 
-             margin-right: 0.5rem; 
-             display: none; 
-             white-space: nowrap; 
-         } 
-          
-         header { 
-             padding:8rem 2rem 2rem; 
-             text-align:center; 
-             flex-shrink: 0; 
-         } 
-         header h1 { 
-             font-size:3rem; font-weight:800; 
-             background: linear-gradient(to right, #919191, var(--accent)); 
-             -webkit-background-clip: text; 
-             -webkit-text-fill-color: transparent; 
-             animation: popIn 1.2s ease forwards; 
-             margin-bottom: 0.5rem; 
-         } 
-         header p { 
-             font-size:1.2rem; color: var(--secondary-text); 
-             margin-top:1rem; 
-             animation: fadeIn 2.5s ease forwards; 
-         } 
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
 
-         .features { 
-             display:grid; 
-             grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); 
-             gap:2rem; 
-             padding:3rem 2rem; 
-             max-width:1200px; 
-             margin:auto; 
-             flex-grow: 1; 
-         } 
-         .feature { 
-             background: var(--blur); 
-             border:1px solid rgba(255,255,255,0.1); 
-             padding:2rem; 
-             border-radius:1rem; 
-             backdrop-filter: blur(10px); 
-             opacity: 0; 
-             transform: translateY(60px) scale(0.95) rotateX(30deg); 
-             transition: all 0.8s ease; 
-         } 
-         .feature.visible { 
-             opacity: 1; 
-             transform: translateY(0) scale(1) rotateX(0); 
-         } 
-         .feature:hover { 
-             transform: scale(1.03) translateY(-5px); 
-             box-shadow: 0 10px 30px #919191; 
-         } 
-         .feature h3 { 
-             color: var(--highlight); 
-             margin-bottom:1rem; 
-             font-size: 1.5rem; 
-         } 
-         .feature ul { 
-             list-style: disc; 
-             margin-left:1.5rem; 
-             color: #d1d5db; 
-             font-size: 1rem; 
-         } 
-         .feature ul li { 
-             margin-bottom: 0.5rem; 
-         } 
+    <style>
 
-         footer { 
-             text-align:center; 
-             padding:3rem 1rem 2rem; 
-             font-size:0.9rem; 
-             color:#64748b; 
-             animation: fadeIn 3s ease forwards; 
-             flex-shrink: 0; 
-         } 
-         footer a { 
-             color: var(--secondary-text); 
-             text-decoration: none; 
-             transition: color 0.3s; 
-         } 
-         footer a:hover { 
-             color: var(--highlight); 
-         } 
+        :root {
 
-         @keyframes fadeIn { 
-             from {opacity: 0; transform: translateY(20px);} 
-             to {opacity: 1; transform: translateY(0);} 
-         } 
-         @keyframes popIn { 
-             0% {opacity: 0; transform: scale(0.6);} 
-             100% {opacity: 1; transform: scale(1);} 
-         } 
-         @keyframes slideDown { 
-             from {transform: translateY(-100%); opacity: 0;} 
-             to {transform: translateY(0); opacity: 1;} 
-         } 
+            --main-bg: #0a0a0a;
 
-         /* --- Media Queries for Mobile Responsiveness --- */ 
-         @media (max-width: 600px) { 
-             nav { 
-                 flex-direction: column; 
-                 align-items: flex-start; 
-                 padding: 1rem; 
-             } 
-             nav h1 { 
-                 margin-bottom: 1rem; 
-                 font-size: 1.1rem; 
-                 margin-right: 0; 
-             } 
-             .nav-links { 
-                 flex-direction: column; 
-                 align-items: flex-start; 
-                 width: 100%; 
-                 gap: 0.6rem; 
-             } 
-             .nav-links a { 
-                 width: 100%; 
-                 text-align: left; 
-                 padding: 0.3rem 0; 
-             } 
-             .profile-section { 
-                 flex-direction: row; 
-                 align-items: center; 
-                 width: 100%; 
-                 gap: 0.5rem; 
-                 margin-top: 0.5rem; 
-             } 
-             .nav-links a, .nav-links .btn { 
-                 width: 100%; 
-                 text-align: left; 
-                 padding: 0.4rem 0; 
-                 margin-right: 0; 
-             } 
-             #welcome-nav-msg { 
-                 width: auto; 
-                 text-align: left; 
-                 padding: 0; 
-                 margin-right: 0.5rem; 
-                 display: inline-block !important; 
-             } 
-             .btn { 
-                 width: auto; 
-                 text-align: center; 
-                 margin-top: 0.4rem; 
-                 margin-bottom: 0.4rem; 
-                 padding: 0.5rem 0.8rem; 
-             } 
-             #login-btn, #register-btn, #logout-btn { 
-                 width: 100%; 
-                 text-align: center; 
-                 margin-left: 0; 
-             } 
-             header { 
-                 padding: 6rem 1rem 1.5rem; 
-             } 
-             header h1 { 
-                 font-size: 2.2rem; 
-             } 
-             header p { 
-                 font-size: 1rem; 
-             } 
-             .features { 
-                 grid-template-columns: 1fr; 
-                 padding: 2rem 1rem; 
-                 gap: 1.5rem; 
-             } 
-             .feature { 
-                 padding: 1.5rem; 
-             } 
-             .feature h3 { 
-                 font-size: 1.3rem; 
-             } 
-             .feature ul { 
-                 font-size: 0.9rem; 
-             } 
-             footer { 
-                 padding: 2rem 1rem; 
-             } 
-         } 
-         @media (min-width: 601px) and (max-width: 900px) { 
-             nav { 
-                 padding: 1rem 1.5rem; 
-             } 
-             .nav-links { 
-                 gap: 0.8rem; 
-             } 
-             header h1 { 
-                 font-size: 2.5rem; 
-             } 
-             .features { 
-                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-                 padding: 2.5rem 1.5rem; 
-             } 
-             .feature { 
-                 padding: 1.8rem; 
-             } 
-             .feature h3 { 
-                 font-size: 1.4rem; 
-             } 
-         } 
-     </style> 
- </head> 
- <body> 
+            --highlight: #919191;
 
-     <div class="loader-wrapper" id="loaderWrapper"> 
-         <div class="loader"> 
-             <div class="loader__inner"></div> 
-             <div class="loader__orbit"> 
-                 <div class="loader__dot"></div> 
-                 <div class="loader__dot"></div> 
-                 <div class="loader__dot"></div> 
-                 <div class="loader__dot"></div> 
-             </div> 
-         </div> 
-     </div> 
-      
-     <div id="mainContent" class="main-content hidden"> 
-         <nav> 
-             <h1>JSALI</h1> 
-             <div class="nav-links" id="nav-links"> 
-    <a href="index.html">Page principale</a> 
-                 <a href="/error-catcher/404page.html">Sponsors</a> 
-                 <a href="/incriptions/">Inscription à la participation</a> 
-                  
-                 <div class="profile-section" style="display:none" id="profile-section"> 
-                     <div id="profile-pic-container"> 
-                         <input type="file" id="profile-pic-input" accept="image/*"> 
-                         <img src="placeholder-profile-pic.png" alt="Profile" id="profile-pic" /> 
-                     </div> 
-                     <span id="welcome-nav-msg"></span> 
-                 </div> 
-                  
-                 <a href="register.html" class="btn" id="register-btn">S'inscrire</a> 
-                 <a href="login.html" class="btn" id="login-btn">Se connecter</a> 
-                 <button class="btn" id="logout-btn" style="display:none">Déconnexion</button> 
-             </div> 
-         </nav> 
+            --primary-text: #fff;
 
-         <header> 
-             <h1>Axes Thématiques</h1> 
-             <p>Découvrez les principaux axes de recherche de la Journée Scientifique JSALI</p> 
-         </header> 
+            --secondary-text: #cbd5e1;
 
-         <section class="features" id="axes"> 
-             <div class="feature"> 
-                 <h3>Infrastructures linéaires & développement rural</h3> 
-                 <ul> 
-                     <li>Contributions des routes, chemins de fer et réseaux d’énergie au désenclavement des territoires.</li> 
-                     <li>Opportunités économiques générées par ces infrastructures dans les zones rurales.</li> 
-                     <li>Défis d’intégration paysagère et d’acceptabilité sociale.</li> 
-                 </ul> 
-             </div> 
-             <div class="feature"> 
-                 <h3>Technologies & innovations pour un aménagement intelligent</h3> 
-                 <ul> 
-                     <li>Utilisation des SIG, drones et modèles numériques pour la conception et la gestion des infrastructures linéaires.</li> 
-                     <li>Surveillance en temps réel grâce à la Géomatique et aux systèmes intelligents.</li> 
-                     <li>Matériaux et techniques innovants pour des infrastructures durables.</li> 
-                 </ul> 
-             </div> 
-             <div class="feature"> 
-                 <h3>Gouvernance & participation locale</h3> 
-                 <ul> 
-                     <li>Rôle des acteurs locaux dans la planification et le suivi des projets.</li> 
-                     <li>Modèles de gouvernance adaptés aux spécificités des territoires ruraux.</li> 
-                     <li>Partenariats public-privé et politiques publiques pour des infrastructures durables.</li> 
-                 </ul> 
-             </div> 
-             <div class="feature"> 
-                 <h3>Développement durable & biodiversité</h3> 
-                 <ul> 
-                     <li>Réduction des impacts des infrastructures sur les écosystèmes naturels.</li> 
-                     <li>Stratégies pour restaurer les corridors écologiques et limiter la fragmentation des habitats.</li> 
-                     <li>Rôle des infrastructures dans la transition écologique et énergétique.</li> 
-                 </ul> 
-             </div> 
-             <div class="feature"> 
-                 <h3>Résilience & adaptation climatique</h3> 
-                 <ul> 
-                     <li>Infrastructures linéaires face aux risques naturels : inondations, érosion, sécheresses.</li> 
-                     <li>Gestion durable des ressources en eau, énergie et sols dans les projets d’aménagement.</li> 
-                 </ul> 
-             </div> 
-         </section> 
+            --accent: #919191;
 
-         <footer> 
-             &copy; 2025 JSALI — USTHB | FSTGAT | <a href="mailto:gatanalysel1@gmail.com">Contact</a><br> 
-             <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a> 
-         </footer> 
-     </div> 
+            --blur: rgba(255,255,255,0.05);
 
-    <script> 
-     document.addEventListener("DOMContentLoaded", () => { 
-         const loaderWrapper = document.getElementById('loaderWrapper'); 
-         const mainContent = document.getElementById('mainContent'); 
-         const minimumLoadingTime = 4000; 
-         const startTime = Date.now(); 
+        }
 
-         const hideLoader = () => { 
-             const elapsed = Date.now() - startTime; 
-             const remainingTime = minimumLoadingTime - elapsed; 
+        * { margin:0; padding:0; box-sizing:border-box; scroll-behavior:smooth; }
 
-             setTimeout(() => { 
-                 if (loaderWrapper) { 
-                     loaderWrapper.classList.add('hidden'); 
-                 } 
-                 setTimeout(() => { 
-                     if (mainContent) { 
-                         mainContent.classList.remove('hidden'); 
-                     } 
-                 }, 500); 
-             }, Math.max(0, remainingTime)); 
-         }; 
+        body {
 
-         if (window.location.pathname.includes('ins.html')) { 
-             window.addEventListener('load', hideLoader); 
-         } else { 
-             hideLoader(); 
-         } 
+            font-family: 'Space Grotesk', sans-serif;
 
-         const observer = new IntersectionObserver(entries => { 
-             entries.forEach(entry => { 
-                 if (entry.isIntersecting) { 
-                     entry.target.classList.add('visible'); 
-                 } else { 
-                     entry.target.classList.remove('visible'); 
-                 } 
-             }); 
-         }, { 
-             threshold: 0.2 
-         }); 
+            background: var(--main-bg);
 
-         document.querySelectorAll('.feature').forEach(el => observer.observe(el)); 
+            color: var(--primary-text);
 
-         const user = localStorage.getItem('jsaliUser'); 
-         const welcomeNavMsg = document.getElementById('welcome-nav-msg'); 
-         const loginBtn = document.getElementById('login-btn'); 
-         const registerBtn = document.getElementById('register-btn'); 
-         const logoutBtn = document.getElementById('logout-btn'); 
-         const profileSection = document.getElementById('profile-section'); 
-         const profilePic = document.getElementById('profile-pic'); 
-         const profilePicInput = document.getElementById('profile-pic-input'); 
+            overflow-x: hidden;
 
-         const placeholderPicPath = "placeholder-profile-pic.png"; 
+            min-height: 100vh;
 
-         function loadProfilePic() { 
-             const savedPic = localStorage.getItem('jsaliProfilePic'); 
-             if (savedPic) { 
-                 profilePic.src = savedPic; 
-             } else { 
-                 profilePic.src = placeholderPicPath; 
-             } 
-         } 
+            display: flex;
 
-         function saveProfilePic(event) { 
-             const file = event.target.files[0]; 
-             if (file) { 
-                 const reader = new FileReader(); 
-                 reader.onload = function(e) { 
-                     localStorage.setItem('jsaliProfilePic', e.target.result); 
-                     profilePic.src = e.target.result; 
-                 }; 
-                 reader.readAsDataURL(file); 
-             } 
-         } 
-          
-         if (profilePic) { 
-             profilePic.addEventListener('click', () => { 
-                 if (user) { 
-                    profilePicInput.click(); 
-                 } 
-             }); 
-         } 
-          
-         if (profilePicInput) { 
-             profilePicInput.addEventListener('change', saveProfilePic); 
-         } 
+            flex-direction: column;
 
-         function showLoggedIn(userName) { 
-             if (welcomeNavMsg) welcomeNavMsg.textContent = `${userName} `; 
-             if (profileSection) profileSection.style.display = 'flex'; 
-             if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block'; 
-             if (loginBtn) loginBtn.style.display = 'none'; 
-             if (registerBtn) registerBtn.style.display = 'none'; 
-             if (logoutBtn) logoutBtn.style.display = 'inline-block'; 
-             if (profilePic) loadProfilePic(); 
-         } 
+        }
 
-         function showLoggedOut() { 
-             if (welcomeNavMsg) welcomeNavMsg.textContent = ''; 
-             if (profileSection) profileSection.style.display = 'none'; 
-             if (welcomeNavMsg) welcomeNavMsg.style.display = 'none'; 
-             if (loginBtn) loginBtn.style.display = 'inline-block'; 
-             if (registerBtn) registerBtn.style.display = 'inline-block'; 
-             if (logoutBtn) logoutBtn.style.display = 'none'; 
-             localStorage.removeItem('jsaliUser'); 
-             if (profilePic) profilePic.src = placeholderPicPath; 
-         } 
 
-         if (user) { 
-             showLoggedIn(user); 
-         } else { 
-             showLoggedOut(); 
-         } 
 
-         if (logoutBtn) { 
-             logoutBtn.addEventListener('click', () => { 
-                 showLoggedOut(); 
-                 window.location.href = "index.html"; 
-             }); 
-         } 
-     }); 
- </script> 
+        /* --- Loading Screen Styles --- */
 
- </body> 
- </html>
+        .loader-wrapper {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background-color: var(--main-bg);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            z-index: 9999;
+
+            transition: opacity 1s ease-in-out;
+
+            opacity: 1;
+
+            pointer-events: all;
+
+        }
+
+
+
+        .loader-wrapper.hidden {
+
+            opacity: 0;
+
+            pointer-events: none;
+
+        }
+
+
+
+        /* From Uiverse.io by zeynabashouri */
+
+        .loader {
+
+            width: 45px;
+
+            height: 40px;
+
+            background: linear-gradient(
+
+                #0000 calc(1 * 100% / 6),
+
+                #fff 0 calc(3 * 100% / 6),
+
+                #0000 0
+
+            ),
+
+            linear-gradient(
+
+                #0000 calc(2 * 100% / 6),
+
+                #fff 0 calc(4 * 100% / 6),
+
+                #0000 0
+
+            ),
+
+            linear-gradient(
+
+                #0000 calc(3 * 100% / 6),
+
+                #fff 0 calc(5 * 100% / 6),
+
+                #0000 0
+
+            );
+
+            background-size: 10px 400%;
+
+            background-repeat: no-repeat;
+
+            animation: matrix 1s infinite linear;
+
+        }
+
+
+
+        @keyframes matrix {
+
+            0% {
+
+                background-position: 0% 100%, 50% 100%, 100% 100%;
+
+            }
+
+
+
+            100% {
+
+                background-position: 0% 0%, 50% 0%, 100% 0%;
+
+            }
+
+        }
+
+
+
+        /* --- Main Content Styles --- */
+
+        .main-content.hidden {
+
+            display: none;
+
+        }
+
+
+
+        nav {
+
+            position: fixed;
+
+            top: 0; left: 0; right: 0;
+
+            background: rgba(10,10,10,0.85);
+
+            backdrop-filter: blur(8px);
+
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+
+            padding: 1rem 2rem;
+
+            z-index: 1000;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            animation: slideDown 1s ease forwards;
+
+            flex-wrap: wrap;
+
+        }
+
+        nav h1 {
+
+            font-size: 1.3rem;
+
+            color: var(--highlight);
+
+            margin-right: 1rem;
+
+        }
+
+
+
+        .profile-section {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 0.5rem;
+
+        }
+
+
+
+        #profile-pic-container {
+
+            position: relative;
+
+            cursor: pointer;
+
+            width: 40px;
+
+            height: 40px;
+
+        }
+
+
+
+        #profile-pic {
+
+            width: 100%;
+
+            height: 100%;
+
+            border-radius: 50%;
+
+            border: 2px solid var(--highlight);
+
+            object-fit: cover;
+
+            transition: transform 0.3s ease;
+
+        }
+
+
+
+        #profile-pic:hover {
+
+            transform: scale(1.1);
+
+        }
+
+
+
+        #profile-pic-input {
+
+            display: none;
+
+        }
+
+
+
+        .nav-links {
+
+            display: flex;
+
+            gap: 1rem;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            margin-top: 0;
+
+        }
+
+        .nav-links a {
+
+            color: var(--secondary-text);
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            transition: color 0.3s;
+
+            white-space: nowrap;
+
+        }
+
+        .nav-links a:hover {
+
+            color: var(--highlight);
+
+        }
+
+
+
+        .btn {
+
+            padding: 0.4rem 1rem;
+
+            background: var(--highlight);
+
+            color: var(--main-bg);
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            transition: background 0.3s, transform 0.3s;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+            white-space: nowrap;
+
+        }
+
+
+
+        .btn:hover {
+
+            background: #a1a1a1;
+
+            transform: scale(1.05);
+
+        }
+
+
+
+        #welcome-nav-msg {
+
+            color: var(--highlight);
+
+            font-weight: 600;
+
+            margin-right: 0.5rem;
+
+            display: none;
+
+            white-space: nowrap;
+
+        }
+
+
+
+        header {
+
+            padding:8rem 2rem 2rem;
+
+            text-align:center;
+
+            flex-shrink: 0;
+
+        }
+
+        header h1 {
+
+            font-size:3rem; font-weight:800;
+
+            background: linear-gradient(to right, #919191, var(--accent));
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            animation: popIn 1.2s ease forwards;
+
+            margin-bottom: 0.5rem;
+
+        }
+
+        header p {
+
+            font-size:1.2rem; color: var(--secondary-text);
+
+            margin-top:1rem;
+
+            animation: fadeIn 2.5s ease forwards;
+
+        }
+
+
+
+        .features {
+
+            display:grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+
+            gap:2rem;
+
+            padding:3rem 2rem;
+
+            max-width:1200px;
+
+            margin:auto;
+
+            flex-grow: 1;
+
+        }
+
+        .feature {
+
+            background: var(--blur);
+
+            border:1px solid rgba(255,255,255,0.1);
+
+            padding:2rem;
+
+            border-radius:1rem;
+
+            backdrop-filter: blur(10px);
+
+            opacity: 0;
+
+            transform: translateY(60px) scale(0.95) rotateX(30deg);
+
+            transition: all 0.8s ease;
+
+        }
+
+        .feature.visible {
+
+            opacity: 1;
+
+            transform: translateY(0) scale(1) rotateX(0);
+
+        }
+
+        .feature:hover {
+
+            transform: scale(1.03) translateY(-5px);
+
+            box-shadow: 0 10px 30px #919191;
+
+        }
+
+        .feature h3 {
+
+            color: var(--highlight);
+
+            margin-bottom:1rem;
+
+            font-size: 1.5rem;
+
+        }
+
+        .feature ul {
+
+            list-style: disc;
+
+            margin-left:1.5rem;
+
+            color: #d1d5db;
+
+            font-size: 1rem;
+
+        }
+
+        .feature ul li {
+
+            margin-bottom: 0.5rem;
+
+        }
+
+
+
+        footer {
+
+            text-align:center;
+
+            padding:3rem 1rem 2rem;
+
+            font-size:0.9rem;
+
+            color:#64748b;
+
+            animation: fadeIn 3s ease forwards;
+
+            flex-shrink: 0;
+
+        }
+
+        footer a {
+
+            color: var(--secondary-text);
+
+            text-decoration: none;
+
+            transition: color 0.3s;
+
+        }
+
+        footer a:hover {
+
+            color: var(--highlight);
+
+        }
+
+
+
+        @keyframes fadeIn {
+
+            from {opacity: 0; transform: translateY(20px);}
+
+            to {opacity: 1; transform: translateY(0);}
+
+        }
+
+        @keyframes popIn {
+
+            0% {opacity: 0; transform: scale(0.6);}
+
+            100% {opacity: 1; transform: scale(1);}
+
+        }
+
+        @keyframes slideDown {
+
+            from {transform: translateY(-100%); opacity: 0;}
+
+            to {transform: translateY(0); opacity: 1;}
+
+        }
+
+
+
+        /* --- Media Queries for Mobile Responsiveness --- */
+
+        @media (max-width: 600px) {
+
+            nav {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                padding: 1rem;
+
+            }
+
+            nav h1 {
+
+                margin-bottom: 1rem;
+
+                font-size: 1.1rem;
+
+                margin-right: 0;
+
+            }
+
+            .nav-links {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                width: 100%;
+
+                gap: 0.6rem;
+
+            }
+
+            .nav-links a {
+
+                width: 100%;
+
+                text-align: left;
+
+                padding: 0.3rem 0;
+
+            }
+
+            .profile-section {
+
+                flex-direction: row;
+
+                align-items: center;
+
+                width: 100%;
+
+                gap: 0.5rem;
+
+                margin-top: 0.5rem;
+
+            }
+
+            .nav-links a, .nav-links .btn {
+
+                width: 100%;
+
+                text-align: left;
+
+                padding: 0.4rem 0;
+
+                margin-right: 0;
+
+            }
+
+            #welcome-nav-msg {
+
+                width: auto;
+
+                text-align: left;
+
+                padding: 0;
+
+                margin-right: 0.5rem;
+
+                display: inline-block !important;
+
+            }
+
+            .btn {
+
+                width: auto;
+
+                text-align: center;
+
+                margin-top: 0.4rem;
+
+                margin-bottom: 0.4rem;
+
+                padding: 0.5rem 0.8rem;
+
+            }
+
+            #login-btn, #register-btn, #logout-btn {
+
+                width: 100%;
+
+                text-align: center;
+
+                margin-left: 0;
+
+            }
+
+            header {
+
+                padding: 6rem 1rem 1.5rem;
+
+            }
+
+            header h1 {
+
+                font-size: 2.2rem;
+
+            }
+
+            header p {
+
+                font-size: 1rem;
+
+            }
+
+            .features {
+
+                grid-template-columns: 1fr;
+
+                padding: 2rem 1rem;
+
+                gap: 1.5rem;
+
+            }
+
+            .feature {
+
+                padding: 1.5rem;
+
+            }
+
+            .feature h3 {
+
+                font-size: 1.3rem;
+
+            }
+
+            .feature ul {
+
+                font-size: 0.9rem;
+
+            }
+
+            footer {
+
+                padding: 2rem 1rem;
+
+            }
+
+        }
+
+        @media (min-width: 601px) and (max-width: 900px) {
+
+            nav {
+
+                padding: 1rem 1.5rem;
+
+            }
+
+            .nav-links {
+
+                gap: 0.8rem;
+
+            }
+
+            header h1 {
+
+                font-size: 2.5rem;
+
+            }
+
+            .features {
+
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+                padding: 2.5rem 1.5rem;
+
+            }
+
+            .feature {
+
+                padding: 1.8rem;
+
+            }
+
+            .feature h3 {
+
+                font-size: 1.4rem;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div class="loader-wrapper" id="loaderWrapper">
+
+        <div class="loader"></div>
+
+    </div>
+
+
+
+    <div id="mainContent" class="main-content hidden">
+
+        <nav>
+
+            <h1>JSALI</h1>
+
+            <div class="nav-links" id="nav-links">
+
+
+   <a href="/home/">Page principale</a>
+
+
+   <a href="index.html">Page principale</a>
+
+                <a href="/error-catcher/404page.html">Sponsors</a>
+
+                <a href="/incriptions/">Inscription à la participation</a>
+
+
+
+                <div class="profile-section" style="display:none" id="profile-section">
+
+                    <div id="profile-pic-container">
+
+                        <input type="file" id="profile-pic-input" accept="image/*">
+
+                        <img src="placeholder-profile-pic.png" alt="Profile" id="profile-pic" />
+
+                    </div>
+
+                    <span id="welcome-nav-msg"></span>
+
+                </div>
+
+
+
+                <a href="register.html" class="btn" id="register-btn">S'inscrire</a>
+
+                <a href="login.html" class="btn" id="login-btn">Se connecter</a>
+
+                <button class="btn" id="logout-btn" style="display:none">Déconnexion</button>
+
+            </div>
+
+        </nav>
+
+
+
+        <header>
+
+            <h1>Axes Thématiques</h1>
+
+            <p>Découvrez les principaux axes de recherche de la Journée Scientifique JSALI</p>
+
+        </header>
+
+
+
+        <section class="features" id="axes">
+
+            <div class="feature">
+
+                <h3>Infrastructures linéaires & développement rural</h3>
+
+                <ul>
+
+                    <li>Contributions des routes, chemins de fer et réseaux d’énergie au désenclavement des territoires.</li>
+
+                    <li>Opportunités économiques générées par ces infrastructures dans les zones rurales.</li>
+
+                    <li>Défis d’intégration paysagère et d’acceptabilité sociale.</li>
+
+                </ul>
+
+            </div>
+
+            <div class="feature">
+
+                <h3>Technologies & innovations pour un aménagement intelligent</h3>
+
+                <ul>
+
+                    <li>Utilisation des SIG, drones et modèles numériques pour la conception et la gestion des infrastructures linéaires.</li>
+
+                    <li>Surveillance en temps réel grâce à la Géomatique et aux systèmes intelligents.</li>
+
+                    <li>Matériaux et techniques innovants pour des infrastructures durables.</li>
+
+                </ul>
+
+            </div>
+
+            <div class="feature">
+
+                <h3>Gouvernance & participation locale</h3>
+
+                <ul>
+
+                    <li>Rôle des acteurs locaux dans la planification et le suivi des projets.</li>
+
+                    <li>Modèles de gouvernance adaptés aux spécificités des territoires ruraux.</li>
+
+                    <li>Partenariats public-privé et politiques publiques pour des infrastructures durables.</li>
+
+                </ul>
+
+            </div>
+
+            <div class="feature">
+
+                <h3>Développement durable & biodiversité</h3>
+
+                <ul>
+
+                    <li>Réduction des impacts des infrastructures sur les écosystèmes naturels.</li>
+
+                    <li>Stratégies pour restaurer les corridors écologiques et limiter la fragmentation des habitats.</li>
+
+                    <li>Rôle des infrastructures dans la transition écologique et énergétique.</li>
+
+                </ul>
+
+            </div>
+
+            <div class="feature">
+
+                <h3>Résilience & adaptation climatique</h3>
+
+                <ul>
+
+                    <li>Infrastructures linéaires face aux risques naturels : inondations, érosion, sécheresses.</li>
+
+                    <li>Gestion durable des ressources en eau, énergie et sols dans les projets d’aménagement.</li>
+
+                </ul>
+
+            </div>
+
+        </section>
+
+
+
+        <footer>
+
+            &copy; 2025 JSALI — USTHB | FSTGAT | <a href="mailto:gatanalysel1@gmail.com">Contact</a><br>
+
+            <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
+
+        </footer>
+
+    </div>
+
+
+
+   <script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const loaderWrapper = document.getElementById('loaderWrapper');
+
+        const mainContent = document.getElementById('mainContent');
+
+        const minimumLoadingTime = 4000;
+
+        const startTime = Date.now();
+
+
+
+        const hideLoader = () => {
+
+            const elapsed = Date.now() - startTime;
+
+            const remainingTime = minimumLoadingTime - elapsed;
+
+
+
+            setTimeout(() => {
+
+                if (loaderWrapper) {
+
+                    loaderWrapper.classList.add('hidden');
+
+                }
+
+                setTimeout(() => {
+
+                    if (mainContent) {
+
+                        mainContent.classList.remove('hidden');
+
+                    }
+
+                }, 500);
+
+            }, Math.max(0, remainingTime));
+
+        };
+
+
+
+        if (window.location.pathname.includes('ins.html')) {
+
+            window.addEventListener('load', hideLoader);
+
+        } else {
+
+            hideLoader();
+
+        }
+
+
+
+        const observer = new IntersectionObserver(entries => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add('visible');
+
+                } else {
+
+                    entry.target.classList.remove('visible');
+
+                }
+
+            });
+
+        }, {
+
+            threshold: 0.2
+
+        });
+
+
+
+        document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+
+
+
+        const user = localStorage.getItem('jsaliUser');
+
+        const welcomeNavMsg = document.getElementById('welcome-nav-msg');
+
+        const loginBtn = document.getElementById('login-btn');
+
+        const registerBtn = document.getElementById('register-btn');
+
+        const logoutBtn = document.getElementById('logout-btn');
+
+        const profileSection = document.getElementById('profile-section');
+
+        const profilePic = document.getElementById('profile-pic');
+
+        const profilePicInput = document.getElementById('profile-pic-input');
+
+
+
+        const placeholderPicPath = "placeholder-profile-pic.png";
+
+
+
+        function loadProfilePic() {
+
+            const savedPic = localStorage.getItem('jsaliProfilePic');
+
+            if (savedPic) {
+
+                profilePic.src = savedPic;
+
+            } else {
+
+                profilePic.src = placeholderPicPath;
+
+            }
+
+        }
+
+
+
+        function saveProfilePic(event) {
+
+            const file = event.target.files[0];
+
+            if (file) {
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+
+                    localStorage.setItem('jsaliProfilePic', e.target.result);
+
+                    profilePic.src = e.target.result;
+
+                };
+
+                reader.readAsDataURL(file);
+
+            }
+
+        }
+
+
+
+        if (profilePic) {
+
+            profilePic.addEventListener('click', () => {
+
+                if (user) {
+
+                   profilePicInput.click();
+
+                }
+
+            });
+
+        }
+
+
+
+        if (profilePicInput) {
+
+            profilePicInput.addEventListener('change', saveProfilePic);
+
+        }
+
+
+
+        function showLoggedIn(userName) {
+
+            if (welcomeNavMsg) welcomeNavMsg.textContent = `${userName} `;
+
+            if (profileSection) profileSection.style.display = 'flex';
+
+            if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
+
+            if (loginBtn) loginBtn.style.display = 'none';
+
+            if (registerBtn) registerBtn.style.display = 'none';
+
+            if (logoutBtn) logoutBtn.style.display = 'inline-block';
+
+            if (profilePic) loadProfilePic();
+
+        }
+
+
+
+        function showLoggedOut() {
+
+            if (welcomeNavMsg) welcomeNavMsg.textContent = '';
+
+            if (profileSection) profileSection.style.display = 'none';
+
+            if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
+
+            if (loginBtn) loginBtn.style.display = 'inline-block';
+
+            if (registerBtn) registerBtn.style.display = 'inline-block';
+
+            if (logoutBtn) logoutBtn.style.display = 'none';
+
+            localStorage.removeItem('jsaliUser');
+
+            // The line to remove the profile picture was here.
+
+            // It has been removed to allow the picture to persist on logout.
+
+            if (profilePic) profilePic.src = placeholderPicPath;
+
+        }
+
+
+
+        if (user) {
+
+            showLoggedIn(user);
+
+        } else {
+
+            showLoggedOut();
+
+        }
+
+
+
+        if (logoutBtn) {
+
+            logoutBtn.addEventListener('click', () => {
+
+                showLoggedOut();
+
+                window.location.href = "index.html";
+
+            });
+
+        }
+
+    });
+
+</script>
+
+
+
+</body>
+
+</html>
