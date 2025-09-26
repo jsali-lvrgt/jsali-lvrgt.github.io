@@ -621,7 +621,7 @@ Résilience & adaptation climatique</h3>
   const PLACEHOLDER_PIC = 'placeholder-profile-pic.png';
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // === LOADER LOGIC (unchanged) ===
+    // === LOADER LOGIC ===
     const loaderWrapper = document.getElementById('loaderWrapper');
     const mainContent = document.getElementById('mainContent');
     const minimumLoadingTime = 4000;
@@ -661,26 +661,24 @@ Résilience & adaptation climatique</h3>
     const profilePic = document.getElementById('profile-pic');
     const profilePicInput = document.getElementById('profile-pic-input');
 
-    // === SUPABASE STORAGE: LOAD PROFILE PICTURE ===
+    // === LOAD PROFILE PICTURE FROM SUPABASE STORAGE ===
     async function loadProfilePicture(userId) {
       if (!userId || !profilePic) return;
 
-      // Try to get from cache first
       const cachedUrl = localStorage.getItem(`jsali_avatar_${userId}`);
       if (cachedUrl) {
         profilePic.src = cachedUrl;
         return;
       }
 
-      // Try common extensions
       const extensions = ['jpg', 'jpeg', 'png', 'webp'];
       for (const ext of extensions) {
         const filePath = `${userId}/avatar.${ext}`;
-        const {  { publicUrl } } = supabase.storage
-          .from(BUCKET_NAME)
-          .getPublicUrl(filePath);
+        const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
+        const publicUrl = data?.publicUrl;
 
-        // Check if file exists by attempting to fetch headers
+        if (!publicUrl) continue;
+
         try {
           const response = await fetch(publicUrl, { method: 'HEAD' });
           if (response.ok) {
@@ -693,41 +691,36 @@ Résilience & adaptation climatique</h3>
         }
       }
 
-      // Fallback to placeholder
       profilePic.src = PLACEHOLDER_PIC;
     }
 
-    // === SUPABASE STORAGE: UPLOAD PROFILE PICTURE ===
+    // === UPLOAD PROFILE PICTURE TO SUPABASE STORAGE ===
     async function uploadProfilePicture(userId, file) {
       if (!file || !userId) return;
 
-      // Validate file type
       if (!file.type.startsWith('image/')) {
-        alert('Veuillez sélectionner une image valide (jpg, png, etc.).');
+        alert('Veuillez sélectionner une image valide.');
         return;
       }
 
-      // Use jpg as default extension
       const filePath = `${userId}/avatar.jpg`;
-
       const { error: uploadError } = await supabase.storage
         .from(BUCKET_NAME)
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) {
-        console.error('Erreur lors du téléchargement:', uploadError);
-        alert('Échec du téléchargement de la photo de profil.');
+        console.error('Upload error:', uploadError);
+        alert('Échec du téléchargement.');
         return;
       }
 
-      // Get public URL
-      const {  { publicUrl } } = supabase.storage
-        .from(BUCKET_NAME)
-        .getPublicUrl(filePath);
+      const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
+      const publicUrl = data?.publicUrl;
 
-      // Update UI and cache
-      profilePic.src = publicUrl;
-      localStorage.setItem(`jsali_avatar_${userId}`, publicUrl);
+      if (publicUrl) {
+        profilePic.src = publicUrl;
+        localStorage.setItem(`jsali_avatar_${userId}`, publicUrl);
+      }
     }
 
     // === UI: LOGGED IN ===
@@ -742,11 +735,8 @@ Résilience & adaptation climatique</h3>
       if (registerBtn) registerBtn.style.display = 'none';
       if (logoutBtn) logoutBtn.style.display = 'inline-block';
 
-      // Set up profile pic click
       if (profilePic) {
-        profilePic.onclick = () => {
-          if (profilePicInput) profilePicInput.click();
-        };
+        profilePic.onclick = () => profilePicInput?.click();
       }
 
       if (profilePicInput) {
@@ -754,13 +744,11 @@ Résilience & adaptation climatique</h3>
           const file = e.target.files[0];
           if (file) {
             await uploadProfilePicture(userId, file);
-            // Reset input so same file can be re-uploaded
-            e.target.value = '';
+            e.target.value = ''; // reset input
           }
         };
       }
 
-      // Load avatar
       loadProfilePicture(userId);
     }
 
@@ -773,29 +761,22 @@ Résilience & adaptation climatique</h3>
       if (registerBtn) registerBtn.style.display = 'inline-block';
       if (logoutBtn) logoutBtn.style.display = 'none';
       if (profilePic) profilePic.src = PLACEHOLDER_PIC;
-      if (profilePicInput) profilePicInput.onchange = null;
     }
 
-    // === CHECK CURRENT SESSION ===
-    const {  { session } } = await supabase.auth.getSession();
+    // ✅ CORRECTED: Get session properly
+    const { data: { session } } = await supabase.auth.getSession();
 
     if (session?.user && session.user.email_confirmed_at) {
       showLoggedIn(session.user);
     } else {
       showLoggedOut();
-      // Optional: if user is logged in but not verified, show message
-      if (session?.user && !session.user.email_confirmed_at) {
-        // You could redirect or show banner
-        console.log("Email non vérifié. Veuillez consulter votre boîte mail.");
-      }
     }
 
-    // === LOGOUT HANDLER ===
+    // === LOGOUT ===
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async () => {
         await supabase.auth.signOut();
         showLoggedOut();
-        // Clear avatar cache for this user (optional)
         if (session?.user) {
           localStorage.removeItem(`jsali_avatar_${session.user.id}`);
         }
@@ -803,9 +784,9 @@ Résilience & adaptation climatique</h3>
       });
     }
 
-    // === LISTEN FOR AUTH CHANGES ===
+    // === AUTH STATE LISTENER ===
     supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user.email_confirmed_at) {
+      if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
         showLoggedIn(session.user);
       } else if (event === 'SIGNED_OUT') {
         showLoggedOut();
