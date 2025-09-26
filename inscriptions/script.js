@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 2000);
 
     // === Check if user is logged in & email confirmed ===
-    const {  { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user || !session.user.email_confirmed_at) {
         formMessage.textContent = "Veuillez vous connecter pour soumettre.";
         formMessage.style.color = "red";
