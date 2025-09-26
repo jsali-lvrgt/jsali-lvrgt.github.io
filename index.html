@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE ahtml>
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
@@ -47,6 +47,8 @@
             transition: opacity 1s ease-in-out;
             opacity: 1;
             pointer-events: all;
+            /* UPDATED: Stack content vertically */
+            flex-direction: column; 
         }
 
         .loader-wrapper.hidden {
@@ -54,129 +56,70 @@
             pointer-events: none;
         }
 
-        /* --- New Loader Styles --- */
+        /* --- New Loader Text Styles --- */
+        .loader-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--highlight);
+            margin-bottom: 2rem; /* Space above the dots */
+        }
+        
+        .loader-footer-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--secondary-text);
+            margin-top: 3rem; /* Space below the dots */
+            line-height: 1.4;
+        }
+
+        .loader-footer-text a {
+            color: var(--highlight);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .loader-footer-text a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        /* --- End of New Loader Text Styles --- */
+
+
+        /* --- Updated Loader Styles: Three-Dot Pulse --- */
         .loader {
-            position: relative;
-            width: 200px;
-            height: 200px;
+            display: flex;
+            justify-content: space-between;
+            width: 60px;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
             border-radius: 50%;
-            background: radial-gradient(
-                circle,
-                rgba(255, 255, 255, 0.05) 30%,
-                transparent 70%
-            );
-            overflow: hidden;
+            background-color: var(--highlight);
+            animation: pulse 1.5s infinite ease-in-out;
         }
 
-        /* outside circle */
-        .loader::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            border: 4px solid transparent;
-            border-top-color: rgba(255, 255, 255, 0.6);
-            animation: loader-spin 2s linear infinite;
+        .dot:nth-child(2) {
+            animation-delay: 0.15s;
         }
 
-        /* rotating circle */
-        .loader::after {
-            content: "";
-            position: absolute;
-            inset: 10%;
-            border-radius: 50%;
-            background: conic-gradient(from 90deg, rgba(255, 255, 255, 0.2), transparent);
-            filter: blur(2px);
-            animation: loader-spin-reverse 1.5s linear infinite;
+        .dot:nth-child(3) {
+            animation-delay: 0.3s;
         }
 
-        /* center circle */
-        .loader__inner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 30px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-            animation: loader-pulse 1s ease-in-out infinite;
-        }
-
-        /* Container */
-        .loader__orbit {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            animation: orbit-rotate 3s linear infinite;
-        }
-
-        /* dots */
-        .loader__dot {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-        }
-
-        /* 4 dots */
-        .loader__dot:nth-child(1) {
-            transform: rotate(0deg) translate(60px);
-        }
-        .loader__dot:nth-child(2) {
-            transform: rotate(90deg) translate(60px);
-        }
-        .loader__dot:nth-child(3) {
-            transform: rotate(180deg) translate(60px);
-        }
-        .loader__dot:nth-child(4) {
-            transform: rotate(270deg) translate(60px);
-        }
-
-        /* Animations */
-
-        @keyframes loader-spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes loader-spin-reverse {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(-360deg);
-            }
-        }
-
-        @keyframes loader-pulse {
-            0%,
-            100% {
-                transform: translate(-50%, -50%) scale(1);
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
             }
             50% {
-                transform: translate(-50%, -50%) scale(1.2);
+                transform: scale(1);
+                opacity: 1;
             }
         }
-
-        @keyframes orbit-rotate {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+        /* --- End of Updated Loader Styles --- */
 
         /* --- Main Content Styles --- */
         .main-content.hidden {
@@ -567,15 +510,19 @@
 <body>
 
     <div class="loader-wrapper" id="loaderWrapper">
+        <div class="loader-text">Chargement...</div>
         <div class="loader">
-            <div class="loader__inner"></div>
-            <div class="loader__orbit">
-                <div class="loader__dot"></div>
-                <div class="loader__dot"></div>
-                <div class="loader__dot"></div>
-                <div class="loader__dot"></div>
-            </div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
         </div>
+        <p class="loader-footer-text">
+            Vous ne pouvez pas entrer le site?
+            <br>
+            <a href="https://x.com/jsali_lvrgt" target="_blank">Tweetez Nous</a> 
+            | 
+            <a href="https://jsalilvrgt.statuspage.io" target="_blank">Stats de nos Services</a>
+        </p>
     </div>
 
 
@@ -650,8 +597,6 @@ Résilience & adaptation climatique</h3>
         </section>
 
 
-     
-
         <footer>
             &copy; 2025 jsali_lvrgt | FSTGAT | USTHB | <a href="mailto:jsalifstgat@gmail.com">Nous Contacter</a><br />
             <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
@@ -659,129 +604,129 @@ Résilience & adaptation climatique</h3>
     </div>
 
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const loaderWrapper = document.getElementById('loaderWrapper');
-        const mainContent = document.getElementById('mainContent');
-        const minimumLoadingTime = 4000;
-        const startTime = Date.now();
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const loaderWrapper = document.getElementById('loaderWrapper');
+            const mainContent = document.getElementById('mainContent');
+            const minimumLoadingTime = 4000;
+            const startTime = Date.now();
 
-        const hideLoader = () => {
-            const elapsed = Date.now() - startTime;
-            const remainingTime = minimumLoadingTime - elapsed;
+            const hideLoader = () => {
+                const elapsed = Date.now() - startTime;
+                const remainingTime = minimumLoadingTime - elapsed;
 
-            setTimeout(() => {
-                if (loaderWrapper) {
-                    loaderWrapper.classList.add('hidden');
-                }
                 setTimeout(() => {
-                    if (mainContent) {
-                        mainContent.classList.remove('hidden');
+                    if (loaderWrapper) {
+                        loaderWrapper.classList.add('hidden');
                     }
-                }, 500);
-            }, Math.max(0, remainingTime));
-        };
+                    setTimeout(() => {
+                        if (mainContent) {
+                            mainContent.classList.remove('hidden');
+                        }
+                    }, 500);
+                }, Math.max(0, remainingTime));
+            };
 
-        if (window.location.pathname.includes('ins.html')) {
-            window.addEventListener('load', hideLoader);
-        } else {
-            hideLoader();
-        }
-
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else {
-                    entry.target.classList.remove('visible');
-                }
-            });
-        }, {
-            threshold: 0.2
-        });
-
-        document.querySelectorAll('.feature').forEach(el => observer.observe(el));
-
-        const user = localStorage.getItem('jsaliUser');
-        const welcomeNavMsg = document.getElementById('welcome-nav-msg');
-        const loginBtn = document.getElementById('login-btn');
-        const registerBtn = document.getElementById('register-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const profileSection = document.getElementById('profile-section');
-        const profilePic = document.getElementById('profile-pic');
-        const profilePicInput = document.getElementById('profile-pic-input');
-
-        const placeholderPicPath = "placeholder-profile-pic.png";
-
-        function loadProfilePic() {
-            const savedPic = localStorage.getItem('jsaliProfilePic');
-            if (savedPic) {
-                profilePic.src = savedPic;
+            if (window.location.pathname.includes('ins.html')) {
+                window.addEventListener('load', hideLoader);
             } else {
-                profilePic.src = placeholderPicPath;
+                hideLoader();
             }
-        }
 
-        function saveProfilePic(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    localStorage.setItem('jsaliProfilePic', e.target.result);
-                    profilePic.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-        
-        if (profilePic) {
-            profilePic.addEventListener('click', () => {
-                if (user) {
-                   profilePicInput.click();
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, {
+                threshold: 0.2
+            });
+
+            document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+
+            const user = localStorage.getItem('jsaliUser');
+            const welcomeNavMsg = document.getElementById('welcome-nav-msg');
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const profileSection = document.getElementById('profile-section');
+            const profilePic = document.getElementById('profile-pic');
+            const profilePicInput = document.getElementById('profile-pic-input');
+
+            const placeholderPicPath = "placeholder-profile-pic.png";
+
+            function loadProfilePic() {
+                const savedPic = localStorage.getItem('jsaliProfilePic');
+                if (savedPic) {
+                    profilePic.src = savedPic;
+                } else {
+                    profilePic.src = placeholderPicPath;
                 }
-            });
-        }
-        
-        if (profilePicInput) {
-            profilePicInput.addEventListener('change', saveProfilePic);
-        }
+            }
 
-        function showLoggedIn(userName) {
-            if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
-            if (profileSection) profileSection.style.display = 'flex';
-            if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
-            if (loginBtn) loginBtn.style.display = 'none';
-            if (registerBtn) registerBtn.style.display = 'none';
-            if (logoutBtn) logoutBtn.style.display = 'inline-block';
-            if (profilePic) loadProfilePic();
-        }
+            function saveProfilePic(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        localStorage.setItem('jsaliProfilePic', e.target.result);
+                        profilePic.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            if (profilePic) {
+                profilePic.addEventListener('click', () => {
+                    if (user) {
+                       profilePicInput.click();
+                    }
+                });
+            }
+            
+            if (profilePicInput) {
+                profilePicInput.addEventListener('change', saveProfilePic);
+            }
 
-        function showLoggedOut() {
-            if (welcomeNavMsg) welcomeNavMsg.textContent = '';
-            if (profileSection) profileSection.style.display = 'none';
-            if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
-            if (loginBtn) loginBtn.style.display = 'inline-block';
-            if (registerBtn) registerBtn.style.display = 'inline-block';
-            if (logoutBtn) logoutBtn.style.display = 'none';
-            localStorage.removeItem('jsaliUser');
-            // The line to remove the profile picture was here.
-            // It has been removed to allow the picture to persist on logout.
-            if (profilePic) profilePic.src = placeholderPicPath;
-        }
+            function showLoggedIn(userName) {
+                if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
+                if (profileSection) profileSection.style.display = 'flex';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (registerBtn) registerBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                if (profilePic) loadProfilePic();
+            }
 
-        if (user) {
-            showLoggedIn(user);
-        } else {
-            showLoggedOut();
-        }
+            function showLoggedOut() {
+                if (welcomeNavMsg) welcomeNavMsg.textContent = '';
+                if (profileSection) profileSection.style.display = 'none';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (registerBtn) registerBtn.style.display = 'inline-block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                localStorage.removeItem('jsaliUser');
+                // The line to remove the profile picture was here.
+                // It has been removed to allow the picture to persist on logout.
+                if (profilePic) profilePic.src = placeholderPicPath;
+            }
 
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => {
+            if (user) {
+                showLoggedIn(user);
+            } else {
                 showLoggedOut();
-                window.location.href = "index.html";
-            });
-        }
-    });
-</script>
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    showLoggedOut();
+                    window.location.href = "index.html";
+                });
+            }
+        });
+    </script>
 </body>
 </html>
