@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Dashboard — JSALI</title>
+  <title>Admin Dashboard — Inscriptions</title>
   <link rel="icon" href="/JSALI.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
@@ -22,44 +22,61 @@
     }
     .container { max-width: 1400px; margin: 0 auto; }
     h1 { margin-bottom: 1.5rem; color: var(--highlight); }
-    .login-box, .dashboard {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
       background: #111;
-      padding: 2rem;
-      border-radius: 1rem;
-      max-width: 500px;
-      margin: 2rem auto;
+      border-radius: 0.5rem;
+      overflow: hidden;
     }
-    .form-group { margin-bottom: 1rem; }
-    label { display: block; margin-bottom: 0.5rem; }
-    input[type="email"], input[type="password"] {
-      width: 100%; padding: 0.75rem;
-      background: #1a1a1a; border: 1px solid #333;
-      color: white; border-radius: 4px;
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #333;
+      white-space: normal;
+      word-wrap: break-word;
     }
-    button {
-      width: 100%; padding: 0.75rem;
-      background: var(--highlight);
-      color: #000;
-      border: none; border-radius: 4px;
-      font-weight: bold; cursor: pointer;
+    th {
+      color: var(--highlight);
+      background: #1a1a1a;
+      font-weight: 600;
     }
-    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
-    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #333; }
-    th { color: var(--highlight); }
-    .btn { padding: 0.4rem 0.8rem; margin: 0.2rem; border: none; border-radius: 4px; cursor: pointer; }
+    tr:hover { background: rgba(255,255,255,0.03); }
+    .btn {
+      padding: 0.4rem 0.8rem;
+      margin: 0.2rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
     .accept { background: #16a34a; color: white; }
     .decline { background: #dc2626; color: white; }
     .modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
     }
     .modal-content {
-      background: #1a1a1a; padding: 2rem; border-radius: 1rem;
-      width: 90%; max-width: 600px;
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 90%;
+      max-width: 600px;
     }
     .modal input, .modal textarea {
-      width: 100%; padding: 0.5rem; margin: 0.5rem 0;
-      background: #2a2a2a; color: white; border: 1px solid #444;
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      background: #2a2a2a;
+      color: white;
+      border: 1px solid #444;
     }
     #message { margin: 1rem 0; padding: 0.5rem; }
     .hidden { display: none; }
@@ -93,8 +110,9 @@
           <tr>
             <th>Nom</th>
             <th>Email</th>
-            <th>Titre</th>
+            <th>Titre de communication</th>
             <th>Axe</th>
+            <th>Auteurs(ices)</th>
             <th>Date</th>
             <th>Action</th>
           </tr>
@@ -136,7 +154,7 @@
 
     // === Check if already logged in as admin ===
     async function checkAuth() {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {  { session } } = await supabase.auth.getSession();
       if (session?.user?.id === ADMIN_ID) {
         loginSection.classList.add('hidden');
         dashboardSection.classList.remove('hidden');
@@ -174,12 +192,19 @@
 
     // === Load submissions ===
     async function loadSubmissions() {
+      const {  { session } } = await supabase.auth.getSession();
+      if (!session?.user || session.user.id !== ADMIN_ID) {
+        messageEl.textContent = "Accès refusé. Administrateur uniquement.";
+        return;
+      }
+
       const { data, error } = await supabase
         .from('participations')
         .select('*')
         .order('submitted_at', { ascending: false });
 
       if (error) {
+        console.error("Supabase error:", error);
         messageEl.textContent = "Erreur: " + error.message;
         return;
       }
@@ -190,6 +215,7 @@
           <td>${row["Email"] || ''}</td>
           <td>${row["Titre de communication"] || ''}</td>
           <td>${row["Axe"] || ''}</td>
+          <td>${row["Auteurs(ices)"] || ''}</td>
           <td>${new Date(row.submitted_at).toLocaleString('fr-FR')}</td>
           <td>
             <button class="btn accept" onclick="openEmailModal('${row["Email"]}', '✅ Acceptation', 'Félicitations ! Votre soumission a été acceptée.')">Accepter</button>
