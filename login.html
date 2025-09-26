@@ -7,6 +7,7 @@
     <link rel="icon" href="JSALI.png">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
+        /* ... (Your CSS styles unchanged) ... */
         :root {
             --bg: #0a0a0a;
             --accent: #919191;
@@ -33,100 +34,110 @@
             border-radius: 1rem;
             width: 100%;
             max-width: 450px;
-            box-shadow: 0 0 30px rgba(255,255,255,0.05);
-            animation: popIn 0.7s ease forwards;
-            box-sizing: border-box;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent);
+            text-align: center;
         }
         .login-box h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--accent);
             font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--highlight);
+        }
+        .login-box form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
         }
         .login-box label {
-            display: block;
-            margin-bottom: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.2rem;
             color: var(--text-light);
             font-weight: 600;
         }
         .login-box input {
-            width: 100%;
-            padding: 0.7rem;
-            margin-bottom: 1.5rem;
+            padding: 0.8rem;
             border: 1px solid #333;
-            border-radius: 8px;
+            border-radius: 0.5rem;
             background: var(--input-bg);
             color: var(--text);
             font-size: 1rem;
-            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .login-box input:focus {
+            outline: none;
+            border-color: var(--highlight);
         }
         .login-box button {
-            width: 100%;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 8px;
             background: var(--accent);
-            color: #0a0a0a;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s ease, box-shadow 0.3s;
+            color: var(--bg);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
             font-size: 1.1rem;
-            box-sizing: border-box;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            margin-top: 1rem;
         }
         .login-box button:hover {
-            background: #a5a5a5;
-            box-shadow: 0 0 15px var(--accent);
+            background: #a9a9a9;
+            transform: translateY(-1px);
         }
-        a {
+        .login-box a {
             color: var(--highlight);
             text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
-            text-align: center;
-            width: 100%;
-            font-size: 0.95rem;
-        }
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #1f1f1f;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.05);
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(30px);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            z-index: 9999;
+            margin-top: 1.5rem;
+            display: block;
             font-size: 0.9rem;
         }
+        .login-box a:hover {
+            text-decoration: underline;
+        }
+
+        .g-recaptcha {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: var(--highlight);
+            color: var(--bg);
+            text-align: center;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: opacity 0.5s;
+        }
         .toast.show {
+            visibility: visible;
             opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
         }
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
+
+        /* Responsive adjustments */
         @media (max-width: 600px) {
-            body { padding: 0.5rem; }
-            .login-box { padding: 1.5rem; margin: 0 0.5rem; }
-            .login-box h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
-            .login-box input { padding: 0.6rem; margin-bottom: 1rem; }
-            .login-box button { padding: 0.65rem; font-size: 1rem; }
-            .toast { bottom: 15px; right: 15px; padding: 0.8rem 1.2rem; font-size: 0.85rem; }
-        }
-        @media (max-width: 400px) {
-            .login-box { padding: 1rem; }
-            .login-box h2 { font-size: 1.6rem; }
+            .login-box {
+                padding: 1.5rem;
+            }
+            .login-box h2 {
+                font-size: 1.6rem;
+                margin-bottom: 1.5rem;
+            }
         }
     </style>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <div class="login-box">
         <h2>Connexion à jsali_lvrgt</h2>
         <form id="loginForm">
@@ -146,21 +157,15 @@
     <div class="toast" id="toast"></div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBeFGzTiu3BcMCURE_Cpw4F4cmihY059mw",
-            authDomain: "jsali-fstgat.firebaseapp.com",
-            projectId: "jsali-fstgat",
-            storageBucket: "jsali-fstgat.firebasestorage.app",
-            messagingSenderId: "887844859070",
-            appId: "1:887844859070:web:ff3f88a6c8ee0547a5c2ef",
-            measurementId: "G-FW9DBVQND2"
-        };
+        // Supabase configuration
+        const SUPABASE_URL = 'https://mqsebxyhynaroemoupwy.supabase.co';
+        // 🚨 IMPORTANT: You MUST use your Supabase Anon Public Key here.
+        // The browser cannot access process.env variables.
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; 
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         function showToast(message) {
             const toast = document.getElementById("toast");
@@ -189,19 +194,26 @@
                     }
 
                     try {
-                        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                        const user = userCredential.user;
+                        // Supabase sign in with email and password
+                        const { data, error } = await supabase.auth.signInWithPassword({
+                            email: email,
+                            password: password,
+                        });
 
-                        // Vérifiez si l'e-mail de l'utilisateur est vérifié
-                        if (!user.emailVerified) {
-                            await signOut(auth);
-                            showToast("Votre compte n'a pas été vérifié. Veuillez vérifier votre boîte de réception pour l'e-mail de confirmation.");
+                        if (error) {
+                            throw error;
+                        }
+
+                        const user = data.user;
+                        
+                        if (!user) {
+                            showToast("Une erreur inattendue est survenue.");
                             grecaptcha.reset();
                             return;
                         }
 
-                        // Si l'e-mail est vérifié, continuez le processus de connexion
-                        const username = user.displayName || email.split("@")[0];
+                        // Get the username from user_metadata (set during registration) or fallback to email part
+                        const username = user.user_metadata?.full_name || email.split("@")[0];
                         localStorage.setItem("jsaliUser", username);
 
                         showToast("Connexion réussie ! Bienvenue " + username + " !");
@@ -214,11 +226,11 @@
                         grecaptcha.reset();
 
                         let errorMessage = "Échec de la connexion. Veuillez vérifier votre email et mot de passe.";
-                        if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                            errorMessage = "Identifiants incorrects. Veuillez réessayer.";
+                        if (error.message.includes('Invalid login credentials') || error.message.includes('Email not confirmed')) {
+                            errorMessage = "Identifiants incorrects ou email non confirmé. Veuillez réessayer.";
                         }
                         showToast(errorMessage);
-                        console.error("Firebase Auth Error:", error.message);
+                        console.error("Supabase Auth Error:", error.message);
                     }
                 });
             }
