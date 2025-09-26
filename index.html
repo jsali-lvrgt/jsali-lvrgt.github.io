@@ -608,129 +608,210 @@ Résilience & adaptation climatique</h3>
     </div>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const loaderWrapper = document.getElementById('loaderWrapper');
-            const mainContent = document.getElementById('mainContent');
-            const minimumLoadingTime = 4000;
-            const startTime = Date.now();
+  <script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-            const hideLoader = () => {
-                const elapsed = Date.now() - startTime;
-                const remainingTime = minimumLoadingTime - elapsed;
+  // Supabase config
+  const supabaseUrl = 'https://mqsebxyhynaroemoupwy.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc2VieHloeW5hcm9lbW91cHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5MDM0NzgsImV4cCI6MjA3NDQ3OTQ3OH0.ieD61m0CwOt7I2EA8Dstkd5Xd3RgOMQEFs5zpvB9hTU';
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
-                setTimeout(() => {
-                    if (loaderWrapper) {
-                        loaderWrapper.classList.add('hidden');
-                    }
-                    setTimeout(() => {
-                        if (mainContent) {
-                            mainContent.classList.remove('hidden');
-                        }
-                    }, 500);
-                }, Math.max(0, remainingTime));
-            };
+  // Constants
+  const BUCKET_NAME = 'profile-pictures';
+  const PLACEHOLDER_PIC = 'placeholder-profile-pic.png';
 
-            if (window.location.pathname.includes('ins.html')) {
-                window.addEventListener('load', hideLoader);
-            } else {
-                hideLoader();
-            }
+  document.addEventListener("DOMContentLoaded", async () => {
+    // === LOADER LOGIC (unchanged) ===
+    const loaderWrapper = document.getElementById('loaderWrapper');
+    const mainContent = document.getElementById('mainContent');
+    const minimumLoadingTime = 4000;
+    const startTime = Date.now();
 
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    } else {
-                        entry.target.classList.remove('visible');
-                    }
-                });
-            }, {
-                threshold: 0.2
-            });
+    const hideLoader = () => {
+      const elapsed = Date.now() - startTime;
+      const remainingTime = minimumLoadingTime - elapsed;
+      setTimeout(() => {
+        if (loaderWrapper) loaderWrapper.classList.add('hidden');
+        setTimeout(() => {
+          if (mainContent) mainContent.classList.remove('hidden');
+        }, 500);
+      }, Math.max(0, remainingTime));
+    };
 
-            document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+    if (window.location.pathname.includes('ins.html')) {
+      window.addEventListener('load', hideLoader);
+    } else {
+      hideLoader();
+    }
 
-            const user = localStorage.getItem('jsaliUser');
-            const welcomeNavMsg = document.getElementById('welcome-nav-msg');
-            const loginBtn = document.getElementById('login-btn');
-            const registerBtn = document.getElementById('register-btn');
-            const logoutBtn = document.getElementById('logout-btn');
-            const profileSection = document.getElementById('profile-section');
-            const profilePic = document.getElementById('profile-pic');
-            const profilePicInput = document.getElementById('profile-pic-input');
+    // === FEATURE ANIMATION ===
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.feature').forEach(el => observer.observe(el));
 
-            const placeholderPicPath = "placeholder-profile-pic.png";
+    // === DOM ELEMENTS ===
+    const welcomeNavMsg = document.getElementById('welcome-nav-msg');
+    const loginBtn = document.getElementById('login-btn');
+    const registerBtn = document.getElementById('register-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const profileSection = document.getElementById('profile-section');
+    const profilePic = document.getElementById('profile-pic');
+    const profilePicInput = document.getElementById('profile-pic-input');
 
-            function loadProfilePic() {
-                const savedPic = localStorage.getItem('jsaliProfilePic');
-                if (savedPic) {
-                    profilePic.src = savedPic;
-                } else {
-                    profilePic.src = placeholderPicPath;
-                }
-            }
+    // === SUPABASE STORAGE: LOAD PROFILE PICTURE ===
+    async function loadProfilePicture(userId) {
+      if (!userId || !profilePic) return;
 
-            function saveProfilePic(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        localStorage.setItem('jsaliProfilePic', e.target.result);
-                        profilePic.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-            
-            if (profilePic) {
-                profilePic.addEventListener('click', () => {
-                    if (user) {
-                       profilePicInput.click();
-                    }
-                });
-            }
-            
-            if (profilePicInput) {
-                profilePicInput.addEventListener('change', saveProfilePic);
-            }
+      // Try to get from cache first
+      const cachedUrl = localStorage.getItem(`jsali_avatar_${userId}`);
+      if (cachedUrl) {
+        profilePic.src = cachedUrl;
+        return;
+      }
 
-            function showLoggedIn(userName) {
-                if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
-                if (profileSection) profileSection.style.display = 'flex';
-                if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
-                if (loginBtn) loginBtn.style.display = 'none';
-                if (registerBtn) registerBtn.style.display = 'none';
-                if (logoutBtn) logoutBtn.style.display = 'inline-block';
-                if (profilePic) loadProfilePic();
-            }
+      // Try common extensions
+      const extensions = ['jpg', 'jpeg', 'png', 'webp'];
+      for (const ext of extensions) {
+        const filePath = `${userId}/avatar.${ext}`;
+        const {  { publicUrl } } = supabase.storage
+          .from(BUCKET_NAME)
+          .getPublicUrl(filePath);
 
-            function showLoggedOut() {
-                if (welcomeNavMsg) welcomeNavMsg.textContent = '';
-                if (profileSection) profileSection.style.display = 'none';
-                if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
-                if (loginBtn) loginBtn.style.display = 'inline-block';
-                if (registerBtn) registerBtn.style.display = 'inline-block';
-                if (logoutBtn) logoutBtn.style.display = 'none';
-                localStorage.removeItem('jsaliUser');
-                // The line to remove the profile picture was here.
-                // It has been removed to allow the picture to persist on logout.
-                if (profilePic) profilePic.src = placeholderPicPath;
-            }
+        // Check if file exists by attempting to fetch headers
+        try {
+          const response = await fetch(publicUrl, { method: 'HEAD' });
+          if (response.ok) {
+            profilePic.src = publicUrl;
+            localStorage.setItem(`jsali_avatar_${userId}`, publicUrl);
+            return;
+          }
+        } catch (err) {
+          continue;
+        }
+      }
 
-            if (user) {
-                showLoggedIn(user);
-            } else {
-                showLoggedOut();
-            }
+      // Fallback to placeholder
+      profilePic.src = PLACEHOLDER_PIC;
+    }
 
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    showLoggedOut();
-                    window.location.href = "index.html";
-                });
-            }
-        });
-    </script>
+    // === SUPABASE STORAGE: UPLOAD PROFILE PICTURE ===
+    async function uploadProfilePicture(userId, file) {
+      if (!file || !userId) return;
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Veuillez sélectionner une image valide (jpg, png, etc.).');
+        return;
+      }
+
+      // Use jpg as default extension
+      const filePath = `${userId}/avatar.jpg`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(BUCKET_NAME)
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) {
+        console.error('Erreur lors du téléchargement:', uploadError);
+        alert('Échec du téléchargement de la photo de profil.');
+        return;
+      }
+
+      // Get public URL
+      const {  { publicUrl } } = supabase.storage
+        .from(BUCKET_NAME)
+        .getPublicUrl(filePath);
+
+      // Update UI and cache
+      profilePic.src = publicUrl;
+      localStorage.setItem(`jsali_avatar_${userId}`, publicUrl);
+    }
+
+    // === UI: LOGGED IN ===
+    function showLoggedIn(user) {
+      const userId = user.id;
+      const userName = user.user_metadata?.full_name || user.email.split('@')[0];
+
+      if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
+      if (profileSection) profileSection.style.display = 'flex';
+      if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
+      if (loginBtn) loginBtn.style.display = 'none';
+      if (registerBtn) registerBtn.style.display = 'none';
+      if (logoutBtn) logoutBtn.style.display = 'inline-block';
+
+      // Set up profile pic click
+      if (profilePic) {
+        profilePic.onclick = () => {
+          if (profilePicInput) profilePicInput.click();
+        };
+      }
+
+      if (profilePicInput) {
+        profilePicInput.onchange = async (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            await uploadProfilePicture(userId, file);
+            // Reset input so same file can be re-uploaded
+            e.target.value = '';
+          }
+        };
+      }
+
+      // Load avatar
+      loadProfilePicture(userId);
+    }
+
+    // === UI: LOGGED OUT ===
+    function showLoggedOut() {
+      if (welcomeNavMsg) welcomeNavMsg.textContent = '';
+      if (profileSection) profileSection.style.display = 'none';
+      if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
+      if (loginBtn) loginBtn.style.display = 'inline-block';
+      if (registerBtn) registerBtn.style.display = 'inline-block';
+      if (logoutBtn) logoutBtn.style.display = 'none';
+      if (profilePic) profilePic.src = PLACEHOLDER_PIC;
+      if (profilePicInput) profilePicInput.onchange = null;
+    }
+
+    // === CHECK CURRENT SESSION ===
+    const {  { session } } = await supabase.auth.getSession();
+
+    if (session?.user && session.user.email_confirmed_at) {
+      showLoggedIn(session.user);
+    } else {
+      showLoggedOut();
+      // Optional: if user is logged in but not verified, show message
+      if (session?.user && !session.user.email_confirmed_at) {
+        // You could redirect or show banner
+        console.log("Email non vérifié. Veuillez consulter votre boîte mail.");
+      }
+    }
+
+    // === LOGOUT HANDLER ===
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        await supabase.auth.signOut();
+        showLoggedOut();
+        // Clear avatar cache for this user (optional)
+        if (session?.user) {
+          localStorage.removeItem(`jsali_avatar_${session.user.id}`);
+        }
+        window.location.href = "index.html";
+      });
+    }
+
+    // === LISTEN FOR AUTH CHANGES ===
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user.email_confirmed_at) {
+        showLoggedIn(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        showLoggedOut();
+      }
+    });
+  });
+</script>
 </body>
 </html>
