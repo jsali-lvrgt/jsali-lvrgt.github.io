@@ -22,60 +22,86 @@
     }
     .container { max-width: 1400px; margin: 0 auto; }
     h1 { margin-bottom: 1.5rem; color: var(--highlight); }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .login-box, .dashboard {
+      background: #111;
+      padding: 2rem;
+      border-radius: 1rem;
+      max-width: 500px;
+      margin: 2rem auto;
+    }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: 0.5rem; }
+    input[type="email"], input[type="password"] {
+      width: 100%; padding: 0.75rem;
+      background: #1a1a1a; border: 1px solid #333;
+      color: white; border-radius: 4px;
+    }
+    button {
+      width: 100%; padding: 0.75rem;
+      background: var(--highlight);
+      color: #000;
+      border: none; border-radius: 4px;
+      font-weight: bold; cursor: pointer;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
     th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #333; }
     th { color: var(--highlight); }
-    tr:hover { background: rgba(255,255,255,0.03); }
-    .btn { 
-      padding: 0.4rem 0.8rem; 
-      margin: 0.2rem; 
-      border: none; 
-      border-radius: 4px; 
-      cursor: pointer; 
-      font-size: 0.85rem;
-    }
+    .btn { padding: 0.4rem 0.8rem; margin: 0.2rem; border: none; border-radius: 4px; cursor: pointer; }
     .accept { background: #16a34a; color: white; }
     .decline { background: #dc2626; color: white; }
     .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;
     }
     .modal-content {
-      background: #1a1a1a;
-      padding: 2rem;
-      border-radius: 1rem;
-      width: 90%;
-      max-width: 600px;
+      background: #1a1a1a; padding: 2rem; border-radius: 1rem;
+      width: 90%; max-width: 600px;
     }
     .modal input, .modal textarea {
-      width: 100%; padding: 0.5rem; margin: 0.5rem 0; 
+      width: 100%; padding: 0.5rem; margin: 0.5rem 0;
       background: #2a2a2a; color: white; border: 1px solid #444;
     }
     #message { margin: 1rem 0; padding: 0.5rem; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>jsali_lvrgt</h1>
-    <div id="message"></div>
-    <table id="submissions-table">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Email</th>
-          <th>Titre</th>
-          <th>Axe</th>
-          <th>Date</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="submissions-body"></tbody>
-    </table>
+    <!-- Login Form -->
+    <div id="loginSection" class="login-box">
+      <h2>Connexion Admin</h2>
+      <div id="loginMessage"></div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="adminEmail">Email</label>
+          <input type="email" id="adminEmail" required>
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Mot de passe</label>
+          <input type="password" id="adminPassword" required>
+        </div>
+        <button type="submit">Se connecter</button>
+      </form>
+    </div>
+
+    <!-- Dashboard (hidden until login) -->
+    <div id="dashboardSection" class="dashboard hidden">
+      <h1>Tableau de Bord Admin — Inscriptions</h1>
+      <div id="message"></div>
+      <table id="submissions-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Titre</th>
+            <th>Axe</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="submissions-body"></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- Email Modal -->
@@ -85,8 +111,8 @@
       <input type="hidden" id="recipient-email">
       <input type="text" id="email-subject" placeholder="Sujet">
       <textarea id="email-message" rows="6" placeholder="Message..."></textarea>
-      <button class="btn accept" onclick="sendEmail()">Envoyer</button>
-      <button class="btn" onclick="closeModal()">Annuler</button>
+      <button class="accept" onclick="sendEmail()">Envoyer</button>
+      <button onclick="closeModal()">Annuler</button>
       <div id="modal-message" style="margin-top:1rem;"></div>
     </div>
   </div>
@@ -100,18 +126,54 @@
     const ADMIN_ID = '51822f67-29fa-4d37-a8f6-dc728d5c6e25';
     const EMAIL_FUNCTION_URL = `${supabaseUrl}/functions/v1/send-email`;
 
+    const loginSection = document.getElementById('loginSection');
+    const dashboardSection = document.getElementById('dashboardSection');
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
     const messageEl = document.getElementById('message');
     const tbody = document.getElementById('submissions-body');
     const modal = document.getElementById('emailModal');
 
-    async function loadSubmissions() {
+    // === Check if already logged in as admin ===
+    async function checkAuth() {
       const {  { session } } = await supabase.auth.getSession();
-      if (!session?.user || session.user.id !== ADMIN_ID) {
-        messageEl.textContent = "Accès refusé. Administrateur uniquement.";
-        messageEl.style.color = "red";
-        return;
+      if (session?.user?.id === ADMIN_ID) {
+        loginSection.classList.add('hidden');
+        dashboardSection.classList.remove('hidden');
+        loadSubmissions();
       }
+    }
 
+    // === Login form ===
+    loginForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('adminEmail').value;
+      const password = document.getElementById('adminPassword').value;
+
+      loginMessage.textContent = "Connexion en cours...";
+      loginMessage.style.color = "yellow";
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        loginMessage.textContent = "Erreur: " + error.message;
+        loginMessage.style.color = "red";
+      } else if (data.user.id !== ADMIN_ID) {
+        await supabase.auth.signOut();
+        loginMessage.textContent = "Accès refusé. Vous n'êtes pas administrateur.";
+        loginMessage.style.color = "red";
+      } else {
+        loginSection.classList.add('hidden');
+        dashboardSection.classList.remove('hidden');
+        loadSubmissions();
+      }
+    });
+
+    // === Load submissions ===
+    async function loadSubmissions() {
       const { data, error } = await supabase
         .from('participations')
         .select('*')
@@ -124,19 +186,20 @@
 
       tbody.innerHTML = data.map(row => `
         <tr>
-          <td>${row.Nom || ''} ${row["Prénom"] || ''}</td>
-          <td>${row.Email || ''}</td>
+          <td>${row["Nom"] || ''} ${row["Prénom"] || ''}</td>
+          <td>${row["Email"] || ''}</td>
           <td>${row["Titre de communication"] || ''}</td>
-          <td>${row.Axe || ''}</td>
+          <td>${row["Axe"] || ''}</td>
           <td>${new Date(row.submitted_at).toLocaleString('fr-FR')}</td>
           <td>
-            <button class="btn accept" onclick="openEmailModal('${row.Email}', '✅ Acceptation de votre participation à JSALI', 'Félicitations ! Votre soumission a été acceptée.')">Accepter</button>
-            <button class="btn decline" onclick="openEmailModal('${row.Email}', '❌ Refus de votre participation à JSALI', 'Nous regrettons de vous informer que votre soumission n’a pas été retenue.')">Refuser</button>
+            <button class="btn accept" onclick="openEmailModal('${row["Email"]}', '✅ Acceptation', 'Félicitations ! Votre soumission a été acceptée.')">Accepter</button>
+            <button class="btn decline" onclick="openEmailModal('${row["Email"]}', '❌ Refus', 'Nous regrettons de vous informer que votre soumission n’a pas été retenue.')">Refuser</button>
           </td>
         </tr>
       `).join('');
     }
 
+    // === Modal functions ===
     window.openEmailModal = function(to, subject, message) {
       document.getElementById('recipient-email').value = to;
       document.getElementById('email-subject').value = subject;
@@ -173,11 +236,9 @@
 
         const result = await response.json();
         if (result.success) {
-          modalMsg.textContent = "Email envoyé avec succès !";
+          modalMsg.textContent = "Email envoyé !";
           modalMsg.style.color = "green";
-          setTimeout(() => {
-            closeModal();
-          }, 1500);
+          setTimeout(() => closeModal(), 1500);
         } else {
           throw new Error(result.error || 'Échec');
         }
@@ -191,7 +252,8 @@
       if (event.target === modal) closeModal();
     };
 
-    loadSubmissions();
+    // Initial check
+    checkAuth();
   </script>
 </body>
 </html>
