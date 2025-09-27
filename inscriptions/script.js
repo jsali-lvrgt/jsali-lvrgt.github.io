@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                formMessage.textContent = "✅ Soumission réussie ! Un email de confirmation vous sera envoyé.";
+                formMessage.textContent = "✅ Soumission réussie.";
                 formMessage.style.color = "green";
                 form.reset();
             } else {
