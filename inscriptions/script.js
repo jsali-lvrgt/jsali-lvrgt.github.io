@@ -5,6 +5,8 @@ const supabaseUrl = 'https://mqsebxyhynaroemoupwy.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc2VieHloeW5hcm9lbW91cHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5MDM0NzgsImV4cCI6MjA3NDQ3OTQ3OH0.ieD61m0CwOt7I2EA8Dstkd5Xd3RgOMQEFs5zpvB9hTU';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+const FORMCARRY_URL = 'https://formcarry.com/s/-rz71ZfooOI';
+
 document.addEventListener("DOMContentLoaded", async () => {
     const loaderWrapper = document.getElementById('loaderWrapper');
     const mainContent = document.getElementById('mainContent');
@@ -12,13 +14,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formMessage = document.getElementById('form-message');
     const submitButton = form?.querySelector('button[type="submit"]');
 
-    // === Hide loader after delay ===
+    // Hide loader
     setTimeout(() => {
         loaderWrapper?.classList.add('hidden');
         setTimeout(() => mainContent?.classList.remove('hidden'), 300);
     }, 2000);
 
-    // === Check if user is logged in & email confirmed ===
+    // Check if user is logged in & email confirmed
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user || !session.user.email_confirmed_at) {
         formMessage.textContent = "Veuillez vous connecter pour soumettre.";
@@ -28,13 +30,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // === Handle form submission ===
+    // Handle form submission via Formcarry
     form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
 
-        // Add metadata
+        // Add user metadata (optional, for your reference)
         const payload = {
             ...data,
             user_id: session.user.id,
@@ -47,25 +49,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         formMessage.style.color = "yellow";
 
         try {
-            const { error } = await supabase
-                .from('participations')
-                .insert([payload]);
+            const response = await fetch(FORMCARRY_URL, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
 
-            if (error) throw error;
+            const result = await response.json();
 
-            formMessage.textContent = "✅ Soumission réussie ! Un email de confirmation vous sera envoyé.";
-            formMessage.style.color = "green";
-            form.reset();
+            if (result.status === 'success') {
+                formMessage.textContent = "✅ Soumission réussie ! Un email de confirmation vous sera envoyé.";
+                formMessage.style.color = "green";
+                form.reset();
+            } else {
+                throw new Error(result.message || "Échec de la soumission");
+            }
         } catch (err) {
             console.error("Erreur:", err);
-            formMessage.textContent = "❌ Erreur: " + (err.message || "Échec de la soumission");
+            formMessage.textContent = "❌ Erreur: " + (err.message || "Impossible d’envoyer le formulaire");
             formMessage.style.color = "red";
         } finally {
             submitButton.disabled = false;
         }
     });
 
-    // === Nav/profile UI (same as before) ===
+    // === Nav/profile UI ===
     const welcomeNavMsg = document.getElementById('welcome-nav-msg');
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
