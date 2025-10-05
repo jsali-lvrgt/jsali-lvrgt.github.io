@@ -1,14 +1,14 @@
-<!DOCTYPE ahtml>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>jsali_lvrgt</title>
-<meta name="description" content="jsali_lvrgt | Aménagement intelligent des infrastructures linéaires rurales. Gouvernance, développement durable et résilience écologique.">
-<meta name="msvalidate.01" content="B795DADDEF92E75F33D6AF2F4B864168" />
+    <title>jsali_lvrgt</title>
+    <meta name="description" content="jsali_lvrgt | Aménagement intelligent des infrastructures linéaires rurales. Gouvernance, développement durable et résilience écologique.">
+    <meta name="msvalidate.01" content="B795DADDEF92E75F33D6AF2F4B864168" />
     <link rel="icon" type="image/png" sizes="32x32" href="JSALI.png">
-<link rel="icon" type="image/png" sizes="16x16" href="JSALI.png">
-<link rel="apple-touch-icon" href="JSALI.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="JSALI.png">
+    <link rel="apple-touch-icon" href="JSALI.png">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet" />
     <style>
         :root {
@@ -18,6 +18,8 @@
             --primary-text: #fff;
             --secondary-text: #cbd5e1;
             --blur: rgba(255, 255, 255, 0.05);
+            --nav-height: 70px;
+            --mobile-breakpoint: 768px;
         }
 
         * {
@@ -35,8 +37,10 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            line-height: 1.6;
         }
-        /* --- Loading Screen Styles --- */
+
+        /* --- Loading Screen --- */
         .loader-wrapper {
             position: fixed;
             top: 0;
@@ -48,11 +52,11 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 1s ease-in-out;
+            transition: opacity 0.5s ease-in-out;
             opacity: 1;
             pointer-events: all;
-            /* UPDATED: Stack content vertically */
-            flex-direction: column; 
+            flex-direction: column;
+            padding: 20px;
         }
 
         .loader-wrapper.hidden {
@@ -60,20 +64,20 @@
             pointer-events: none;
         }
 
-        /* --- New Loader Text Styles --- */
         .loader-text {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 800;
             color: var(--highlight);
-            margin-bottom: 2rem; /* Space above the dots */
+            margin-bottom: 2rem;
+            text-align: center;
         }
         
         .loader-footer-text {
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--secondary-text);
-            margin-top: 3rem; /* Space below the dots */
-            line-height: 1.4;
+            margin-top: 2.5rem;
+            line-height: 1.5;
         }
 
         .loader-footer-text a {
@@ -87,49 +91,30 @@
             color: #fff;
             text-decoration: underline;
         }
-        /* --- End of New Loader Text Styles --- */
 
-
-        /* --- Updated Loader Styles: Three-Dot Pulse --- */
         .loader {
             display: flex;
             justify-content: space-between;
-            width: 60px;
+            width: 70px;
         }
 
         .dot {
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background-color: var(--highlight);
             animation: pulse 1.5s infinite ease-in-out;
         }
 
-        .dot:nth-child(2) {
-            animation-delay: 0.15s;
-        }
-
-        .dot:nth-child(3) {
-            animation-delay: 0.3s;
-        }
+        .dot:nth-child(2) { animation-delay: 0.15s; }
+        .dot:nth-child(3) { animation-delay: 0.3s; }
 
         @keyframes pulse {
-            0%, 100% {
-                transform: scale(0);
-                opacity: 0.5;
-            }
-            50% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        /* --- End of Updated Loader Styles --- */
-
-        /* --- Main Content Styles --- */
-        .main-content.hidden {
-            display: none;
+            0%, 100% { transform: scale(0); opacity: 0.5; }
+            50% { transform: scale(1); opacity: 1; }
         }
 
+        /* --- Navigation (Desktop & Mobile) --- */
         nav {
             position: fixed;
             top: 0;
@@ -138,65 +123,33 @@
             background: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(8px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 2rem;
+            padding: 0 2rem;
             z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: slideDown 1s ease forwards;
-            flex-wrap: wrap;
+            height: var(--nav-height);
         }
 
         nav h1 {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: var(--highlight);
-            margin-right: 1rem;
-        }
-        
-        .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        #profile-pic-container {
-            position: relative;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-        }
-        
-        #profile-pic {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid var(--highlight);
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        
-        #profile-pic:hover {
-            transform: scale(1.1);
-        }
-        
-        #profile-pic-input {
-            display: none;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 0;
+            font-weight: 800;
         }
 
-        .nav-links a {
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a, .nav-links .btn {
             color: var(--secondary-text);
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s;
             white-space: nowrap;
+            font-size: 1rem;
         }
 
         .nav-links a:hover {
@@ -204,315 +157,336 @@
         }
 
         .btn {
-            padding: 0.4rem 1rem;
+            padding: 0.5rem 1.2rem;
             background: var(--highlight);
             color: var(--main-bg);
             border: none;
             border-radius: 8px;
             font-weight: bold;
-            transition: background 0.3s, transform 0.3s;
+            transition: background 0.3s, transform 0.2s;
             text-decoration: none;
             cursor: pointer;
-            white-space: nowrap;
         }
 
         .btn:hover {
             background: #a1a1a1;
-            transform: scale(1.05);
+            transform: translateY(-2px);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        #profile-pic-container {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        #profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--highlight);
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        #profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        #profile-pic-input {
+            display: none;
         }
 
         #welcome-nav-msg {
             color: var(--highlight);
             font-weight: 600;
-            margin-right: 0.5rem;
-            display: none;
             white-space: nowrap;
         }
 
+        /* --- Hamburger Menu (Mobile Only) --- */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 26px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            height: 2px;
+            width: 100%;
+            background: var(--highlight);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* --- Main Content --- */
+        .main-content.hidden {
+            display: none;
+        }
+
+        .content-wrapper {
+            padding-top: var(--nav-height);
+            flex: 1;
+        }
+
         header {
-            padding: 8rem 2rem 2rem;
+            padding: 6rem 2rem 2rem;
             text-align: center;
-            flex-shrink: 0;
         }
 
         header h1 {
-            font-size: 3rem;
+            font-size: 3.2rem;
             font-weight: 800;
             background: linear-gradient(to right, var(--highlight), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: popIn 1.2s ease forwards;
             margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--secondary-text);
+            margin-bottom: 1.5rem;
         }
 
         header p {
             font-size: 1.2rem;
             color: var(--secondary-text);
-            margin-top: 1rem;
-            animation: fadeIn 2.5s ease forwards;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         .logos {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 2rem;
-            padding: 2rem;
+            gap: 3rem;
+            padding: 2.5rem;
             flex-wrap: wrap;
-            animation: fadeInZoom 2s ease forwards;
-            flex-shrink: 0;
         }
 
         .logos img {
-            max-width: 150px;
+            max-width: 160px;
             height: auto;
-            border-radius: 25%;
+            border-radius: 20%;
             border: 2px solid var(--highlight);
-            padding: 5px;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            padding: 6px;
+            transition: transform 0.4s, box-shadow 0.4s;
         }
 
         #fstgat-logo {
-            width: 180px;
-            height: 90px;
+            width: 200px;
+            height: 100px;
             object-fit: contain;
-            border-radius: 25%;
+            border-radius: 20%;
         }
-
 
         .logos img:hover {
-            transform: scale(1.15);
-            box-shadow: 0 0 20px var(--highlight);
-        }
-        
-        #fstgat-logo:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px var(--highlight);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(145, 145, 145, 0.5);
         }
 
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 2.2rem;
             padding: 3rem 2rem;
             max-width: 1200px;
-            margin: auto;
-            flex-grow: 1;
+            margin: 0 auto;
         }
 
         .feature {
             background: var(--blur);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 2rem;
+            padding: 2.2rem;
+            border-radius: 20px;
             backdrop-filter: blur(10px);
             opacity: 0;
-            transform: translateY(60px) scale(0.95) rotateX(30deg);
-            transition: all 0.8s ease;
+            transform: translateY(30px) scale(0.98);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
         }
 
         .feature.visible {
             opacity: 1;
-            transform: translateY(0) scale(1) rotateX(0);
+            transform: translateY(0) scale(1);
         }
 
         .feature:hover {
-            transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 10px 30px #919191;
-            cursor: pointer;
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(145, 145, 145, 0.4);
         }
 
         .feature h3 {
             color: var(--highlight);
-            margin-bottom: 1rem;
-        }
-
-        .feature ul {
-            list-style: disc;
-            margin-left: 1.5rem;
-            color: #d1d5db;
+            margin-bottom: 1.2rem;
+            font-size: 1.4rem;
+            line-height: 1.4;
         }
 
         footer {
             text-align: center;
             padding: 3rem 1rem 2rem;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #64748b;
-            animation: fadeIn 3s ease forwards;
-            flex-shrink: 0;
         }
+
         footer a {
             color: var(--secondary-text);
             text-decoration: none;
             transition: color 0.3s;
         }
+
         footer a:hover {
             color: var(--highlight);
         }
 
-        @keyframes fadeIn {
-            from {
+        /* --- Mobile Styles --- */
+        @media (max-width: 768px) {
+            :root {
+                --nav-height: 60px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: var(--nav-height);
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 10, 0.97);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1.8rem;
+                gap: 1.4rem;
+                transform: translateX(100%);
                 opacity: 0;
-                transform: translateY(20px);
+                visibility: hidden;
+                transition: all 0.4s ease;
+                z-index: 999;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
-            to {
+
+            .nav-links.active {
+                transform: translateX(0);
                 opacity: 1;
-                transform: translateY(0);
+                visibility: visible;
             }
+
+            .nav-links a, .nav-links .btn {
+                width: 100%;
+                padding: 0.6rem 0;
+                font-size: 1.1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                padding-bottom: 0.8rem;
+            }
+
+            .nav-links a:last-child, .nav-links .btn:last-child {
+                border-bottom: none;
+            }
+
+            .profile-section {
+                width: 100%;
+                padding-top: 0.8rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            #welcome-nav-msg {
+                display: block;
+                margin-top: 0.5rem;
+            }
+
+            .btn {
+                text-align: center;
+                margin-top: 0.5rem;
+            }
+
+            header {
+                padding: 5rem 1.5rem 1.5rem;
+            }
+
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            header h2 {
+                font-size: 1.5rem;
+            }
+
+            header p {
+                font-size: 1rem;
+                padding: 0 10px;
+            }
+
+            .logos {
+                gap: 1.8rem;
+                padding: 1.8rem 1rem;
+            }
+
+            .logos img {
+                max-width: 110px;
+            }
+
+            #fstgat-logo {
+                width: 140px;
+                height: 70px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                padding: 2rem 1.2rem;
+                gap: 1.5rem;
+            }
+
+            .feature {
+                padding: 1.6rem;
+            }
+
+            .feature h3 {
+                font-size: 1.25rem;
+            }
+
+            footer {
+                padding: 2rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes popIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.6);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+            0% { opacity: 0; transform: scale(0.6); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         @keyframes fadeInZoom {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* --- Media Queries for Mobile Responsiveness --- */
-        @media (max-width: 600px) {
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1rem;
-            }
-            nav h1 {
-                margin-bottom: 0.5rem;
-            }
-            .nav-links {
-                flex-direction: column;
-                align-items: flex-start;
-                width: 100%;
-                gap: 0.6rem;
-                margin-top: 0.5rem;
-            }
-            .profile-section {
-                flex-direction: row;
-                align-items: center;
-                width: 100%;
-                gap: 0.5rem;
-                margin-top: 0.5rem;
-            }
-            .nav-links a, .nav-links .btn {
-                width: 100%;
-                text-align: left;
-                padding: 0.4rem 0;
-                margin-right: 0;
-            }
-            #welcome-nav-msg {
-                width: auto;
-                text-align: left;
-                padding: 0;
-                margin-right: 0.5rem;
-                display: inline-block !important; /* Ensure it's visible on small screens when logged in */
-            }
-            .btn {
-                width: auto;
-                text-align: center;
-                margin-top: 0.4rem;
-                margin-bottom: 0.4rem;
-                padding: 0.5rem 0.8rem;
-            }
-            #login-btn, #register-btn, #logout-btn {
-                width: 100%;
-                text-align: center;
-                margin-left: 0;
-            }
-            header {
-                padding: 6rem 1rem 1rem;
-            }
-            header h1 {
-                font-size: 1.8rem;
-                word-break: break-word;
-            }
-            header p {
-                font-size: 0.9rem;
-            }
-            .logos {
-                flex-direction: column;
-                align-items: center;
-                gap: 1.2rem;
-                padding: 1rem;
-            }
-            .logos img {
-                max-width: 100px;
-                height: auto;
-            }
-            #fstgat-logo {
-                width: 120px;
-                height: 60px;
-                object-fit: contain;
-            }
-            .features {
-                grid-template-columns: 1fr;
-                padding: 1.5rem 1rem;
-            }
-            .feature {
-                padding: 1.2rem;
-            }
-            .feature h3 {
-                font-size: 1.2rem;
-            }
-            .feature ul {
-                font-size: 0.85rem;
-            }
-            footer {
-                padding: 1.5rem 1rem;
-            }
-        }
-        @media (min-width: 601px) and (max-width: 900px) {
-            nav {
-                padding: 1rem 1.5rem;
-            }
-            .nav-links {
-                gap: 0.8rem;
-            }
-            header h1 {
-                font-size: 2.5rem;
-            }
-            .logos img {
-                max-width: 150px;
-            }
-            #fstgat-logo {
-                width: 180px;
-                height: 90px;
-                object-fit: contain;
-            }
-            .features {
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                padding: 2rem 1.5rem;
-                gap: 1.5rem;
-            }
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
-
     <div class="loader-wrapper" id="loaderWrapper">
         <div class="loader-text">Chargement...</div>
         <div class="loader">
@@ -521,19 +495,20 @@
             <div class="dot"></div>
         </div>
         <p class="loader-footer-text">
-            Site par tarmacq studios
-            <br>
-            <br>
-            <a href="https://x.com/jsali_lvrgt" target="_blank">Tweetez Nous</a> 
-            | 
+            Site par tarmacq studios<br><br>
+            <a href="https://x.com/jsali_lvrgt" target="_blank">Tweetez Nous</a> | 
             <a href="https://jsalilvrgt.statuspage.io" target="_blank">Stats de nos Services</a>
         </p>
     </div>
 
-
     <div id="mainContent" class="main-content hidden">
         <nav>
             <h1><strong>jsali_lvrgt</strong></h1>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <div class="nav-links" id="nav-links">
                 <a href="axe thematique">Axes Thématiques</a>
                 <a href="/error-catcher/404page">Sponsors</a>
@@ -553,249 +528,91 @@
             </div>
         </nav>
 
-        <header>
-            <h1> Aménagement Intelligent des Infrastructures Linéaires dans les Zones
-Rurales</h1>
-<h2>Gouvernance, Développement Durable et Résilience Ecologique</h2>
-            <p id="welcome-msg">Laboratoire Villes, Régions et Gouvernance Territoriale.
-<br>
-Équipe 4: Dynamiques et Valorisation des Ressources Territoriales.</p>
-        </header>
+        <div class="content-wrapper">
+            <header>
+                <h1>Aménagement Intelligent des Infrastructures Linéaires dans les Zones Rurales</h1>
+                <h2>Gouvernance, Développement Durable et Résilience Ecologique</h2>
+                <p id="welcome-msg">Laboratoire Villes, Régions et Gouvernance Territoriale.<br>Équipe 4: Dynamiques et Valorisation des Ressources Territoriales.</p>
+            </header>
 
-        <section class="logos">
-            <img src="jsail usthb.jpeg" alt="USTHB" />
-            <img src="fstgat jsail.png" alt="FSTGAT" id="fstgat-logo" />
-            <img src="JSALI.png" alt="JSALI" />
-        </section>
+            <section class="logos">
+                <img src="jsail usthb.jpeg" alt="USTHB" />
+                <img src="fstgat jsail.png" alt="FSTGAT" id="fstgat-logo" />
+                <img src="JSALI.png" alt="JSALI" />
+            </section>
 
-        <section class="features" id="axes">
-            <a href="axe thematique.html" class="feature">
-                <h3>Axe 1:
-<br>
-Infrastructures linéaires & développement rural</h3>
+            <section class="features" id="axes">
+                <a href="axe thematique.html" class="feature">
+                    <h3>Axe 1:<br>Infrastructures linéaires & développement rural</h3>
+                </a>
+                <a href="axe thematique.html" class="feature">
+                    <h3>Axe 2:<br>Technologies & innovations pour un aménagement intelligent</h3>
+                </a>
+                <a href="axe thematique.html" class="feature">
+                    <h3>Axe 3:<br>Gouvernance & participation locale</h3>
+                </a>
+                <a href="axe thematique.html" class="feature">
+                    <h3>Axe 4:<br>Développement durable & biodiversité</h3>
+                </a>
+                <a href="axe thematique.html" class="feature">
+                    <h3>Axe 5:<br>Résilience & adaptation climatique</h3>
+                </a>
+            </section>
 
-            </a>
-            <a href="axe thematique.html" class="feature">
-                <h3>Axe 2:
-<br>
-Technologies & innovations pour un aménagement intelligent</h3>
-
-            </a>
-            <a href="axe thematique.html" class="feature">
-                <h3>Axe 3:
-<br>
-Gouvernance & participation locale</h3>
-
-            </a>
-            <a href="axe thematique.html" class="feature">
-                <h3>Axe 4:
-<br>
-Développement durable & biodiversité</h3>
-
-            </a>
-            <a href="axe thematique.html" class="feature">
-                <h3>Axe 5:
-<br>
-Résilience & adaptation climatique</h3>
-
-            </a>
-        </section>
-
-
-        <footer>
-            &copy; 2025 jsali_lvrgt | FSTGAT | USTHB | <a href="mailto:jsalifstgat@gmail.com">Nous Contacter</a><br />
-            <a href="mailto:ryanyagouni@gmail.com">Contacter le developeur</a>
-        </footer>
+            <footer>
+                &copy; 2025 jsali_lvrgt | FSTGAT | USTHB | <a href="mailto:jsalifstgat@gmail.com">Nous Contacter</a><br />
+                <a href="mailto:ryanyagouni@gmail.com">Contacter le développeur</a>
+            </footer>
+        </div>
     </div>
 
-
-  <script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-  // Supabase config
-  const supabaseUrl = 'https://mqsebxyhynaroemoupwy.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc2VieHloeW5hcm9lbW91cHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5MDM0NzgsImV4cCI6MjA3NDQ3OTQ3OH0.ieD61m0CwOt7I2EA8Dstkd5Xd3RgOMQEFs5zpvB9hTU';
-  const supabase = createClient(supabaseUrl, supabaseKey);
-
-  // Constants
-  const BUCKET_NAME = 'profile-pictures';
-  const PLACEHOLDER_PIC = 'placeholder-profile-pic.png';
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    // === LOADER LOGIC ===
-    const loaderWrapper = document.getElementById('loaderWrapper');
-    const mainContent = document.getElementById('mainContent');
-    const minimumLoadingTime = 4000;
-    const startTime = Date.now();
-
-    const hideLoader = () => {
-      const elapsed = Date.now() - startTime;
-      const remainingTime = minimumLoadingTime - elapsed;
-      setTimeout(() => {
-        if (loaderWrapper) loaderWrapper.classList.add('hidden');
-        setTimeout(() => {
-          if (mainContent) mainContent.classList.remove('hidden');
-        }, 500);
-      }, Math.max(0, remainingTime));
-    };
-
-    if (window.location.pathname.includes('/inscriptions')) {
-      window.addEventListener('load', hideLoader);
-    } else {
-      hideLoader();
-    }
-
-    // === FEATURE ANIMATION ===
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, { threshold: 0.2 });
-    document.querySelectorAll('.feature').forEach(el => observer.observe(el));
-
-    // === DOM ELEMENTS ===
-    const welcomeNavMsg = document.getElementById('welcome-nav-msg');
-    const loginBtn = document.getElementById('login-btn');
-    const registerBtn = document.getElementById('register-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const profileSection = document.getElementById('profile-section');
-    const profilePic = document.getElementById('profile-pic');
-    const profilePicInput = document.getElementById('profile-pic-input');
-
-    // === LOAD PROFILE PICTURE FROM SUPABASE STORAGE ===
-    async function loadProfilePicture(userId) {
-      if (!userId || !profilePic) return;
-
-      const cachedUrl = localStorage.getItem(`jsali_avatar_${userId}`);
-      if (cachedUrl) {
-        profilePic.src = cachedUrl;
-        return;
-      }
-
-      const extensions = ['jpg', 'jpeg', 'png', 'webp'];
-      for (const ext of extensions) {
-        const filePath = `${userId}/avatar.${ext}`;
-        const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
-        const publicUrl = data?.publicUrl;
-
-          console.log('✅ Uploaded to:', publicUrl);
-
-        if (!publicUrl) continue;
-
-        try {
-          const response = await fetch(publicUrl, { method: 'HEAD' });
-          if (response.ok) {
-            profilePic.src = publicUrl;
-            localStorage.setItem(`jsali_avatar_${userId}`, publicUrl);
-            return;
-          }
-        } catch (err) {
-          continue;
-        }
-      }
-
-      profilePic.src = PLACEHOLDER_PIC;
-    }
-
-    // === UPLOAD PROFILE PICTURE TO SUPABASE STORAGE ===
-    async function uploadProfilePicture(userId, file) {
-      if (!file || !userId) return;
-
-      if (!file.type.startsWith('image/')) {
-        alert('Veuillez sélectionner une image valide.');
-        return;
-      }
-
-      const filePath = `${userId}/avatar.jpg`;
-      const { error: uploadError } = await supabase.storage
-        .from(BUCKET_NAME)
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
-        alert('Échec du téléchargement.');
-        return;
-      }
-
-      const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
-      const publicUrl = data?.publicUrl;
-
-      if (publicUrl) {
-        profilePic.src = publicUrl;
-        localStorage.setItem(`jsali_avatar_${userId}`, publicUrl);
-      }
-    }
-
-    // === UI: LOGGED IN ===
-    function showLoggedIn(user) {
-      const userId = user.id;
-      const userName = user.user_metadata?.full_name || user.email.split('@')[0];
-
-      if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${userName} `;
-      if (profileSection) profileSection.style.display = 'flex';
-      if (welcomeNavMsg) welcomeNavMsg.style.display = 'inline-block';
-      if (loginBtn) loginBtn.style.display = 'none';
-      if (registerBtn) registerBtn.style.display = 'none';
-      if (logoutBtn) logoutBtn.style.display = 'inline-block';
-
-      if (profilePic) {
-        profilePic.onclick = () => profilePicInput?.click();
-      }
-
-      if (profilePicInput) {
-        profilePicInput.onchange = async (e) => {
-          const file = e.target.files[0];
-          if (file) {
-            await uploadProfilePicture(userId, file);
-            e.target.value = ''; // reset input
-          }
-        };
-      }
-
-      loadProfilePicture(userId);
-    }
-
-    // === UI: LOGGED OUT ===
-    function showLoggedOut() {
-      if (welcomeNavMsg) welcomeNavMsg.textContent = '';
-      if (profileSection) profileSection.style.display = 'none';
-      if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
-      if (loginBtn) loginBtn.style.display = 'inline-block';
-      if (registerBtn) registerBtn.style.display = 'inline-block';
-      if (logoutBtn) logoutBtn.style.display = 'none';
-      if (profilePic) profilePic.src = PLACEHOLDER_PIC;
-    }
-
-    // ✅ CORRECTED: Get session properly
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (session?.user && session.user.email_confirmed_at) {
-      showLoggedIn(session.user);
-    } else {
-      showLoggedOut();
-    }
-
-    // === LOGOUT ===
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', async () => {
-        await supabase.auth.signOut();
-        showLoggedOut();
-        if (session?.user) {
-          localStorage.removeItem(`jsali_avatar_${session.user.id}`);
-        }
-        window.location.href = "index.html";
-      });
-    }
-
-    // === AUTH STATE LISTENER ===
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
-        showLoggedIn(session.user);
-      } else if (event === 'SIGNED_OUT') {
-        showLoggedOut();
-      }
-    });
-  });
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('nav-links');
+            
+            hamburger.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                const spans = hamburger.querySelectorAll('span');
+                if (navLinks.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                }
+            });
+            
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('#nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    const spans = hamburger.querySelectorAll('span');
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                });
+            });
+            
+            // Loader
+            setTimeout(() => {
+                document.getElementById('loaderWrapper').classList.add('hidden');
+                setTimeout(() => {
+                    document.getElementById('mainContent').classList.remove('hidden');
+                }, 300);
+            }, 2000);
+            
+            // Feature animation
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.15 });
+            
+            document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+        });
+    </script>
 </body>
 </html>
