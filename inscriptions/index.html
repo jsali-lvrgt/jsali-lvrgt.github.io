@@ -4,41 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulaire de participation</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="/JSALI.png" />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- LOADER (identical to other pages) -->
     <div class="loader-wrapper" id="loaderWrapper">
-        <div class="loader"></div>
+        <div class="loader-text">Chargement...</div>
+        <div class="loader">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        <p class="loader-footer-text">
+            Site par tarmacq studios<br><br>
+            <a href="https://x.com/jsali_lvrgt" target="_blank" rel="noopener noreferrer">Tweetez Nous</a> | 
+            <a href="https://jsalilvrgt.statuspage.io" target="_blank" rel="noopener noreferrer">Stats de nos Services</a>
+        </p>
     </div>
-    
+
     <div id="mainContent" class="main-content hidden">
         <nav>
             <h1>JSALI</h1>
+            <div class="hamburger" id="hamburger" aria-label="Menu de navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <div class="nav-links" id="nav-links">
-                <a href="/index.html">Page principale</a>
-                <a href="/axe thematique.html">Axes Thématiques</a>
-                <a href="/error-catcher/404page.html">Sponsors</a>
+                <a href="/index.html" rel="noopener">Page principale</a>
+                <a href="/axe-thematique.html" rel="noopener">Axes Thématiques</a>
+                <a href="/error-catcher/404page.html" rel="noopener">Sponsors</a>
                 
                 <div class="profile-section" style="display:none" id="profile-section">
                     <div id="profile-pic-container">
                         <input type="file" id="profile-pic-input" accept="image/*">
-                        <img src="/placeholder-profile-pic.png" alt="Profile" id="profile-pic" />
+                        <img src="/placeholder-profile-pic.png" alt="Photo de profil" id="profile-pic" />
                     </div>
                     <span id="welcome-nav-msg"></span>
                 </div>
                 
                 <a href="/register.html" class="btn" id="register-btn">S'inscrire</a>
                 <a href="/login.html" class="btn" id="login-btn">Se connecter</a>
-                <button class="btn" id="logout-btn" style="display:none">Déconnexion</button>
+                <button type="button" class="btn" id="logout-btn" style="display:none">Déconnexion</button>
             </div>
         </nav>
 
         <div class="login-box">
             <h2>Soumission de participation</h2>
-
             <form id="participation-form" class="space-y-6" method="POST" action="https://formcarry.com/s/-rz71ZfooOI">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -56,7 +70,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="etablissement">Etablissement de Rattachement</label>
+                        <label for="etablissement">Établissement de Rattachement</label>
                         <input type="text" id="etablissement" name="Etablissement de Rattachement" required>
                     </div>
                     <div>
@@ -78,13 +92,11 @@
                 </div>
 
                 <div id="form-message" class="form-message"></div>
-
                 <button type="submit">Soumettre</button>
             </form>
         </div>
     </div>
-    
- 
-       <script type="module" src="script.js"></script>
 
+    <script type="module" src="script.js"></script>
 </body>
+</html>
