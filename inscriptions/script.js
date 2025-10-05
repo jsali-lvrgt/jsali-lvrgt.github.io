@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         formMessage.textContent = "Veuillez vous connecter pour soumettre.";
         formMessage.style.color = "red";
         submitButton.disabled = true;
-        setTimeout(() => window.location.href = "/login.html", 2500);
+        setTimeout(() => window.location.href = "/login?redirect=inscriptions.html", 2500);
         return;
     }
 
