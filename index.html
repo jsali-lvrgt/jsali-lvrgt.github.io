@@ -19,7 +19,6 @@
             --secondary-text: #cbd5e1;
             --blur: rgba(255, 255, 255, 0.05);
             --nav-height: 70px;
-            --mobile-breakpoint: 768px;
         }
 
         * {
@@ -37,10 +36,9 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            line-height: 1.6;
         }
 
-        /* --- Loading Screen --- */
+        /* --- LOADER (identique aux autres pages) --- */
         .loader-wrapper {
             position: fixed;
             top: 0;
@@ -62,22 +60,22 @@
         .loader-wrapper.hidden {
             opacity: 0;
             pointer-events: none;
+            display: none;
         }
 
         .loader-text {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--highlight);
             margin-bottom: 2rem;
-            text-align: center;
         }
         
         .loader-footer-text {
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--secondary-text);
             margin-top: 2.5rem;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .loader-footer-text a {
@@ -95,7 +93,8 @@
         .loader {
             display: flex;
             justify-content: space-between;
-            width: 70px;
+            width: 60px;
+            margin: 0 auto;
         }
 
         .dot {
@@ -114,7 +113,7 @@
             50% { transform: scale(1); opacity: 1; }
         }
 
-        /* --- Navigation (Desktop & Mobile) --- */
+        /* --- NAVIGATION --- */
         nav {
             position: fixed;
             top: 0;
@@ -132,23 +131,39 @@
         }
 
         nav h1 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: var(--highlight);
             font-weight: 800;
         }
 
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 26px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            height: 2px;
+            width: 100%;
+            background: var(--highlight);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
         .nav-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 1.2rem;
             align-items: center;
         }
 
-        .nav-links a, .nav-links .btn {
+        .nav-links a {
             color: var(--secondary-text);
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s;
-            white-space: nowrap;
             font-size: 1rem;
         }
 
@@ -178,26 +193,26 @@
             align-items: center;
             gap: 0.8rem;
         }
-
+        
         #profile-pic-container {
             width: 40px;
             height: 40px;
             cursor: pointer;
         }
-
+        
         #profile-pic {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             border: 2px solid var(--highlight);
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
-
+        
         #profile-pic:hover {
             transform: scale(1.1);
         }
-
+        
         #profile-pic-input {
             display: none;
         }
@@ -205,28 +220,9 @@
         #welcome-nav-msg {
             color: var(--highlight);
             font-weight: 600;
-            white-space: nowrap;
         }
 
-        /* --- Hamburger Menu (Mobile Only) --- */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 26px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            height: 2px;
-            width: 100%;
-            background: var(--highlight);
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-
-        /* --- Main Content --- */
+        /* --- MAIN CONTENT --- */
         .main-content.hidden {
             display: none;
         }
@@ -242,20 +238,19 @@
         }
 
         header h1 {
-            font-size: 3.2rem;
+            font-size: 3rem;
             font-weight: 800;
             background: linear-gradient(to right, var(--highlight), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             line-height: 1.2;
         }
 
         header h2 {
             font-size: 1.8rem;
-            font-weight: 600;
             color: var(--secondary-text);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         header p {
@@ -269,36 +264,35 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 3rem;
+            gap: 2.5rem;
             padding: 2.5rem;
             flex-wrap: wrap;
         }
 
         .logos img {
-            max-width: 160px;
+            max-width: 150px;
             height: auto;
             border-radius: 20%;
             border: 2px solid var(--highlight);
-            padding: 6px;
-            transition: transform 0.4s, box-shadow 0.4s;
+            padding: 5px;
+            transition: transform 0.4s ease;
         }
 
         #fstgat-logo {
-            width: 200px;
-            height: 100px;
+            width: 180px;
+            height: 90px;
             object-fit: contain;
             border-radius: 20%;
         }
 
         .logos img:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(145, 145, 145, 0.5);
         }
 
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.2rem;
+            gap: 2rem;
             padding: 3rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
@@ -307,12 +301,12 @@
         .feature {
             background: var(--blur);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2.2rem;
-            border-radius: 20px;
+            padding: 2rem;
+            border-radius: 1.5rem;
             backdrop-filter: blur(10px);
             opacity: 0;
             transform: translateY(30px) scale(0.98);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.6s ease;
             text-align: center;
         }
 
@@ -322,13 +316,13 @@
         }
 
         .feature:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(145, 145, 145, 0.4);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(145, 145, 145, 0.4);
         }
 
         .feature h3 {
             color: var(--highlight);
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
             font-size: 1.4rem;
             line-height: 1.4;
         }
@@ -336,7 +330,7 @@
         footer {
             text-align: center;
             padding: 3rem 1rem 2rem;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #64748b;
         }
 
@@ -350,15 +344,11 @@
             color: var(--highlight);
         }
 
-        /* --- Mobile Styles --- */
+        /* --- MOBILE MENU & RESPONSIVE --- */
         @media (max-width: 768px) {
-            :root {
-                --nav-height: 60px;
-            }
+            :root { --nav-height: 60px; }
 
-            .hamburger {
-                display: flex;
-            }
+            .hamburger { display: flex; }
 
             .nav-links {
                 position: fixed;
@@ -387,10 +377,9 @@
 
             .nav-links a, .nav-links .btn {
                 width: 100%;
-                padding: 0.6rem 0;
+                padding: 0.7rem 0;
                 font-size: 1.1rem;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-                padding-bottom: 0.8rem;
             }
 
             .nav-links a:last-child, .nav-links .btn:last-child {
@@ -399,7 +388,7 @@
 
             .profile-section {
                 width: 100%;
-                padding-top: 0.8rem;
+                padding-top: 1rem;
                 border-top: 1px solid rgba(255, 255, 255, 0.05);
             }
 
@@ -427,12 +416,11 @@
 
             header p {
                 font-size: 1rem;
-                padding: 0 10px;
             }
 
             .logos {
-                gap: 1.8rem;
-                padding: 1.8rem 1rem;
+                gap: 1.5rem;
+                padding: 1.5rem;
             }
 
             .logos img {
@@ -460,33 +448,12 @@
 
             footer {
                 padding: 2rem 1rem;
-                font-size: 0.85rem;
             }
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.6); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes fadeInZoom {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
+    <!-- LOADER IDENTIQUE AUX AUTRES PAGES -->
     <div class="loader-wrapper" id="loaderWrapper">
         <div class="loader-text">Chargement...</div>
         <div class="loader">
@@ -496,22 +463,22 @@
         </div>
         <p class="loader-footer-text">
             Site par tarmacq studios<br><br>
-            <a href="https://x.com/jsali_lvrgt" target="_blank">Tweetez Nous</a> | 
-            <a href="https://jsalilvrgt.statuspage.io" target="_blank">Stats de nos Services</a>
+            <a href="https://x.com/jsali_lvrgt" target="_blank" rel="noopener noreferrer">Tweetez Nous</a> | 
+            <a href="https://jsalilvrgt.statuspage.io" target="_blank" rel="noopener noreferrer">Stats de nos Services</a>
         </p>
     </div>
 
     <div id="mainContent" class="main-content hidden">
         <nav>
             <h1><strong>jsali_lvrgt</strong></h1>
-            <div class="hamburger" id="hamburger">
+            <div class="hamburger" id="hamburger" aria-label="Menu de navigation">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
             <div class="nav-links" id="nav-links">
-                <a href="axe thematique">Axes Thématiques</a>
-                <a href="/error-catcher/404page">Sponsors</a>
+                <a href="axe-thematique.html">Axes Thématiques</a>
+                <a href="/error-catcher/404page.html">Sponsors</a>
                 <a href="/inscriptions/">Inscription à la participation</a>
                 
                 <div class="profile-section" style="display:none" id="profile-section">
@@ -522,9 +489,9 @@
                     <span id="welcome-nav-msg"></span>
                 </div>
                 
-                <a href="register" class="btn" id="register-btn">S'inscrire</a>
-                <a href="login" class="btn" id="login-btn">Se connecter</a>
-                <button class="btn" id="logout-btn" style="display:none">Déconnexion</button>
+                <a href="register.html" class="btn" id="register-btn">S'inscrire</a>
+                <a href="login.html" class="btn" id="login-btn">Se connecter</a>
+                <button type="button" class="btn" id="logout-btn" style="display:none">Déconnexion</button>
             </div>
         </nav>
 
@@ -536,25 +503,25 @@
             </header>
 
             <section class="logos">
-                <img src="jsail usthb.jpeg" alt="USTHB" />
-                <img src="fstgat jsail.png" alt="FSTGAT" id="fstgat-logo" />
+                <img src="jsail%20usthb.jpeg" alt="USTHB" />
+                <img src="fstgat%20jsail.png" alt="FSTGAT" id="fstgat-logo" />
                 <img src="JSALI.png" alt="JSALI" />
             </section>
 
             <section class="features" id="axes">
-                <a href="axe thematique.html" class="feature">
+                <a href="axe-thematique.html" class="feature">
                     <h3>Axe 1:<br>Infrastructures linéaires & développement rural</h3>
                 </a>
-                <a href="axe thematique.html" class="feature">
+                <a href="axe-thematique.html" class="feature">
                     <h3>Axe 2:<br>Technologies & innovations pour un aménagement intelligent</h3>
                 </a>
-                <a href="axe thematique.html" class="feature">
+                <a href="axe-thematique.html" class="feature">
                     <h3>Axe 3:<br>Gouvernance & participation locale</h3>
                 </a>
-                <a href="axe thematique.html" class="feature">
+                <a href="axe-thematique.html" class="feature">
                     <h3>Axe 4:<br>Développement durable & biodiversité</h3>
                 </a>
-                <a href="axe thematique.html" class="feature">
+                <a href="axe-thematique.html" class="feature">
                     <h3>Axe 5:<br>Résilience & adaptation climatique</h3>
                 </a>
             </section>
@@ -566,52 +533,150 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        // 🔑 Supabase config (espaces supprimés)
+        const supabaseUrl = 'https://mqsebxyhynaroemoupwy.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc2VieHloeW5hcm9lbW91cHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5MDM0NzgsImV4cCI6MjA3NDQ3OTQ3OH0.ieD61m0CwOt7I2EA8Dstkd5Xd3RgOMQEFs5zpvB9hTU';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        const BUCKET_NAME = 'profile-pictures';
+        const PLACEHOLDER_PIC = 'placeholder-profile-pic.png';
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            // === LOADER ===
+            const loaderWrapper = document.getElementById('loaderWrapper');
+            const mainContent = document.getElementById('mainContent');
+            setTimeout(() => {
+                loaderWrapper?.classList.add('hidden');
+                setTimeout(() => mainContent?.classList.remove('hidden'), 300);
+            }, 2000);
+
+            // === MOBILE MENU ===
             const hamburger = document.getElementById('hamburger');
             const navLinks = document.getElementById('nav-links');
-            
-            hamburger.addEventListener('click', function() {
-                navLinks.classList.toggle('active');
+            hamburger.addEventListener('click', () => {
+                const isActive = navLinks.classList.toggle('active');
                 const spans = hamburger.querySelectorAll('span');
-                if (navLinks.classList.contains('active')) {
+                if (isActive) {
                     spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
                     spans[1].style.opacity = '0';
                     spans[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
                 } else {
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
+                    spans.forEach(s => s.style.cssText = '');
                 }
             });
-            
-            // Close mobile menu when clicking a link
-            document.querySelectorAll('#nav-links a').forEach(link => {
-                link.addEventListener('click', () => {
+
+            // Close menu on link click
+            document.querySelectorAll('#nav-links a').forEach(a => {
+                a.addEventListener('click', () => {
                     navLinks.classList.remove('active');
-                    const spans = hamburger.querySelectorAll('span');
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
+                    hamburger.querySelectorAll('span').forEach(s => s.style.cssText = '');
                 });
             });
-            
-            // Loader
-            setTimeout(() => {
-                document.getElementById('loaderWrapper').classList.add('hidden');
-                setTimeout(() => {
-                    document.getElementById('mainContent').classList.remove('hidden');
-                }, 300);
-            }, 2000);
-            
-            // Feature animation
+
+            // === FEATURE ANIMATION ===
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) entry.target.classList.add('visible');
                 });
             }, { threshold: 0.15 });
-            
             document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+
+            // === AUTH UI ===
+            const welcomeNavMsg = document.getElementById('welcome-nav-msg');
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const profileSection = document.getElementById('profile-section');
+            const profilePic = document.getElementById('profile-pic');
+            const profilePicInput = document.getElementById('profile-pic-input');
+
+            async function loadProfilePicture(userId) {
+                if (!userId || !profilePic) return;
+                const cached = localStorage.getItem(`jsali_avatar_${userId}`);
+                if (cached) return profilePic.src = cached;
+
+                const exts = ['jpg','jpeg','png','webp'];
+                for (const ext of exts) {
+                    const path = `${userId}/avatar.${ext}`;
+                    const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(path);
+                    if (!data?.publicUrl) continue;
+                    try {
+                        const res = await fetch(data.publicUrl, {method:'HEAD'});
+                        if (res.ok) {
+                            profilePic.src = data.publicUrl;
+                            localStorage.setItem(`jsali_avatar_${userId}`, data.publicUrl);
+                            return;
+                        }
+                    } catch {}
+                }
+                profilePic.src = PLACEHOLDER_PIC;
+            }
+
+            function showLoggedIn(user) {
+                const name = user.user_metadata?.full_name || user.email.split('@')[0];
+                if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${name} `;
+                if (profileSection) profileSection.style.display = 'flex';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'block';
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (registerBtn) registerBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                if (profilePic) {
+                    profilePic.onclick = () => profilePicInput?.click();
+                    profilePicInput.onchange = async (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const filePath = `${user.id}/avatar.jpg`;
+                            const { error } = await supabase.storage.from(BUCKET_NAME).upload(filePath, file, { upsert: true });
+                            if (!error) {
+                                const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
+                                if (data?.publicUrl) {
+                                    profilePic.src = data.publicUrl + '?t=' + Date.now();
+                                    localStorage.setItem(`jsali_avatar_${user.id}`, data.publicUrl);
+                                }
+                            }
+                            e.target.value = '';
+                        }
+                    };
+                }
+                loadProfilePicture(user.id);
+            }
+
+            function showLoggedOut() {
+                if (welcomeNavMsg) welcomeNavMsg.textContent = '';
+                if (profileSection) profileSection.style.display = 'none';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (registerBtn) registerBtn.style.display = 'inline-block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                if (profilePic) profilePic.src = PLACEHOLDER_PIC;
+            }
+
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user?.email_confirmed_at) {
+                showLoggedIn(session.user);
+            } else {
+                showLoggedOut();
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    await supabase.auth.signOut();
+                    showLoggedOut();
+                    if (session?.user) localStorage.removeItem(`jsali_avatar_${session.user.id}`);
+                    window.location.href = "index.html";
+                });
+            }
+
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
+                    showLoggedIn(session.user);
+                } else if (event === 'SIGNED_OUT') {
+                    showLoggedOut();
+                }
+            });
         });
     </script>
 </body>
