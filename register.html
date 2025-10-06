@@ -161,9 +161,9 @@
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-        // Supabase configuration
+
         const SUPABASE_URL = 'https://mqsebxyhynaroemoupwy.supabase.co';
-        // 🚨 IMPORTANT: You MUST use your Supabase Anon Public Key here.
+
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc2VieHloeW5hcm9lbW91cHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5MDM0NzgsImV4cCI6MjA3NDQ3OTQ3OH0.ieD61m0CwOt7I2EA8Dstkd5Xd3RgOMQEFs5zpvB9hTU'; 
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -172,7 +172,7 @@
             const toast = document.getElementById("toast");
             toast.textContent = message;
             toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 3000);
+            setTimeout(() => toast.classList.remove("show"), 5000);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
