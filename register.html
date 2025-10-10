@@ -14,6 +14,9 @@
             --text: #fff;
             --text-light: #cbd5e1;
             --input-bg: #1a1a1a;
+            --success: #4ade80;
+            --error: #f87171;
+            --info: #60a5fa;
         }
         body {
             font-family: 'Space Grotesk', sans-serif;
@@ -94,32 +97,56 @@
             text-decoration: underline;
         }
 
-        .g-recaptcha {
+        /* Cloudflare Turnstile container */
+        .cf-turnstile {
             margin-top: 1rem;
             display: flex;
             justify-content: center;
         }
 
+        /* ✨ Beautiful Toast Styles (same as login page) */
         .toast {
-            visibility: hidden;
-            min-width: 250px;
-            margin-left: -125px;
-            background-color: var(--highlight);
-            color: var(--bg);
-            text-align: center;
-            border-radius: 0.5rem;
-            padding: 1rem;
             position: fixed;
-            z-index: 1;
-            left: 50%;
             bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(20, 20, 20, 0.95);
+            color: white;
+            padding: 1rem 1.4rem;
+            border-radius: 0.8rem;
             font-size: 1rem;
             font-weight: 600;
-            transition: opacity 0.5s;
+            max-width: 90%;
+            width: auto;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(145, 145, 145, 0.2);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28),
+                        opacity 0.4s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
         }
+
         .toast.show {
-            visibility: visible;
             opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--info);
         }
 
         /* Responsive adjustments */
@@ -131,11 +158,16 @@
                 font-size: 1.6rem;
                 margin-bottom: 1.5rem;
             }
+            .toast {
+                padding: 0.9rem 1.2rem;
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
 <body>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Cloudflare Turnstile script -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <div class="register-box">
         <h2>Créer un compte jsali_lvrgt</h2>
@@ -149,7 +181,8 @@
             <label for="password">Mot de passe</label>
             <input type="password" id="password" required placeholder="Mot de passe" />
             
-            <div class="g-recaptcha" data-sitekey="6LeE9s0rAAAAAMjjjJG2weTGHGn65pEcqFCp57zV"></div>
+            <!-- Cloudflare Turnstile widget -->
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAB5t-g-mfliUjsH3"></div>
 
             <button type="submit">S'inscrire →</button>
         </form>
@@ -161,18 +194,32 @@
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-
         const SUPABASE_URL = 'https://mqsebxyhynaroemoupwy.supabase.co';
-
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc2VieHloeW5hcm9lbW91cHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5MDM0NzgsImV4cCI6MjA3NDQ3OTQ3OH0.ieD61m0CwOt7I2EA8Dstkd5Xd3RgOMQEFs5zpvB9hTU'; 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc2VieHloeW5hcm9lbW91cHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5MDM0NzgsImV4cCI6MjA3NDQ3OTQ3OH0.ieD61m0CwOt7I2EA8Dstkd5Xd3RgOMQEFs5zpvB9hTU';
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        function showToast(message) {
+        function showToast(message, type = 'info') {
             const toast = document.getElementById("toast");
-            toast.textContent = message;
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 5000);
+            
+            let icon = 'ℹ️';
+            if (type === 'success') icon = '✅';
+            else if (type === 'error') icon = '⚠️';
+
+            toast.innerHTML = `<span>${icon}</span> ${message}`;
+            toast.className = `toast ${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.className = 'toast', 400);
+            }, 5000);
+        }
+
+        function resetTurnstile() {
+            const container = document.querySelector('.cf-turnstile');
+            if (container && typeof turnstile !== 'undefined') {
+                turnstile.reset(container);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -184,24 +231,23 @@
                     const name = document.getElementById('name').value.trim();
                     const email = document.getElementById('email').value.trim();
                     const password = document.getElementById('password').value;
-                    const recaptchaResponse = grecaptcha.getResponse();
+
+                    // ✅ Get Turnstile token correctly
+                    const turnstileToken = document.querySelector('input[name="cf-turnstile-response"]')?.value || '';
 
                     if (!name || !email || !password) {
-                        showToast("Veuillez remplir tous les champs.");
+                        showToast("Veuillez remplir tous les champs.", "error");
                         return;
                     }
-                    if (recaptchaResponse.length === 0) {
-                        showToast("Veuillez compléter le reCAPTCHA.");
+                    if (!turnstileToken) {
+                        showToast("Veuillez compléter le CAPTCHA.", "error");
                         return;
                     }
 
                     try {
-                        // Supabase sign up with email/password
-                        // This call automatically sends a confirmation email if enabled in your project settings.
                         const { error } = await supabase.auth.signUp({
                             email: email,
                             password: password,
-                            // Pass name as user metadata (equivalent to Firebase's updateProfile/displayName)
                             options: {
                                 data: {
                                     full_name: name
@@ -213,15 +259,12 @@
                             throw error;
                         }
 
-                        // Display a success message indicating that a verification email was sent.
-                        showToast("Compte créé avec succès ! Un e-mail de vérification a été envoyé. Veuillez vérifier votre boîte de réception.");
-                        
-                        // Reset the form and reCAPTCHA after successful submission
+                        showToast("Compte créé avec succès, Un e-mail de vérification a été envoyé.", "success");
                         form.reset();
-                        grecaptcha.reset();
+                        resetTurnstile();
 
                     } catch (error) {
-                        grecaptcha.reset();
+                        resetTurnstile();
 
                         let errorMessage = "Échec de l'inscription. Veuillez réessayer.";
                         if (error.message.includes('User already registered')) {
@@ -229,10 +272,9 @@
                         } else if (error.message.includes('Password should be at least 6 characters')) {
                             errorMessage = 'Le mot de passe doit contenir au moins 6 caractères.';
                         } else if (error.message.includes('AuthApiError')) {
-                            // General Supabase error handling
                             errorMessage = 'Erreur du serveur d\'authentification. Veuillez réessayer.';
                         }
-                        showToast(errorMessage);
+                        showToast(errorMessage, "error");
                         console.error("Supabase Auth Error:", error.message);
                     }
                 });
