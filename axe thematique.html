@@ -4,39 +4,51 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>jsali_lvrgt - Axes Thématiques</title>
+    <meta name="description" content="jsali_lvrgt | Axes Thématiques de la Journée Scientifique.">
     <link rel="icon" href="JSALI.png"/>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     <style>
         :root {
-            --main-bg: #0a0a0a;
-            --highlight: #919191;
-            --primary-text: #fff;
-            --secondary-text: #cbd5e1;
-            --accent: #919191;
-            --blur: rgba(255,255,255,0.05);
+            --main-bg: #e2e2e2;
+            --highlight: #616161;
+            --accent: #c9d6ff;
+            --primary-text: #333;
+            --secondary-text: #888;
+            --blur: rgba(0, 0, 0, 0.1);
             --nav-height: 70px;
+            --btn-bg: #888;
+            --btn-hover: #777;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; scroll-behavior:smooth; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            font-family: "Poppins", sans-serif;
+            text-decoration: none;
+            list-style: none;
+        }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: var(--main-bg);
+            background: linear-gradient(90deg, var(--main-bg), var(--accent));
             color: var(--primary-text);
-            overflow-x: hidden;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
-        /* --- LOADER: Three-Dot Pulse (from main page) --- */
+        /* --- LOADER --- */
         .loader-wrapper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--main-bg);
+            background: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -46,12 +58,12 @@
             pointer-events: all;
             flex-direction: column;
             padding: 20px;
-            text-align: center;
         }
 
         .loader-wrapper.hidden {
             opacity: 0;
             pointer-events: none;
+            display: none;
         }
 
         .loader-text {
@@ -77,7 +89,7 @@
         }
 
         .loader-footer-text a:hover {
-            color: #fff;
+            color: var(--primary-text);
             text-decoration: underline;
         }
 
@@ -96,32 +108,23 @@
             animation: pulse 1.5s infinite ease-in-out;
         }
 
-        .dot:nth-child(2) {
-            animation-delay: 0.15s;
-        }
-
-        .dot:nth-child(3) {
-            animation-delay: 0.3s;
-        }
+        .dot:nth-child(2) { animation-delay: 0.15s; }
+        .dot:nth-child(3) { animation-delay: 0.3s; }
 
         @keyframes pulse {
-            0%, 100% {
-                transform: scale(0);
-                opacity: 0.5;
-            }
-            50% {
-                transform: scale(1);
-                opacity: 1;
-            }
+            0%, 100% { transform: scale(0); opacity: 0.5; }
+            50% { transform: scale(1); opacity: 1; }
         }
 
         /* --- NAVIGATION --- */
         nav {
             position: fixed;
-            top: 0; left: 0; right: 0;
-            background: rgba(10,10,10,0.85);
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             padding: 0 2rem;
             z-index: 1000;
             display: flex;
@@ -133,6 +136,8 @@
         nav h1 {
             font-size: 1.3rem;
             color: var(--highlight);
+            font-weight: 800;
+            animation: fadeIn 1s ease-out;
         }
 
         .hamburger {
@@ -158,30 +163,40 @@
             align-items: center;
         }
 
-        .nav-links a, .nav-links .btn {
-            color: var(--secondary-text);
+        .nav-links a {
+            color: var(--primary-text);
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.3s;
+            transition: color 0.3s, transform 0.3s;
             font-size: 1rem;
+            animation: fadeIn 1s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .nav-links a:hover { color: var(--highlight); }
+        .nav-links a:hover {
+            color: var(--highlight);
+            transform: scale(1.1);
+        }
 
         .btn {
             padding: 0.5rem 1.2rem;
-            background: var(--highlight);
-            color: var(--main-bg);
+            background: var(--btn-bg);
+            color: #fff;
             border: none;
             border-radius: 8px;
-            font-weight: bold;
+            font-weight: 600;
             transition: background 0.3s, transform 0.2s;
-            text-decoration: none;
             cursor: pointer;
+            animation: fadeIn 1s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn:hover {
-            background: #a1a1a1;
+            background: var(--btn-hover);
             transform: translateY(-2px);
         }
 
@@ -189,6 +204,7 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
+            animation: fadeIn 1s ease-out;
         }
 
         #profile-pic-container {
@@ -203,14 +219,16 @@
             border-radius: 50%;
             border: 2px solid var(--highlight);
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
 
         #profile-pic:hover {
             transform: scale(1.1);
         }
 
-        #profile-pic-input { display: none; }
+        #profile-pic-input {
+            display: none;
+        }
 
         #welcome-nav-msg {
             color: var(--highlight);
@@ -218,7 +236,9 @@
         }
 
         /* --- MAIN CONTENT --- */
-        .main-content.hidden { display: none; }
+        .main-content.hidden {
+            display: none;
+        }
 
         .content-wrapper {
             padding-top: var(--nav-height);
@@ -228,15 +248,17 @@
         header {
             padding: 6rem 2rem 2rem;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         header h1 {
             font-size: 3rem;
             font-weight: 800;
-            background: linear-gradient(to right, #919191, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--highlight);
             margin-bottom: 0.5rem;
+            line-height: 1.2;
+            animation: fadeInUp 1s ease-out;
         }
 
         header p {
@@ -244,6 +266,17 @@
             color: var(--secondary-text);
             max-width: 700px;
             margin: 1rem auto 0;
+            animation: fadeInUp 1.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         .features {
@@ -253,40 +286,67 @@
             padding: 3rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .feature {
-            background: var(--blur);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #fff;
+            border: 1px solid var(--blur);
             padding: 2rem;
-            border-radius: 1rem;
-            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             opacity: 0;
             transform: translateY(30px) scale(0.98);
             transition: all 0.6s ease;
+            text-align: center;
+            transform-style: preserve-3d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature i {
+            font-size: 2.5rem;
+            color: var(--highlight);
         }
 
         .feature.visible {
             opacity: 1;
             transform: translateY(0) scale(1);
+            animation: staggerIn 0.5s ease-out forwards;
+        }
+
+        .feature:nth-child(1) { animation-delay: 0.1s; }
+        .feature:nth-child(2) { animation-delay: 0.2s; }
+        .feature:nth-child(3) { animation-delay: 0.3s; }
+        .feature:nth-child(4) { animation-delay: 0.4s; }
+        .feature:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes staggerIn {
+            0% { opacity: 0; transform: translateY(30px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .feature:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 25px rgba(145,145,145,0.4);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         .feature h3 {
             color: var(--highlight);
             margin-bottom: 1rem;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
+            line-height: 1.4;
         }
 
         .feature ul {
             list-style: disc;
             margin-left: 1.5rem;
-            color: #d1d5db;
+            color: var(--secondary-text);
             font-size: 1rem;
+            text-align: left;
         }
 
         .feature ul li { margin-bottom: 0.6rem; }
@@ -295,18 +355,59 @@
             text-align: center;
             padding: 3rem 1rem 2rem;
             font-size: 0.9rem;
-            color: #64748b;
+            color: var(--secondary-text);
+            position: relative;
+            z-index: 1;
         }
 
         footer a {
-            color: var(--secondary-text);
+            color: var(--primary-text);
             text-decoration: none;
             transition: color 0.3s;
         }
 
-        footer a:hover { color: var(--highlight); }
+        footer a:hover {
+            color: var(--highlight);
+        }
 
-        /* --- MOBILE MENU --- */
+        /* --- PARALLAX EFFECT --- */
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .parallax-layer img {
+            position: absolute;
+            object-fit: cover;
+            opacity: 0.3;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        .parallax-layer-1 img {
+            width: 200px;
+            top: 10%;
+            left: 10%;
+        }
+
+        .parallax-layer-2 img {
+            width: 150px;
+            top: 50%;
+            right: 15%;
+        }
+
+        .parallax-layer-3 img {
+            width: 180px;
+            bottom: 20%;
+            left: 20%;
+        }
+
+        /* --- MOBILE MENU & RESPONSIVE --- */
         @media (max-width: 768px) {
             :root { --nav-height: 60px; }
 
@@ -317,7 +418,7 @@
                 top: var(--nav-height);
                 left: 0;
                 right: 0;
-                background: rgba(10,10,10,0.97);
+                background: rgba(255, 255, 255, 0.95);
                 backdrop-filter: blur(10px);
                 flex-direction: column;
                 align-items: flex-start;
@@ -328,7 +429,7 @@
                 visibility: hidden;
                 transition: all 0.4s ease;
                 z-index: 999;
-                border-top: 1px solid rgba(255,255,255,0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
             }
 
             .nav-links.active {
@@ -341,7 +442,7 @@
                 width: 100%;
                 padding: 0.7rem 0;
                 font-size: 1.1rem;
-                border-bottom: 1px solid rgba(255,255,255,0.05);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             }
 
             .nav-links a:last-child, .nav-links .btn:last-child {
@@ -351,7 +452,7 @@
             .profile-section {
                 width: 100%;
                 padding-top: 1rem;
-                border-top: 1px solid rgba(255,255,255,0.05);
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
             }
 
             #welcome-nav-msg {
@@ -387,7 +488,7 @@
             }
 
             .feature h3 {
-                font-size: 1.3rem;
+                font-size: 1.25rem;
             }
 
             .feature ul {
@@ -397,11 +498,29 @@
             footer {
                 padding: 2rem 1rem;
             }
+
+            .parallax-layer-1 img {
+                width: 100px;
+                top: 15%;
+                left: 5%;
+            }
+
+            .parallax-layer-2 img {
+                width: 80px;
+                top: 60%;
+                right: 5%;
+            }
+
+            .parallax-layer-3 img {
+                width: 90px;
+                bottom: 10%;
+                left: 10%;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- LOADER (same as homepage) -->
+    <!-- LOADER -->
     <div class="loader-wrapper" id="loaderWrapper">
         <div class="loader-text">Chargement...</div>
         <div class="loader">
@@ -410,50 +529,45 @@
             <div class="dot"></div>
         </div>
         <p class="loader-footer-text">
-            Site par tarmacq studios
-            <br>
-            <br>
-            <a href="https://x.com/jsali_lvrgt" target="_blank" rel="noopener noreferrer">Tweetez Nous</a> 
-            | 
+            Site par tarmacq studios<br><br>
+            <a href="https://x.com/jsali_lvrgt" target="_blank" rel="noopener noreferrer">Tweetez Nous</a> | 
             <a href="https://jsalilvrgt.statuspage.io" target="_blank" rel="noopener noreferrer">Stats de nos Services</a>
         </p>
     </div>
 
     <div id="mainContent" class="main-content hidden">
         <nav>
-            <h1>jsali_lvrgt</h1>
-            <div class="hamburger" id="hamburger" aria-label="Menu de navigation" aria-expanded="false">
+            <h1><strong>jsali_lvrgt</strong></h1>
+            <div class="hamburger" id="hamburger" aria-label="Menu de navigation">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
             <div class="nav-links" id="nav-links">
-                <a href="https://jsali-lvrgt.github.io" rel="noopener noreferrer">Page principale</a>
-                <a href="/error-catcher/404page.html">Sponsors</a>
-                <a href="/inscriptions/">Inscription à la participation</a>
-
+                <a href="https://jsali-lvrgt.github.io"><i class='bx bx-home'></i> Page principale</a>
+                <a href="404"><i class='bx bx-heart'></i> Sponsors</a>
+                <a href="/inscriptions/"><i class='bx bx-user-plus'></i> Inscription à la participation</a>
                 <div class="profile-section" style="display:none" id="profile-section">
                     <div id="profile-pic-container">
                         <input type="file" id="profile-pic-input" accept="image/*">
-                        <img src="placeholder-profile-pic.png" alt="Photo de profil" id="profile-pic" />
+                        <img src="placeholder-profile-pic.png" alt="Profile" id="profile-pic" />
                     </div>
                     <span id="welcome-nav-msg"></span>
                 </div>
-
-                <a href="register.html" class="btn" id="register-btn">S'inscrire</a>
-                <a href="login.html" class="btn" id="login-btn">Se connecter</a>
-                <button type="button" class="btn" id="logout-btn" style="display:none">Déconnexion</button>
+                <a href="auth" class="btn" id="register-btn"><i class='bx bx-user'></i>Authentification</a>
+                <button type="button" class="btn" id="logout-btn" style="display:none"><i class='bx bx-log-out'></i> Déconnexion</button>
             </div>
         </nav>
 
         <div class="content-wrapper">
             <header>
                 <h1>Axes Thématiques</h1>
-                <p>Découvrez les principaux axes de recherche de la Journée Scientifique JSALI</p>
+                <p>Découvrez les principaux principaux axes de recherche de la Journée Scientifique JSALI</p>
             </header>
 
             <section class="features" id="axes">
-                <div class="feature">
+                <div class="feature" data-tilt data-tilt-max="8" data-tilt-speed="400" data-tilt-perspective="1000">
+                    <i class='bx bx-building-house'></i>
                     <h3>Infrastructures linéaires & développement rural</h3>
                     <ul>
                         <li>Contributions des routes, chemins de fer et réseaux d’énergie au désenclavement des territoires.</li>
@@ -461,7 +575,8 @@
                         <li>Défis d’intégration paysagère et d’acceptabilité sociale.</li>
                     </ul>
                 </div>
-                <div class="feature">
+                <div class="feature" data-tilt data-tilt-max="8" data-tilt-speed="400" data-tilt-perspective="1000">
+                    <i class='bx bx-bulb'></i>
                     <h3>Technologies & innovations pour un aménagement intelligent</h3>
                     <ul>
                         <li>Utilisation des SIG, drones et modèles numériques pour la conception et la gestion des infrastructures linéaires.</li>
@@ -469,7 +584,8 @@
                         <li>Matériaux et techniques innovants pour des infrastructures durables.</li>
                     </ul>
                 </div>
-                <div class="feature">
+                <div class="feature" data-tilt data-tilt-max="8" data-tilt-speed="400" data-tilt-perspective="1000">
+                    <i class='bx bx-group'></i>
                     <h3>Gouvernance & participation locale</h3>
                     <ul>
                         <li>Rôle des acteurs locaux dans la planification et le suivi des projets.</li>
@@ -477,7 +593,8 @@
                         <li>Partenariats public-privé et politiques publiques pour des infrastructures durables.</li>
                     </ul>
                 </div>
-                <div class="feature">
+                <div class="feature" data-tilt data-tilt-max="8" data-tilt-speed="400" data-tilt-perspective="1000">
+                    <i class='bx bx-leaf'></i>
                     <h3>Développement durable & biodiversité</h3>
                     <ul>
                         <li>Réduction des impacts des infrastructures sur les écosystèmes naturels.</li>
@@ -485,7 +602,8 @@
                         <li>Rôle des infrastructures dans la transition écologique et énergétique.</li>
                     </ul>
                 </div>
-                <div class="feature">
+                <div class="feature" data-tilt data-tilt-max="8" data-tilt-speed="400" data-tilt-perspective="1000">
+                    <i class='bx bx-shield'></i>
                     <h3>Résilience & adaptation climatique</h3>
                     <ul>
                         <li>Infrastructures linéaires face aux risques naturels : inondations, érosion, sécheresses.</li>
@@ -495,7 +613,7 @@
             </section>
 
             <footer>
-                &copy; 2025 JSALI — USTHB | FSTGAT | <a href="mailto:jsalifstgat@gmail.com">Contact</a><br>
+                &copy; 2025 jsali_lvrgt | FSTGAT | USTHB | <a href="mailto:jsalifstgat@gmail.com">Nous Contacter</a><br />
                 <a href="mailto:ryanyagouni@yahoo.com">Contacter le développeur</a>
             </footer>
         </div>
@@ -512,39 +630,19 @@
         const PLACEHOLDER_PIC = 'placeholder-profile-pic.png';
 
         document.addEventListener("DOMContentLoaded", async () => {
-            // === LOADER LOGIC ===
+            // Loader
             const loaderWrapper = document.getElementById('loaderWrapper');
             const mainContent = document.getElementById('mainContent');
-            const minimumLoadingTime = 2000; // Reduced to 2s for better UX
-            const startTime = Date.now();
+            setTimeout(() => {
+                loaderWrapper?.classList.add('hidden');
+                setTimeout(() => mainContent?.classList.remove('hidden'), 300);
+            }, 2000);
 
-            const hideLoader = () => {
-                const elapsed = Date.now() - startTime;
-                const remainingTime = minimumLoadingTime - elapsed;
-                setTimeout(() => {
-                    loaderWrapper.classList.add('hidden');
-                    setTimeout(() => {
-                        mainContent.classList.remove('hidden');
-                    }, 300);
-                }, Math.max(0, remainingTime));
-            };
-
-            hideLoader();
-
-            // === FEATURE ANIMATION ===
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('visible');
-                });
-            }, { threshold: 0.15 });
-            document.querySelectorAll('.feature').forEach(el => observer.observe(el));
-
-            // === MOBILE MENU ===
+            // Mobile Menu
             const hamburger = document.getElementById('hamburger');
             const navLinks = document.getElementById('nav-links');
             hamburger.addEventListener('click', () => {
                 const isActive = navLinks.classList.toggle('active');
-                hamburger.setAttribute('aria-expanded', isActive);
                 const spans = hamburger.querySelectorAll('span');
                 if (isActive) {
                     spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
@@ -555,16 +653,43 @@
                 }
             });
 
-            // Close mobile menu when clicking a link
+            // Close menu on link click
             document.querySelectorAll('#nav-links a').forEach(a => {
                 a.addEventListener('click', () => {
                     navLinks.classList.remove('active');
-                    hamburger.setAttribute('aria-expanded', 'false');
                     hamburger.querySelectorAll('span').forEach(s => s.style.cssText = '');
                 });
             });
 
-            // === AUTH UI LOGIC ===
+            // Feature Animation
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.feature').forEach(el => observer.observe(el));
+
+            // Parallax Effect with Rotation
+            const parallaxLayers = document.querySelectorAll('.parallax-layer img');
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                parallaxLayers.forEach((layer, index) => {
+                    const speed = 0.2 * (index + 1);
+                    const rotation = scrollY * 0.05 * (index + 1);
+                    layer.style.transform = `translateY(${scrollY * speed}px) rotate(${rotation}deg)`;
+                });
+            });
+
+            // Initialize Vanilla Tilt for 3D effect
+            VanillaTilt.init(document.querySelectorAll(".feature"), {
+                max: 10,
+                speed: 400,
+                perspective: 1000,
+                glare: true,
+                "max-glare": 0.3
+            });
+
+            // Auth UI
             const welcomeNavMsg = document.getElementById('welcome-nav-msg');
             const loginBtn = document.getElementById('login-btn');
             const registerBtn = document.getElementById('register-btn');
@@ -595,60 +720,67 @@
                 profilePic.src = PLACEHOLDER_PIC;
             }
 
-            async function uploadProfilePicture(userId, file) {
-                if (!file?.type.startsWith('image/')) return alert('Veuillez sélectionner une image valide.');
-                const path = `${userId}/avatar.jpg`;
-                const { error } = await supabase.storage.from(BUCKET_NAME).upload(path, file, { upsert: true });
-                if (error) return alert('Échec du téléchargement.');
-                const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(path);
-                if (data?.publicUrl) {
-                    profilePic.src = data.publicUrl + '?t=' + Date.now();
-                    localStorage.setItem(`jsali_avatar_${userId}`, data.publicUrl);
-                }
-            }
-
             function showLoggedIn(user) {
                 const name = user.user_metadata?.full_name || user.email.split('@')[0];
-                welcomeNavMsg.textContent = ` ${name} `;
-                profileSection.style.display = 'flex';
-                welcomeNavMsg.style.display = 'block';
-                loginBtn.style.display = 'none';
-                registerBtn.style.display = 'none';
-                logoutBtn.style.display = 'inline-block';
-                profilePic.onclick = () => profilePicInput?.click();
-                profilePicInput.onchange = async e => {
-                    const f = e.target.files[0];
-                    if (f) { await uploadProfilePicture(user.id, f); e.target.value = ''; }
-                };
+                if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${name} `;
+                if (profileSection) profileSection.style.display = 'flex';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'block';
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (registerBtn) registerBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                if (profilePic) {
+                    profilePic.onclick = () => profilePicInput?.click();
+                    profilePicInput.onchange = async (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const filePath = `${user.id}/avatar.jpg`;
+                            const { error } = await supabase.storage.from(BUCKET_NAME).upload(filePath, file, { upsert: true });
+                            if (!error) {
+                                const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
+                                if (data?.publicUrl) {
+                                    profilePic.src = data.publicUrl + '?t=' + Date.now();
+                                    localStorage.setItem(`jsali_avatar_${user.id}`, data.publicUrl);
+                                }
+                            }
+                            e.target.value = '';
+                        }
+                    };
+                }
                 loadProfilePicture(user.id);
             }
 
             function showLoggedOut() {
-                welcomeNavMsg.textContent = '';
-                profileSection.style.display = 'none';
-                welcomeNavMsg.style.display = 'none';
-                loginBtn.style.display = 'inline-block';
-                registerBtn.style.display = 'inline-block';
-                logoutBtn.style.display = 'none';
-                profilePic.src = PLACEHOLDER_PIC;
+                if (welcomeNavMsg) welcomeNavMsg.textContent = '';
+                if (profileSection) profileSection.style.display = 'none';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (registerBtn) registerBtn.style.display = 'inline-block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                if (profilePic) profilePic.src = PLACEHOLDER_PIC;
             }
 
             const { data: { session } } = await supabase.auth.getSession();
-            if (session?.user?.email_confirmed_at) showLoggedIn(session.user);
-            else showLoggedOut();
+            if (session?.user?.email_confirmed_at) {
+                showLoggedIn(session.user);
+            } else {
+                showLoggedOut();
+            }
 
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', async () => {
                     await supabase.auth.signOut();
                     showLoggedOut();
                     if (session?.user) localStorage.removeItem(`jsali_avatar_${session.user.id}`);
-                    window.location.href = "https://jsali-lvrgt.github.io";
+                    window.location.href = "index.html";
                 });
             }
 
             supabase.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) showLoggedIn(session.user);
-                else if (event === 'SIGNED_OUT') showLoggedOut();
+                if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
+                    showLoggedIn(session.user);
+                } else if (event === 'SIGNED_OUT') {
+                    showLoggedOut();
+                }
             });
         });
     </script>
