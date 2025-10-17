@@ -4,12 +4,456 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulaire de participation</title>
+    <meta name="description" content="jsali_lvrgt | Soumettez votre participation à la Journée Scientifique JSALI.">
     <link rel="icon" href="/JSALI.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --main-bg: #e2e2e2;
+            --highlight: #616161;
+            --accent: #c9d6ff;
+            --primary-text: #333;
+            --secondary-text: #888;
+            --blur: rgba(0, 0, 0, 0.1);
+            --nav-height: 70px;
+            --btn-bg: #888;
+            --btn-hover: #777;
+            --input-bg: #eee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            font-family: "Poppins", sans-serif;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        body {
+            background: linear-gradient(90deg, var(--main-bg), var(--accent));
+            color: var(--primary-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- LOADER --- */
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-in-out;
+            opacity: 1;
+            pointer-events: all;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .loader-wrapper.hidden {
+            opacity: 0;
+            pointer-events: none;
+            display: none;
+        }
+
+        .loader-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--highlight);
+            margin-bottom: 2rem;
+        }
+
+        .loader-footer-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--secondary-text);
+            margin-top: 2.5rem;
+            line-height: 1.4;
+        }
+
+        .loader-footer-text a {
+            color: var(--highlight);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .loader-footer-text a:hover {
+            color: var(--primary-text);
+            text-decoration: underline;
+        }
+
+        .loader {
+            display: flex;
+            justify-content: space-between;
+            width: 60px;
+            margin: 0 auto;
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--highlight);
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.15s; }
+        .dot:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0); opacity: 0.5; }
+            50% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 0 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--nav-height);
+        }
+
+        nav h1 {
+            font-size: 1.3rem;
+            color: var(--highlight);
+            font-weight: 800;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 26px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            height: 2px;
+            width: 100%;
+            background: var(--highlight);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--primary-text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s, transform 0.3s;
+            font-size: 1rem;
+            animation: fadeIn 1s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--highlight);
+            transform: scale(1.1);
+        }
+
+        .btn {
+            padding: 0.5rem 1.2rem;
+            background: var(--btn-bg);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.2s;
+            cursor: pointer;
+            animation: fadeIn 1s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--btn-hover);
+            transform: translateY(-2px);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        #profile-pic-container {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        #profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--highlight);
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        #profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        #profile-pic-input {
+            display: none;
+        }
+
+        #welcome-nav-msg {
+            color: var(--highlight);
+            font-weight: 600;
+        }
+
+        /* --- FORM STYLES --- */
+        .login-box {
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: 2rem auto;
+            box-sizing: border-box;
+            transform-style: preserve-3d;
+            opacity: 0;
+            transform: translateY(30px) scale(0.98);
+            transition: all 0.6s ease;
+        }
+
+        .login-box.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--highlight);
+            font-size: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .login-box label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-text);
+            font-weight: 600;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .login-box input,
+        .login-box textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--primary-text);
+            font-size: 1rem;
+            box-sizing: border-box;
+            animation: fadeInUp 1.4s ease-out;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            background: var(--btn-bg);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            animation: fadeInUp 1.6s ease-out;
+        }
+
+        .login-box button:hover {
+            background: var(--btn-hover);
+        }
+
+        .form-message {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 1rem;
+            color: var(--highlight);
+        }
+
+        /* --- PARALLAX EFFECT --- */
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .parallax-layer img {
+            position: absolute;
+            object-fit: cover;
+            opacity: 0.3;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        .parallax-layer-1 img {
+            width: 200px;
+            top: 10%;
+            left: 10%;
+        }
+
+        .parallax-layer-2 img {
+            width: 150px;
+            top: 50%;
+            right: 15%;
+        }
+
+        .parallax-layer-3 img {
+            width: 180px;
+            bottom: 20%;
+            left: 20%;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* --- MOBILE MENU & RESPONSIVE --- */
+        @media (max-width: 768px) {
+            :root { --nav-height: 60px; }
+
+            .hamburger { display: flex; }
+
+            .nav-links {
+                position: fixed;
+                top: var(--nav-height);
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1.8rem;
+                gap: 1.4rem;
+                transform: translateX(100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.4s ease;
+                z-index: 999;
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                transform: translateX(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .nav-links a, .nav-links .btn {
+                width: 100%;
+                padding: 0.7rem 0;
+                font-size: 1.1rem;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .nav-links a:last-child, .nav-links .btn:last-child {
+                border-bottom: none;
+            }
+
+            .profile-section {
+                width: 100%;
+                padding-top: 1rem;
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            #welcome-nav-msg {
+                display: block;
+                margin-top: 0.5rem;
+            }
+
+            .btn {
+                text-align: center;
+                margin-top: 0.5rem;
+            }
+
+            .login-box {
+                padding: 1.8rem;
+                margin: 1.5rem;
+            }
+
+            .login-box h2 { font-size: 1.8rem; }
+            .login-box input, .login-box textarea { padding: 0.65rem; }
+            .login-box button { padding: 0.7rem; font-size: 1rem; }
+
+            .parallax-layer-1 img {
+                width: 100px;
+                top: 15%;
+                left: 5%;
+            }
+
+            .parallax-layer-2 img {
+                width: 80px;
+                top: 60%;
+                right: 5%;
+            }
+
+            .parallax-layer-3 img {
+                width: 90px;
+                bottom: 10%;
+                left: 10%;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .login-box { padding: 1.2rem; margin: 1rem; }
+            .login-box h2 { font-size: 1.6rem; }
+        }
+    </style>
 </head>
 <body>
-    <!-- LOADER (identical to other pages) -->
+    <!-- LOADER -->
     <div class="loader-wrapper" id="loaderWrapper">
         <div class="loader-text">Chargement...</div>
         <div class="loader">
@@ -24,30 +468,28 @@
         </p>
     </div>
 
+ 
     <div id="mainContent" class="main-content hidden">
         <nav>
-            <h1>jsali_lvrgt</h1>
+            <h1><strong>jsali_lvrgt</strong></h1>
             <div class="hamburger" id="hamburger" aria-label="Menu de navigation">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
             <div class="nav-links" id="nav-links">
-                <a href="/index.html" rel="noopener">Page principale</a>
-                <a href="/axe thematique.html" rel="noopener">Axes Thématiques</a>
-                <a href="/error-catcher/404page.html" rel="noopener">Sponsors</a>
-                
+                <a href="/index.html"><i class='bx bx-home'></i> Page principale</a>
+                <a href="/axe thematique.html"><i class='bx bx-book'></i> Axes Thématiques</a>
+                <a href="/error-catcher/404page.html"><i class='bx bx-heart'></i> Sponsors</a>
                 <div class="profile-section" style="display:none" id="profile-section">
                     <div id="profile-pic-container">
                         <input type="file" id="profile-pic-input" accept="image/*">
-                        <img src="/placeholder-profile-pic.png" alt="Photo de profil" id="profile-pic" />
+                        <img src="/placeholder-profile-pic.png" alt="Profile" id="profile-pic" />
                     </div>
                     <span id="welcome-nav-msg"></span>
                 </div>
-                
-                <a href="/register.html" class="btn" id="register-btn">S'inscrire</a>
-                <a href="/login.html" class="btn" id="login-btn">Se connecter</a>
-                <button type="button" class="btn" id="logout-btn" style="display:none">Déconnexion</button>
+                <a href="/auth" class="btn" id="register-btn"><i class='bx bx-user'></i> Authentification</a>
+                <button type="button" class="btn" id="logout-btn" style="display:none"><i class='bx bx-log-out'></i> Déconnexion</button>
             </div>
         </nav>
 
@@ -55,48 +497,277 @@
             <h2>Soumission de participation</h2>
             <form id="participation-form" class="space-y-6" method="POST" action="https://formcarry.com/s/-rz71ZfooOI">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
+                    <div class="input-box">
                         <label for="nom">Nom</label>
                         <input type="text" id="nom" name="Nom" required>
                     </div>
-                    <div>
+                    <div class="input-box">
                         <label for="prenom">Prénom</label>
                         <input type="text" id="prenom" name="Prénom" required>
                     </div>
                 </div>
-                <div>
+                <div class="input-box">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="Email" required>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
+                    <div class="input-box">
                         <label for="etablissement">Établissement de Rattachement</label>
                         <input type="text" id="etablissement" name="Etablissement de Rattachement" required>
                     </div>
-                    <div>
+                    <div class="input-box">
                         <label for="fonction">Fonction</label>
                         <input type="text" id="fonction" name="Fonction" required>
                     </div>
                 </div>
-                <div>
+                <div class="input-box">
                     <label for="titre">Titre de communication</label>
                     <input type="text" id="titre" name="Titre de communication" required>
                 </div>
-                <div>
+                <div class="input-box">
                     <label for="axe">Axe</label>
                     <input type="text" id="axe" name="Axe" required>
                 </div>
-                <div>
+                <div class="input-box">
                     <label for="auteurs">Auteurs</label>
                     <textarea id="auteurs" name="Auteurs(ices)" rows="3" required></textarea>
                 </div>
 
                 <div id="form-message" class="form-message"></div>
-                <button type="submit">Soumettre</button>
+                <button type="submit"><i class='bx bx-send'></i> Soumettre</button>
             </form>
         </div>
+
+        <footer>
+            &copy; 2025 jsali_lvrgt | FSTGAT | USTHB | <a href="mailto:jsalifstgat@gmail.com">Nous Contacter</a><br />
+            <a href="mailto:ryanyagouni@yahoo.com">Contacter le développeur</a>
+        </footer>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const supabaseUrl = 'https://mqsebxyhynaroemoupwy.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc2VieHloeW5hcm9lbW91cHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5MDM0NzgsImV4cCI6MjA3NDQ3OTQ3OH0.ieD61m0CwOt7I2EA8Dstkd5Xd3RgOMQEFs5zpvB9hTU';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const FORMCARRY_URL = 'https://formcarry.com/s/-rz71ZfooOI';
+        const BUCKET_NAME = 'profile-pictures';
+        const PLACEHOLDER_PIC = '/placeholder-profile-pic.png';
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            // Loader
+            const loaderWrapper = document.getElementById('loaderWrapper');
+            const mainContent = document.getElementById('mainContent');
+            setTimeout(() => {
+                loaderWrapper?.classList.add('hidden');
+                setTimeout(() => mainContent?.classList.remove('hidden'), 300);
+            }, 2000);
+
+            // Mobile Menu
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('nav-links');
+            hamburger.addEventListener('click', () => {
+                const isActive = navLinks.classList.toggle('active');
+                const spans = hamburger.querySelectorAll('span');
+                if (isActive) {
+                    spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
+                } else {
+                    spans.forEach(s => s.style.cssText = '');
+                }
+            });
+
+            // Close menu on link click
+            document.querySelectorAll('#nav-links a').forEach(a => {
+                a.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    hamburger.querySelectorAll('span').forEach(s => s.style.cssText = '');
+                });
+            });
+
+            // Form Animation
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.login-box').forEach(el => observer.observe(el));
+
+            // Parallax Effect
+            const parallaxLayers = document.querySelectorAll('.parallax-layer img');
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                parallaxLayers.forEach((layer, index) => {
+                    const speed = 0.2 * (index + 1);
+                    const rotation = scrollY * 0.05 * (index + 1);
+                    layer.style.transform = `translateY(${scrollY * speed}px) rotate(${rotation}deg)`;
+                });
+            });
+
+            // Auth & Form Logic
+            const { data: { session } } = await supabase.auth.getSession();
+            const form = document.getElementById('participation-form');
+            const formMessage = document.getElementById('form-message');
+            const submitButton = form?.querySelector('button[type="submit"]');
+
+            if (!session?.user || !session.user.email_confirmed_at) {
+                formMessage.textContent = "Veuillez vous connecter pour soumettre.";
+                formMessage.style.color = "red";
+                submitButton.disabled = true;
+                setTimeout(() => window.location.href = "/login", 2500);
+                return;
+            }
+
+            // Nav UI
+            const welcomeNavMsg = document.getElementById('welcome-nav-msg');
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const profileSection = document.getElementById('profile-section');
+            const profilePic = document.getElementById('profile-pic');
+            const profilePicInput = document.getElementById('profile-pic-input');
+
+            async function loadProfilePicture(userId) {
+                if (!userId || !profilePic) return;
+                const cached = localStorage.getItem(`jsali_avatar_${userId}`);
+                if (cached) return profilePic.src = cached;
+
+                const exts = ['jpg', 'jpeg', 'png', 'webp'];
+                for (const ext of exts) {
+                    const path = `${userId}/avatar.${ext}`;
+                    const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(path);
+                    if (!data?.publicUrl) continue;
+                    try {
+                        const res = await fetch(data.publicUrl, { method: 'HEAD' });
+                        if (res.ok) {
+                            profilePic.src = data.publicUrl;
+                            localStorage.setItem(`jsali_avatar_${userId}`, data.publicUrl);
+                            return;
+                        }
+                    } catch {}
+                }
+                profilePic.src = PLACEHOLDER_PIC;
+            }
+
+            function showLoggedIn(user) {
+                const name = user.user_metadata?.full_name || user.email.split('@')[0];
+                if (welcomeNavMsg) welcomeNavMsg.textContent = ` ${name} `;
+                if (profileSection) profileSection.style.display = 'flex';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'block';
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (registerBtn) registerBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                if (profilePic && profilePicInput) {
+                    profilePic.onclick = () => profilePicInput.click();
+                    profilePicInput.onchange = async (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const filePath = `${user.id}/avatar.jpg`;
+                            const { error } = await supabase.storage.from(BUCKET_NAME).upload(filePath, file, { upsert: true });
+                            if (!error) {
+                                const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
+                                if (data?.publicUrl) {
+                                    profilePic.src = data.publicUrl + '?t=' + Date.now();
+                                    localStorage.setItem(`jsali_avatar_${user.id}`, data.publicUrl);
+                                }
+                            }
+                            e.target.value = '';
+                        }
+                    };
+                } else {
+                    console.warn('profilePic or profilePicInput not found in DOM');
+                }
+                loadProfilePicture(user.id);
+            }
+
+            function showLoggedOut() {
+                if (welcomeNavMsg) welcomeNavMsg.textContent = '';
+                if (profileSection) profileSection.style.display = 'none';
+                if (welcomeNavMsg) welcomeNavMsg.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (registerBtn) registerBtn.style.display = 'inline-block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                if (profilePic) profilePic.src = PLACEHOLDER_PIC;
+            }
+
+            if (session?.user?.email_confirmed_at) {
+                console.log('User is logged in:', session.user);
+                showLoggedIn(session.user);
+            } else {
+                console.log('No active session');
+                showLoggedOut();
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    console.log('Logout button clicked');
+                    try {
+                        const { error } = await supabase.auth.signOut();
+                        if (error) throw error;
+                        console.log('Sign-out successful');
+                        showLoggedOut();
+                        if (session?.user) localStorage.removeItem(`jsali_avatar_${session.user.id}`);
+                        window.location.href = "/index.html";
+                    } catch (error) {
+                        console.error('Logout failed:', error.message);
+                        alert('Échec de la déconnexion. Veuillez réessayer.');
+                    }
+                });
+            }
+
+            supabase.auth.onAuthStateChange((event, session) => {
+                console.log('Auth state changed:', event, session);
+                if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
+                    showLoggedIn(session.user);
+                } else if (event === 'SIGNED_OUT') {
+                    showLoggedOut();
+                }
+            });
+
+            // Form Submission
+            form?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                const payload = {
+                    ...data,
+                    user_id: session.user.id,
+                    email: session.user.email,
+                    submitted_at: new Date().toISOString()
+                };
+
+                submitButton.disabled = true;
+                formMessage.textContent = "Envoi en cours...";
+                formMessage.style.color = "yellow";
+
+                try {
+                    const response = await fetch(FORMCARRY_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        formMessage.textContent = "✅ Soumission réussie.";
+                        formMessage.style.color = "green";
+                        form.reset();
+                    } else {
+                        throw new Error(result.message || "Échec de la soumission");
+                    }
+                } catch (err) {
+                    console.error("Erreur:", err);
+                    formMessage.textContent = "❌ Erreur: " + (err.message || "Impossible d’envoyer");
+                    formMessage.style.color = "red";
+                } finally {
+                    submitButton.disabled = false;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
